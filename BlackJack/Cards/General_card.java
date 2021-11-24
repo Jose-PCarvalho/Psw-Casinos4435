@@ -9,9 +9,6 @@ public class General_card {
         setFace(Face);
         setSuit(Suit);
         this.positionInDeck=positionInDeck;
-
-
-
     }
 
     private void setSuit(String Suit){

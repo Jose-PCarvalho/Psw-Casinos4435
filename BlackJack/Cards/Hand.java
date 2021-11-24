@@ -3,10 +3,10 @@ package BlackJack.Cards;
 
 public class Hand{
 
-    BlackJackCard[] handCards;
-    int handValue;
-    boolean bust;
-    int numberOfCards=0;
+    public BlackJackCard[] handCards;
+    private int handValue;
+    private boolean bust;
+    private int numberOfCards=0;
 
     public Hand(){
         this.numberOfCards=0;
@@ -51,6 +51,9 @@ public class Hand{
             
         }
         return this.bust;
+    }
+    public int getHandsize(){
+        return numberOfCards;
     }
 
 

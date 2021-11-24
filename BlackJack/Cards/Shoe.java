@@ -1,5 +1,5 @@
 package BlackJack.Cards;
-
+import java.util.Random;
 public class Shoe {
 
     Deck[] Decks;
@@ -23,6 +23,9 @@ public class Shoe {
 
         return Decks[deckNumber].drawCard(position);
     }
+
+    
+
 
     public int AvailableCards(){
         int total=0;
