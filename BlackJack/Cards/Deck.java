@@ -5,6 +5,7 @@ package BlackJack.Cards;
 public class Deck {
     BlackJackCard[] Cards;
     boolean Available[];
+    private int numberOfCards;
 
     public Deck(){
         final String[] Suits = {"Hearts", "Diamonds", "Clubs", "Spades"};
@@ -23,9 +24,11 @@ public class Deck {
             }
             Available[i]=true;
         }
+        this.numberOfCards=52;
     }
    public BlackJackCard drawCard(int position){
-       if(isAvailable(position)==true){    
+       if(isAvailable(position)==true){  
+        this.numberOfCards--;  
         return Cards[position];
        }
        else{
@@ -33,14 +36,20 @@ public class Deck {
        } 
    }
 
-   public void insertCard(BlackJackCard Card){
+   public int insertCard(BlackJackCard Card){
        if(isAvailable(Card.getPosition())==false){
            Cards[Card.getPosition()]=Card;
+           this.numberOfCards++;
+           return 1;
        }
+       return -1;
    }
 
    private boolean isAvailable(int position){
        return Available[position];
+   }
+   public int getNumberOfCards(){
+       return this.numberOfCards;
    }
 
 }

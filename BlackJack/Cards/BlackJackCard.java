@@ -57,6 +57,18 @@ public class BlackJackCard extends General_card {
 
     }
 
+    public boolean isAce(){
+        return (this.getFace().equals("Ace")) ? true : false;
+    }
+
+    public boolean switchAceLow(){
+        if(this.getFace().equals("Ace") && this.getValue()==11){
+            this.value=1;
+            return true;
+        }
+        return false;
+    }
+
 
 
 }
