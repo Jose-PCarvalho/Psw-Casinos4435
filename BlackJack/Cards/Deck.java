@@ -3,8 +3,8 @@ package BlackJack.Cards;
 
 
 public class Deck {
-    BlackJackCard[] Cards;
-    boolean Available[];
+    BlackJackCard[] Cards=new BlackJackCard[52];
+    boolean[] Available=new boolean[52];
     private int numberOfCards;
 
     public Deck(){
@@ -13,7 +13,7 @@ public class Deck {
         int f=0;
         int s=0;
         for(int i=0;i<52;i++){
-            Cards[i]=new BlackJackCard(Suits[s], Faces[f], i);
+            this.Cards[i]=new BlackJackCard(Suits[s], Faces[f], i);
             f++;
             s++;
             if(s>3){
@@ -29,6 +29,7 @@ public class Deck {
    public BlackJackCard drawCard(int position){
        if(isAvailable(position)==true){  
         this.numberOfCards--;  
+        Available[position]=false;
         return Cards[position];
        }
        else{
@@ -51,5 +52,6 @@ public class Deck {
    public int getNumberOfCards(){
        return this.numberOfCards;
    }
+   
 
 }

@@ -2,25 +2,37 @@ package BlackJack.Players;
 import BlackJack.Cards.*;
 public class Gambler extends Base_participant {
     
-    public Hand[] PlayerHand;
+    public Hand[] PlayerHand=new Hand[2];
     private int wallet;
     private boolean Double;
     private String Action;
     private boolean ActionDone;
+    private int bet;
 
     public Gambler(String name,int age, String gender){
         super(name, age, gender);
-        PlayerHand[1]=new Hand();
-        PlayerHand[2]=new Hand();    
+        newHands();    
+        wallet=50000;
     }
 
-    public void DoAction(String Act){
+    public void newHands(){
+        for(int i=0;i<2;i++){
+        PlayerHand[i]=new Hand();
+         }
+    }
 
-        if(Act.equals("Hit")==true || Act.equals("Stand")==true || Act.equals("Double")==true || Act.equals("Split")==true || Act.equals("Leave")==true || Act.equals("Bet") ){
-            this.Action=Act;
-            ActionDone=true;
-        }
+    public void newGame(){
+        PlayerHand[0]=new Hand();
+        PlayerHand[1]=new Hand();
+        resetBet();
+    }
 
+    public void setAction(String Act){
+        this.resetAction();
+        this.Action=Act;
+    }
+    public void finalizeAction(){
+        this.ActionDone=true;
     }
     public boolean isActionDone(){
         return ActionDone;
@@ -46,12 +58,35 @@ public class Gambler extends Base_participant {
         this.wallet-=quantity;
     }
 
+    public void setBet(int quantity){
+        this.bet=quantity;
+        this.wallet-=quantity;
+    }
+    public void resetBet(){
+        this.bet=0;
+    }
+    public int getBet(){
+        return this.bet;
+    }
+
+    public void winnings(int quantity){
+        this.wallet+=quantity;
+
+    }
+
     public void actionDouble(){
         Double=true;   // complete afterwards
     }
 
     public boolean isDouble(){
         return Double;
+    }
+
+    public boolean isBust(){
+        if(this.PlayerHand[0].getHandValue()>21){
+            return true;
+        }
+        return false;
     }
 
 

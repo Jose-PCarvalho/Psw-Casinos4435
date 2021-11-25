@@ -12,8 +12,10 @@ public class BlackJackCard extends General_card {
     }
 
     private void setValue(){
+        
         if(this.getFace().equals("Ace")==true){
             this.value=11;
+            
         }
         else if(this.getFace().equals("2")==true){
             this.value=2;
@@ -62,12 +64,13 @@ public class BlackJackCard extends General_card {
     }
 
     public boolean switchAceLow(){
-        if(this.getFace().equals("Ace") && this.getValue()==11){
+        if(this.isAce() && this.getValue()==11){
             this.value=1;
             return true;
         }
         return false;
     }
+
 
 
 
