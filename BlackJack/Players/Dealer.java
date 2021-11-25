@@ -24,7 +24,7 @@ public class Dealer extends Base_participant {
 
         Random rand = new Random();
   
-        
+        dsasdsafd
         int rand_int1 = rand.nextInt(1000);
         int rand_int2 = rand.nextInt(1000);
 
