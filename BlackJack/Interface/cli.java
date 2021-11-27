@@ -21,17 +21,18 @@ public class cli {
     public void PrintCasino(Game g){
         System.out.println("*********************");
         System.out.print("Dealer Name "+ g.D.getName());
-        System.out.println(" Hand Value: "+g.D.DealerHand.getHandValue(g.D.isFaceDown()));
+        System.out.println(" Hand Value: "+g.D.DealerHand.getHandValue());
+        System.out.println(" Hand : \n"+g.D.DealerHand.toString());
+
         System.out.println();
         System.out.println();
         System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
+
         System.out.print("Gambler Name "+ g.P.getName());
         System.out.print(" Bet"+g.P.getBet());
         System.out.print(" Currency "+g.P.checkWallet());
         System.out.println(" Hand Value: "+g.P.PlayerHand[0].getHandValue());
+        System.out.println(" Hand : \n"+g.P.PlayerHand[0].toString());
         
 
 

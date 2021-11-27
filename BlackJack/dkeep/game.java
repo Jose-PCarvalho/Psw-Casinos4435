@@ -71,6 +71,9 @@ public void gameFlow(){
         gameControllerPlayerSide(inter.getPlayerAction());
         inter.PrintCasino(this);
         if(P.getAction().equals("Stand")){
+            D.setAction("Player Stand");
+            D.doAction(P);
+
             break;
         }
         if(P.isBust()==true || P.PlayerHand[0].getHandValue()==21){
@@ -88,10 +91,9 @@ public void gameFlow(){
     }
 
     else{
-        D.setAction("Reveal");
-        D.doAction(P);
+        
         inter.PrintCasino(this);
-        while(D.DealerHand.getHandValue()<=17 && D.DealerHand.getHandValue()<=P.PlayerHand[0].getHandValue()){
+        while(D.DealerHand.getHandValue()<17 && D.DealerHand.getHandValue()<=P.PlayerHand[0].getHandValue()){
             D.setAction("Dealer Draw");
             D.doAction(P);
             inter.PrintCasino(this);
@@ -106,7 +108,7 @@ public void gameFlow(){
             inter.printWin();
         }
 
-        
+
     }
 
     

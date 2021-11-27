@@ -7,7 +7,6 @@ public class Dealer extends Base_participant {
     public Hand DealerHand;
     private Shoe dShoe;
     private String Action;
-    private boolean cardFaceDown;
     
 
 
@@ -15,13 +14,14 @@ public class Dealer extends Base_participant {
     public Dealer(String name,int age, String gender,int numberOfDecks){
         super(name, age, gender);
         this.dShoe=new Shoe(numberOfDecks);
-        this.DealerHand=new Hand();
-        this.cardFaceDown=true;
+        this.DealerHand=new Hand("Dealer");
+        
     }
 
     public void newGame(){
-        DealerHand=new Hand();
-        this.cardFaceDown=true;
+        this.DealerHand=new Hand("Dealer");
+       
+        
     }
 
 
@@ -50,10 +50,13 @@ public class Dealer extends Base_participant {
 
         }
         else if(this.Action.equals("Player Stand")){
-            this.cardFaceDown=false;
+            this.DealerHand.resetHidden();
         }
 
         else if(this.Action.equals("Dealer Draw")){
+            if(this.DealerHand.isHidden()){
+                this.DealerHand.resetHidden();
+            }
             this.DealerHand.insertCard(this.dShoe.dealCard());
         
         }
@@ -66,9 +69,7 @@ public class Dealer extends Base_participant {
 
     }
 
-    public boolean isFaceDown(){
-        return this.cardFaceDown;
-    }
+    
     public boolean isBust(){
         if(this.DealerHand.getHandValue()>21){
             return true;
