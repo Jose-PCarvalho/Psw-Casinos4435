@@ -10,7 +10,7 @@ public class Game {
 
 
 public Game(){
-    D=new Dealer("Julia Pinheiro", 45, "Feminino", 4);
+    D=new Dealer("Dolores Aveiro", 66, "Feminino", 4);
     P=new Gambler("Nuno Daniel",21,"Masculino");
     inter=new cli();
     start=true;
