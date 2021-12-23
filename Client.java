@@ -14,7 +14,7 @@ public class Client {
 
         Game g=new Game();
         while(true){
-            g.gameFlow();
+           
 
         }
 

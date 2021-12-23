@@ -32,7 +32,7 @@ public class General_card {
 
     public String toString()
     {
-        return getFace() + " of " + getSuit();
+        return  getSuit()+getFace();
     }
 
 }

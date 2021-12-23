@@ -82,7 +82,8 @@ public class Hand{
     public String toString(){
         String str="";
         for(int i=0;i<numberOfCards;i++){
-            if(i==1 && this.Hidden==true){
+            if(i==0 && this.Hidden==true){
+            	str=str+"cardback"+"\n";
 
             }
             else{

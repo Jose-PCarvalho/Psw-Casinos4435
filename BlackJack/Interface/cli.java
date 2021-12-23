@@ -30,7 +30,7 @@ public class cli {
 
         System.out.print("Gambler Name "+ g.P.getName());
         System.out.print(" Bet"+g.P.getBet());
-        System.out.print(" Currency "+g.P.checkWallet());
+        System.out.print(" Currency "+g.P.getWallet());
         System.out.println(" Hand Value: "+g.P.PlayerHand[0].getHandValue());
         System.out.println(" Hand : \n"+g.P.PlayerHand[0].toString());
         

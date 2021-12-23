@@ -8,8 +8,8 @@ public class Deck {
     private int numberOfCards;
 
     public Deck(){
-        final String[] Suits = {"Hearts", "Diamonds", "Clubs", "Spades"};
-        final String[] Faces = {"Ace", "2", "3", "4","5","6","7","8","9","10","Jack","Queen","King"};
+        final String[] Suits = {"hearts", "diamonds", "clubs", "spade"};
+        final String[] Faces = {"Ace", "2", "3", "4","5","6","7","8","9","10","J","Q","K"};
         int f=0;
         int s=0;
         for(int i=0;i<52;i++){

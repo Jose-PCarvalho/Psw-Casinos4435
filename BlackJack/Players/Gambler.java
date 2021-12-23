@@ -46,7 +46,7 @@ public class Gambler extends Base_participant {
         ActionDone=false;
     }
 
-    public int checkWallet(){
+    public int getWallet(){
         return wallet;
     }
 
@@ -59,7 +59,7 @@ public class Gambler extends Base_participant {
     }
 
     public void setBet(int quantity){
-        this.bet=quantity;
+        this.bet+=quantity;
         this.wallet-=quantity;
     }
     public void resetBet(){

@@ -44,13 +44,13 @@ public class BlackJackCard extends General_card {
         else if(this.getFace().equals("10")==true){
             this.value=10;
         }
-        else if(this.getFace().equals("Jack")==true){
+        else if(this.getFace().equals("J")==true){
             this.value=10;
         }
-        else if(this.getFace().equals("Queen")==true){
+        else if(this.getFace().equals("Q")==true){
             this.value=10;
         }
-        else if(this.getFace().equals("King")==true){
+        else if(this.getFace().equals("K")==true){
             this.value=10;
         }
     }
