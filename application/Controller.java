@@ -58,6 +58,7 @@ public class Controller {
  
 @FXML 
 public void BetEntered(MouseEvent e) {
+	if(g.getGameState().equals("Betting")) {
 	 Node clickedNode = e.getPickResult().getIntersectedNode();
 	    if (clickedNode != ChipGrid) {
 	        if(currentBet==0) {
@@ -74,15 +75,17 @@ public void BetEntered(MouseEvent e) {
 	        
 	        
 	    }
- 
+	}
  }
 
 public void BetConfirmed() {
-	ConfirmButton.setImage(null);
-	g.gamelogic("Bet Confirmed");
-	currentBet=0;
-	setPlayGrid();
-	DrawCards();
+	if(g.getGameState().equals("Betting") && currentBet>0) {
+		ConfirmButton.setImage(null);
+		g.gamelogic("Bet Confirmed");
+		currentBet=0;
+		setPlayGrid();
+		DrawCards();
+	}
 	
 	
 	}
@@ -145,7 +148,7 @@ private void removePlayGrid() {
  
 
 public void Play(MouseEvent e) {
-	
+	if(g.getGameState().equals("Playing")) {
 	 Node clickedNode = e.getPickResult().getIntersectedNode();
 	    if (clickedNode != PlayGrid) {
 	    	Integer colIndex = GridPane.getColumnIndex(clickedNode);
@@ -171,7 +174,7 @@ public void Play(MouseEvent e) {
 	        	gameOver();
 	        }
 	        
-	        
+	    }
 	        
 	    }
 
@@ -265,7 +268,7 @@ public void DrawCards() {
 		 PlayersHands[0][i].setSmooth(true);
 		 PlayersHands[0][i].setFitWidth(75);
 		 PlayersHands[0][i].toFront();
-		 PlayersHands[0][i].setRotate(-180);
+		 //PlayersHands[0][i].setRotate(-180);
 	     Pane.getChildren().add(PlayersHands[0][i]);
 	}
 	

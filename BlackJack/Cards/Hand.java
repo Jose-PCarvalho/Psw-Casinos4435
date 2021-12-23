@@ -43,7 +43,7 @@ public class Hand{
         this.handValue=0;
         boolean aceFlag=false;
         if(Hidden==true && numberOfCards>0){
-            this.handValue=handCards[0].getValue();
+            this.handValue=handCards[1].getValue();
         }
         else{
             for(int i=0;i<numberOfCards;i++){

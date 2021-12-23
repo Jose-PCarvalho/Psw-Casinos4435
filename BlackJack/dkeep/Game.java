@@ -1,7 +1,7 @@
 package BlackJack.dkeep;
 import BlackJack.Players.*;
 import BlackJack.Interface.*;
-public class Game implements Runnable{
+public class Game{
     public Gambler P;
     public Dealer D;
     Boolean start;
@@ -9,6 +9,7 @@ public class Game implements Runnable{
     private Thread t;
     boolean PlayerTurn=true;
     boolean GameIsPlaying=true;
+    private String gameState="Betting";
 
 
 
@@ -64,80 +65,8 @@ public void newGame() {
     D.newGame();
     GameIsPlaying=true;
     PlayerTurn=true;
+    setGameState("Betting");
 }
-public void run(){
-    start=true;
-    P.newGame();
-    D.newGame();
-    inter.PrintCasino(this);
-
-    while(startGame(inter.getPlayerBet())==false){
-
-    }
-    inter.PrintCasino(this);
-
-    while(true){
-    
-        gameControllerPlayerSide(inter.getPlayerAction());
-        inter.PrintCasino(this);
-        if(P.getAction().equals("Stand")){
-            D.setAction("Player Stand");
-            D.doAction(P);
-
-            break;
-        }
-        if(P.isBust()==true || P.PlayerHand[0].getHandValue()==21){
-            break;
-        }
-        
-
-    }
-    inter.PrintCasino(this);
-
-    if(P.isBust()==true){
-        P.resetBet();
-        start=true;
-        return;
-    }
-
-    else{
-        
-        inter.PrintCasino(this);
-        while(D.DealerHand.getHandValue()<17 && D.DealerHand.getHandValue()<=P.PlayerHand[0].getHandValue()){
-            D.setAction("Dealer Draw");
-            D.doAction(P);
-            inter.PrintCasino(this);
-
-        }
-
-        if(D.isBust()|| D.DealerHand.getHandValue()<=P.PlayerHand[0].getHandValue()){
-            P.deposit(P.getBet()*2);
-            P.resetBet();
-            start=true;
-            inter.PrintCasino(this);
-            inter.printWin();
-        }
-
-
-    }
-
-
-}
-
-
-
-public void start () {
-    System.out.println("Starting " );
-    start=true;
-    P.newGame();
-    D.newGame();
-    inter.PrintCasino(this);
-    if (t == null) {
-       t = new Thread (this);
-       t.start ();
-    }
- }
-
 
 public boolean gamelogic(String Message) {
 	
@@ -147,11 +76,12 @@ public boolean gamelogic(String Message) {
 	}
 	
 	else if(Message.contains("Bet Confirmed")==true){
-		
+		setGameState("Playing");
 		D.setAction("Dealer Start"); //Alterar para quando funcionar em multiplayer
         D.doAction(P);
         D.setAction("Player Bet");
         D.doAction(P);
+        
         
         
 		
@@ -165,6 +95,7 @@ public boolean gamelogic(String Message) {
 		}
 		
 		else if(Message.contains("Stand")==true) {
+			setGameState("Ending");
 			D.setAction("Player Stand");
             D.doAction(P);
             PlayerTurn=false;   
@@ -177,8 +108,10 @@ public boolean gamelogic(String Message) {
             }
 		}
 	else if(Message.contains("Dealer Draw")==true) {
-		D.setAction("Dealer Draw");
-        D.doAction(P);
+		if(D.DealerHand.getHandValue()<=P.PlayerHand[0].getHandValue()) {
+			D.setAction("Dealer Draw");
+	        D.doAction(P);
+		}
 		GameIsPlaying=D.DealerHand.getHandValue()<17 && D.DealerHand.getHandValue()<=P.PlayerHand[0].getHandValue();
 	}
 	
@@ -202,6 +135,9 @@ public void payBet() {
 	if(D.isBust() || D.DealerHand.getHandValue()<P.PlayerHand[0].getHandValue() ) {
 		P.deposit(P.getBet()*2);
 		 }
+	else if(D.DealerHand.getHandValue()==P.PlayerHand[0].getHandValue()) {
+		P.deposit(P.getBet());	
+	}
 	P.resetBet();
 	
 	
@@ -221,6 +157,14 @@ public int whoWon() {
 	else {
 		return 2;
 	}
+}
+
+public String getGameState() {
+	return gameState;
+}
+
+public void setGameState(String gameState) {
+	this.gameState = gameState;
 }
 
 }
