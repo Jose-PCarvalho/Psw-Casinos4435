@@ -83,11 +83,11 @@ public class Hand{
         String str="";
         for(int i=0;i<numberOfCards;i++){
             if(i==0 && this.Hidden==true){
-            	str=str+"cardback"+"\n";
+            	str=str+"cardback"+" ";
 
             }
             else{
-            str=str+this.handCards[i].toString()+"\n";}
+            str=str+this.handCards[i].toString()+" ";}
 
         }
         return str;

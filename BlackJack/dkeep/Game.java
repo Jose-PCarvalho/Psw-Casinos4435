@@ -6,18 +6,44 @@ public class Game{
     public Dealer D;
     Boolean start;
     cli inter;
-    private Thread t;
+    
     boolean PlayerTurn=true;
     boolean GameIsPlaying=true;
-    private String gameState="Betting";
+    private String gameState="Waiting for Players";
+    public Gambler[] Players= new Gambler[8];
+    private int numberOfPlayers=0;
+    private boolean[] OccupiedSlots= {false,false,false,false,false,false,false,false};
+    private int[] WinDrawLose={0,0,0,0,0,0,0,0};
+    
+    
 
 
 
 public Game(){
     D=new Dealer("Dolores Aveiro", 66, "Feminino", 4);
-    P=new Gambler("Nuno Daniel",21,"Masculino");
+    //P=new Gambler("Nuno Daniel",21,"Masculino");
     inter=new cli();
     start=true;
+}
+
+
+public void newPlayer(int pid) {
+	Players[pid]=new Gambler("Nuno Daniel",21,"Masculino");
+	numberOfPlayers++;
+	OccupiedSlots[pid]=true;
+}
+
+public String AvailableSpots() {
+	String Message="Available Spots: ";
+	for(int i=1;i<8;i++) {
+		if(OccupiedSlots[i]==false) 
+		{
+			Message=Message + Integer.toString(i) +" ";
+		}
+		
+	}
+	return Message;
+	
 }
 
 public boolean gameControllerPlayerSide(String Act){
@@ -61,58 +87,36 @@ public boolean startGame(int bet){
 
 public void newGame() {
 	start=true;
-    P.newGame();
-    D.newGame();
+	D.newGame();
+	for(int i=1;i<8;i++) {
+		if(OccupiedSlots[i]) {
+			Players[i].newGame();
+		}
+	}
+    
     GameIsPlaying=true;
     PlayerTurn=true;
     setGameState("Betting");
 }
 
-public boolean gamelogic(String Message) {
+public boolean gamelogic(String Message,int pid) {
 	
-	if(Message.contains("Bet Entered")==true) {
-		int value=Integer.parseInt(Message.replaceAll("[\\D]", ""));
-		this.P.setBet(value);	
-	}
+
 	
-	else if(Message.contains("Bet Confirmed")==true){
-		setGameState("Playing");
-		D.setAction("Dealer Start"); //Alterar para quando funcionar em multiplayer
-        D.doAction(P);
-        D.setAction("Player Bet");
-        D.doAction(P);
-        
-        
-        
-		
-	}
-	
-	else if(Message.contains("Play")==true && PlayerTurn==true) {
-		if(Message.contains("Hit")==true) {
-			D.setAction("Player Hit");
-            D.doAction(P);
-            GameIsPlaying=!P.isBust();
-		}
-		
-		else if(Message.contains("Stand")==true) {
-			setGameState("Ending");
-			D.setAction("Player Stand");
-            D.doAction(P);
-            PlayerTurn=false;   
-            }
-		else if(Message.contains("Double")==true) {
-			D.setAction("Player Hit");
-            D.doAction(P);
-            P.setBet(P.getBet());
-            PlayerTurn=false;   
-            }
-		}
-	else if(Message.contains("Dealer Draw")==true) {
-		if(D.DealerHand.getHandValue()<=P.PlayerHand[0].getHandValue()) {
+	 D.setAction("Dealer Reveal");
+	 D.doAction(Players[pid]);
+	if(Message.contains("Dealer Draw")==true) {
+		if(D.DealerHand.getHandValue()<=Players[pid].PlayerHand[0].getHandValue() && !Players[pid].isBust()) {
 			D.setAction("Dealer Draw");
-	        D.doAction(P);
+	        D.doAction(Players[pid]);
 		}
-		GameIsPlaying=D.DealerHand.getHandValue()<17 && D.DealerHand.getHandValue()<=P.PlayerHand[0].getHandValue();
+		GameIsPlaying=D.DealerHand.getHandValue()<17 && D.DealerHand.getHandValue()<=Players[pid].PlayerHand[0].getHandValue() && !Players[pid].isBust();
+		
+	}
+	if(!GameIsPlaying) {
+		whoWon();
+		setGameState("Finished");
+	
 	}
 	
 	return GameIsPlaying;
@@ -123,6 +127,34 @@ public boolean gamelogic(String Message) {
 	
 	
 	
+}
+
+public void PlayerPlay(String Message,int pid) {
+	if(Message.contains("Playing")==true) {
+		if(Message.contains("Hit")==true) {
+			D.setAction("Player Hit");
+            D.doAction(Players[pid]);
+            if(Players[pid].isBust()) {
+            	setGameState("Ending");
+            }
+            else if(Players[pid].PlayerHand[0].getHandValue()==21) {
+            	setGameState("Ending");
+            }
+            
+		}
+		
+		else if(Message.contains("Stand")==true) {
+			setGameState("Ending");
+			D.setAction("Player Stand");
+            D.doAction(Players[pid]);  
+            }
+		else if(Message.contains("Double")==true) {
+			D.setAction("Player Hit");
+			setGameState("Ending");
+            D.doAction(Players[pid]);
+            Players[pid].setBet(Players[pid].getBet()); 
+            }
+		}
 }
 
 public boolean getGameIsPlaying() {
@@ -143,20 +175,23 @@ public void payBet() {
 	
 	
 }
-public int whoWon() {
-	if(P.isBust())
-		return 0;
-	if(D.isBust())
-		return 1;
-	if(D.DealerHand.getHandValue()>P.PlayerHand[0].getHandValue()) {
-		return 0;
-	}
-	if(D.DealerHand.getHandValue()<P.PlayerHand[0].getHandValue()) {
-		return 1;
-	}
-	else {
-		return 2;
-	}
+public void whoWon() {
+	for(int i=1;i<8;i++) {
+		if(OccupiedSlots[i]) {
+			if(Players[i].isBust())
+				WinDrawLose[i]=0;
+			else if(D.isBust())
+				WinDrawLose[i]=1;
+			else if(D.DealerHand.getHandValue()>Players[i].PlayerHand[0].getHandValue()) {
+				WinDrawLose[i]= 0;
+			}
+			else if(D.DealerHand.getHandValue()<Players[i].PlayerHand[0].getHandValue()) {
+				WinDrawLose[i]= 1;
+			}
+			else {
+				WinDrawLose[i]= 2;}
+		}
+		}
 }
 
 public String getGameState() {
@@ -165,6 +200,40 @@ public String getGameState() {
 
 public void setGameState(String gameState) {
 	this.gameState = gameState;
+}
+
+
+public String getInfo(){
+	String info="GameState:"+ getGameState()+"%";
+	info+= "Dealer" + ":Hand Size:" + D.DealerHand.getHandsize() + ":Hand Value:" + D.DealerHand.getHandValue() +":Hand Cards:" +D.DealerHand.toString()+" %";
+	for(int i=1;i<8;i++) {
+		if(OccupiedSlots[i]) {
+			info+= "Player"+Integer.toString(i) + ":Wallet:"+Integer.toString(Players[i].getWallet())+":Bet:"+Integer.toString(Players[i].getBet()) +":Hand Size:" + Players[i].PlayerHand[0].getHandsize() + ":Hand Value:" +Players[i].PlayerHand[0].getHandValue() +":Hand Cards:"+ Players[i].PlayerHand[0].toString()+" "+":Result:" +Integer.toString(WinDrawLose[i]) +"%";
+
+		}
+		else{
+			info+="Player"+Integer.toString(i)+":" +"Not Playing"+"%";
+		}
+	}
+	
+	return info;
+}
+
+public void setBet(int pid, int value) {
+	Players[pid].setBet(value);
+	
+}
+
+public void startPlaying() {
+	D.setAction("Dealer Start");
+    D.doAction(P);
+	for(int i=1;i<8;i++) {
+		if(OccupiedSlots[i]) {
+	        D.setAction("Player Bet");
+	        D.doAction(Players[i]);
+			
+		}
+	}
 }
 
 }

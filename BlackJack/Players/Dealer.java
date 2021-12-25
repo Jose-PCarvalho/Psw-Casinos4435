@@ -60,7 +60,11 @@ public class Dealer extends Base_participant {
             this.DealerHand.insertCard(this.dShoe.dealCard());
         
         }
-            
+        else if(this.Action.equals("Dealer Reveal")){
+            if(this.DealerHand.isHidden()){
+                this.DealerHand.resetHidden();
+            }
+        }
 
         
 

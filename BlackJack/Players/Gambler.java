@@ -8,6 +8,7 @@ public class Gambler extends Base_participant {
     private String Action;
     private boolean ActionDone;
     private int bet;
+    private boolean Active;
 
     public Gambler(String name,int age, String gender){
         super(name, age, gender);
