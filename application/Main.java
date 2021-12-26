@@ -48,7 +48,7 @@ public class Main extends Application {
         	        while(socket.isConnected() && !socket.isClosed()){
         	            String messageFromServer= bufferedReader.readLine();
 
-        	            System.out.println("messageFromServer");
+        	            System.out.println(messageFromServer);
 
         	            Platform.runLater( () -> {
         	            	if(messageFromServer.contains("Available Spots")) {
