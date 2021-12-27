@@ -20,8 +20,16 @@ public class ServerLogic {
     	    while(!server.serverSocket.isClosed()) {
     	    	ArrayList<String> remove= new ArrayList<String>();
     	    	server.receiveMessageClientHandlers();
+    	    	if(g.getNumberOfPlayers()==0) {
+    	    		g.newGame();
+    	    	}
+    	    	
     	    	for (int i=0;i<server.messageList.size();i++) {
     	    		
+    	    		if(server.messageList.get(i).contains("Shutdown")) {
+    	    			ID=Integer.parseInt(server.messageList.get(i).replaceAll("[^0-9]", ""));
+    	    			g.freeSpot(ID);
+    	    		}
     	    		if(server.messageList.get(i).equals("Player Joined")) {
     					System.out.println("Server: Player Joined");
     					server.broadcastMessage(g.AvailableSpots());
@@ -32,7 +40,6 @@ public class ServerLogic {
     					String numberOnly= server.messageList.get(i).replaceAll("[^0-9]", "");
     					System.out.println("Server: New Player" + numberOnly);
     					g.newPlayer(Integer.parseInt(numberOnly));
-    					g.setGameState("Betting"); //fix this later
     					server.broadcastMessage(g.getInfo());
     					
     				}
@@ -51,8 +58,7 @@ public class ServerLogic {
     					System.out.println("Server: New Bet");
     					String parse[]=server.messageList.get(i).split(":");
     					ID=Integer.parseInt(parse[0].replaceAll("[^0-9]", ""));
-    					g.setGameState("Playing");
-    					g.startPlaying();
+    					g.confirmBet(ID);
     					server.broadcastMessage(g.getInfo());
     					
     				}
@@ -62,8 +68,7 @@ public class ServerLogic {
     					ID=Integer.parseInt(server.messageList.get(i).replaceAll("[^0-9]", ""));
     					g.PlayerPlay(server.messageList.get(i), ID);
     					if(g.getGameState().equals("Ending")) {
-    						while(g.gamelogic("Dealer Draw",ID)) { //Adapt for multiplayer later	
-    						}
+    						g.endGame();
     					}
     					server.broadcastMessage(g.getInfo());
     					
@@ -73,19 +78,17 @@ public class ServerLogic {
     					ID=Integer.parseInt(server.messageList.get(i).replaceAll("[^0-9]", ""));
     					g.PlayerPlay(server.messageList.get(i), ID);
     					if(g.getGameState().equals("Ending")) {
-    						while(g.gamelogic("Dealer Draw",ID)) { //Adapt for multiplayer later	
-    						}
+    						g.endGame();
     					}
     					server.broadcastMessage(g.getInfo());
     					
     				}
     				if(server.messageList.get(i).contains("Double") && g.getGameState().equals("Playing")) {
-    					System.out.println("Server: Douvle");
+    					System.out.println("Server: Double");
     					ID=Integer.parseInt(server.messageList.get(i).replaceAll("[^0-9]", ""));
     					g.PlayerPlay(server.messageList.get(i), ID);
     					if(g.getGameState().equals("Ending")) {
-    						while(g.gamelogic("Dealer Draw",ID)) { //Adapt for multiplayer later	
-    						}
+    						g.endGame();
     					}
     					server.broadcastMessage(g.getInfo());
     					

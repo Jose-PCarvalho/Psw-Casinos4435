@@ -11,7 +11,7 @@
 
 <AnchorPane fx:id="Pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="909.0" prefWidth="1430.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
    <children>
-      <ImageView fitHeight="909.0" fitWidth="1588.0" layoutX="-31.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="909.0" fitWidth="1588.0" layoutX="-24.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@Side-bets-blackjack-explanation.jpg" />
          </image>
@@ -67,7 +67,7 @@
          </font>
       </Label>
       <ImageView fx:id="ConfirmButton" fitHeight="150.0" fitWidth="200.0" layoutX="1245.0" layoutY="722.0" onMouseClicked="#BetConfirmed" pickOnBounds="true" preserveRatio="true" />
-      <GridPane fx:id="PlayGrid" layoutX="507.0" layoutY="400.0" onMouseClicked="#Play" prefHeight="128.0" prefWidth="384.0">
+      <GridPane fx:id="PlayGrid" layoutX="507.0" layoutY="400.0" onMouseClicked="#Play" prefHeight="128.0" prefWidth="384.0" style="-fx-background-color: transparent;">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />

@@ -51,10 +51,10 @@ public class Main extends Application {
         	            System.out.println(messageFromServer);
 
         	            Platform.runLater( () -> {
-        	            	if(messageFromServer.contains("Available Spots")) {
+        	            	if(messageFromServer.contains("Available Spots") && cont.joined==false) {
         	            		cont.setJoinButton(messageFromServer);
         	            	}
-        	            	if(messageFromServer.contains("GameState")) {
+        	            	if(messageFromServer.contains("GameState") && cont.joined==true) {
         	            		cont.absorbInfo(messageFromServer);
         	            	}
 
@@ -113,7 +113,7 @@ public class Main extends Application {
                 try {
                 	try {
                 	if(bufferedWriter!=null) {
-                	bufferedWriter.write("Shutdown");
+                	bufferedWriter.write("Shutdown "+cont.pid);
       				bufferedWriter.newLine();
       				bufferedWriter.flush();}}
                 	catch(IOException e) {
@@ -135,7 +135,10 @@ public class Main extends Application {
                 stage.close();
                 Platform.exit();
             }
-        });        
+        });  
+        
+        
+        
           
  
 
@@ -148,4 +151,7 @@ public class Main extends Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
+	
+	
+	
 }

@@ -50,7 +50,7 @@ public class Dealer extends Base_participant {
 
         }
         else if(this.Action.equals("Player Stand")){
-            this.DealerHand.resetHidden();
+            
         }
 
         else if(this.Action.equals("Dealer Draw")){

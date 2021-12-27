@@ -14,6 +14,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class Controller {
 
@@ -41,23 +43,35 @@ public class Controller {
  boolean confirmFlag=true;
  Image confirmImage = new Image(getClass().getResourceAsStream("../Resources/GeneralAssets/Confirm.png"));
  Image Join = new Image(getClass().getResourceAsStream("../Resources/GeneralAssets/Join.png"));
- ImageView JoinButton[] = new ImageView[8];
  Circle PlayerCircle[] = new Circle[8];
  Label PlayerPoints[] = new Label[8];
  ImageView FinalScreen;
  Game g;
  String GameState="";
  boolean playGridOn=false;
- int pid=4;
- //ArrayList<ImageView> HandPlayer1=new ArrayList<ImageView>();
- //ArrayList < ArrayList<ImageView>> PlayersHand = new ArrayList <ArrayList<ImageView> >(7);
+ int pid;
+ boolean joined=false;
+ ImageView JoinButton1= new ImageView(Join);
+ ImageView JoinButton2= new ImageView(Join);
+ ImageView JoinButton3= new ImageView(Join);
+ ImageView JoinButton4= new ImageView(Join);
+ ImageView JoinButton5= new ImageView(Join);
+ ImageView JoinButton6= new ImageView(Join);
+ ImageView JoinButton7= new ImageView(Join);
+ boolean buttonFlag=true;
+ 
+ 
+ 
  
  ImageView[][] PlayersHands= new ImageView[8][10];
  ImageView[] DealerHand= new ImageView[10];
+ int PlayerPositionX[]= {0,185,347,507,682,865,1029,1183};
+ int PlayerPositionY[]= {0,556,629,688,697,687,637,553};
+ int PlayerRotation[]= {0,30,20,10,0,-10,-20,-30};
 
-private boolean SendMessage=false;
+ private boolean SendMessage=false;
 
-private String message="";
+ private String message="";
 
  
  
@@ -139,32 +153,157 @@ public void setBetValue() {
  
  public void setJoinButton(String message) {
 	 
-	 int i=-1;
+	 int i=0;
+	 removeButtons();
+	   
+	       
+		
 	 for (String val: message.split(" ")) {
          System.out.println(val +"\n");
-	         if(i>0) {
-				 JoinButton[i]=new ImageView(Join);
-				 JoinButton[i].setLayoutX(100+150*i);
-				 JoinButton[i].setLayoutY(653-150);
-				 JoinButton[i].setPreserveRatio(true);
-				 JoinButton[i].setSmooth(true);
-				 JoinButton[i].setFitWidth(75);
-				 //JoinButton[4].setFitWidth(7);
-				 JoinButton[i].toFront();
-			     Pane.getChildren().add(JoinButton[i]);
-			     
-			     JoinButton[i].addEventHandler(MouseEvent.MOUSE_CLICKED, event->{
-			    	 for(int n=1;n<8;n++) {
-			    		 pid=4;
-				         Pane.getChildren().remove(JoinButton[n]);
-			    	 }
-			         setMessage("New Player on position:" + Integer.toString(pid));
-			         messageResquest();
-			         event.consume();
-		     });}
-	         i++;
+	    if(i>1)  { 
+	    	if(Integer.parseInt(val)==1) {
+	    		JoinButton1=new ImageView(Join);
+	    		JoinButton1.setLayoutX(PlayerPositionX[Integer.parseInt(val)]-15);
+	    		JoinButton1.setLayoutY(PlayerPositionY[Integer.parseInt(val)]);
+	    		JoinButton1.setPreserveRatio(true);
+	    		JoinButton1.setSmooth(true);
+	    		JoinButton1.setFitWidth(75);
+	    		JoinButton1.toFront();
+	     		Pane.getChildren().add(JoinButton1);
+	     		JoinButton1.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
+	    			pid=Integer.parseInt(val);
+	    			joined=true;
+	    			setMessage("New Player on position:" + Integer.toString(pid));
+	    			messageResquest();
+	    			removeButtons();
+	    			event.consume();
+	    		     });}
+	    	if(Integer.parseInt(val)==2) {
+	    		JoinButton2=new ImageView(Join);
+	    		JoinButton2.setLayoutX(PlayerPositionX[Integer.parseInt(val)]-15);
+	    		JoinButton2.setLayoutY(PlayerPositionY[Integer.parseInt(val)]);
+	    		JoinButton2.setPreserveRatio(true);
+	    		JoinButton2.setSmooth(true);
+	    		JoinButton2.setFitWidth(75);
+	    		JoinButton2.toFront();
+	     		Pane.getChildren().add(JoinButton2);
+	     		JoinButton2.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
+	    			pid=Integer.parseInt(val);
+	    			joined=true;
+	    			setMessage("New Player on position:" + Integer.toString(pid));
+	    			messageResquest();
+	    			removeButtons();
+	    			event.consume();
+	    		     });
+	    	}
+	    	if(Integer.parseInt(val)==3) {
+	    		JoinButton3=new ImageView(Join);
+	    		JoinButton3.setLayoutX(PlayerPositionX[Integer.parseInt(val)]-15);
+	    		JoinButton3.setLayoutY(PlayerPositionY[Integer.parseInt(val)]);
+	    		JoinButton3.setPreserveRatio(true);
+	    		JoinButton3.setSmooth(true);
+	    		JoinButton3.setFitWidth(75);
+	    		JoinButton3.toFront();
+	     		Pane.getChildren().add(JoinButton3);
+	     		JoinButton3.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
+	    			pid=Integer.parseInt(val);
+	    			joined=true;
+	    			setMessage("New Player on position:" + Integer.toString(pid));
+	    			messageResquest();
+	    			removeButtons();
+	    			event.consume();
+	    		     });}
+	    	if(Integer.parseInt(val)==4) {
+	    		JoinButton4=new ImageView(Join);
+	    		JoinButton4.setLayoutX(PlayerPositionX[Integer.parseInt(val)]-15);
+	    		JoinButton4.setLayoutY(PlayerPositionY[Integer.parseInt(val)]);
+	    		JoinButton4.setPreserveRatio(true);
+	    		JoinButton4.setSmooth(true);
+	    		JoinButton4.setFitWidth(75);
+	    		JoinButton4.toFront();
+	     		Pane.getChildren().add(JoinButton4);
+	     		JoinButton4.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
+	    			pid=Integer.parseInt(val);
+	    			joined=true;
+	    			setMessage("New Player on position:" + Integer.toString(pid));
+	    			messageResquest();
+	    			removeButtons();
+	    			event.consume();
+	    		     });}
+	    	if(Integer.parseInt(val)==5) {
+	    		JoinButton5=new ImageView(Join);
+	    		JoinButton5.setLayoutX(PlayerPositionX[Integer.parseInt(val)]-15);
+	    		JoinButton5.setLayoutY(PlayerPositionY[Integer.parseInt(val)]);
+	    		JoinButton5.setPreserveRatio(true);
+	    		JoinButton5.setSmooth(true);
+	    		JoinButton5.setFitWidth(75);
+	    		JoinButton5.toFront();
+	     		Pane.getChildren().add(JoinButton5);
+	     		JoinButton5.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
+	    			pid=Integer.parseInt(val);
+	    			joined=true;
+	    			setMessage("New Player on position:" + Integer.toString(pid));
+	    			messageResquest();
+	    			removeButtons();
+	    			event.consume();
+	    		     });}
+		
+	    	if(Integer.parseInt(val)==6) {
+	    		JoinButton6=new ImageView(Join);
+	    		JoinButton6.setLayoutX(PlayerPositionX[Integer.parseInt(val)]-15);
+	    		JoinButton6.setLayoutY(PlayerPositionY[Integer.parseInt(val)]);
+	    		JoinButton6.setPreserveRatio(true);
+	    		JoinButton6.setSmooth(true);
+	    		JoinButton6.setFitWidth(75);
+	    		JoinButton6.toFront();
+	     		Pane.getChildren().add(JoinButton6);
+	     		JoinButton6.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
+	    			pid=Integer.parseInt(val);
+	    			joined=true;
+	    			setMessage("New Player on position:" + Integer.toString(pid));
+	    			messageResquest();
+	    			removeButtons();
+	    			event.consume();
+	    		     });}
+	    	if(Integer.parseInt(val)==7){
+	    		JoinButton7=new ImageView(Join);
+	    		JoinButton7.setLayoutX(PlayerPositionX[Integer.parseInt(val)]-15);
+	    		JoinButton7.setLayoutY(PlayerPositionY[Integer.parseInt(val)]);
+	    		JoinButton7.setPreserveRatio(true);
+	    		JoinButton7.setSmooth(true);
+	    		JoinButton7.setFitWidth(75);
+	    		JoinButton7.toFront();
+	     		Pane.getChildren().add(JoinButton7);
+	     		JoinButton7.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
+	    			pid=Integer.parseInt(val);
+	    			joined=true;
+	    			setMessage("New Player on position:" + Integer.toString(pid));
+	    			messageResquest();
+	    			removeButtons();
+	    			event.consume();
+	    		     });}
+		    	
+		
+	    	
+		
+	    		    
+	    }
+	    i++;	
+	 }
+	         
  }
- }
+ 
+ 	
+ 	public void removeButtons() {
+ 		Pane.getChildren().remove(JoinButton1);
+ 		Pane.getChildren().remove(JoinButton2);
+ 		Pane.getChildren().remove(JoinButton3);
+ 		Pane.getChildren().remove(JoinButton4);
+ 		Pane.getChildren().remove(JoinButton5);
+ 		Pane.getChildren().remove(JoinButton6);
+ 		Pane.getChildren().remove(JoinButton7);
+ 		
+ 	}
  
 private void setPlayGrid() {
 	 String[] PlayName= { "../Resources/GeneralAssets/Double.png","../Resources/GeneralAssets/Hit.png","../Resources/GeneralAssets/Stand.png" };
@@ -279,6 +418,11 @@ public void removeCards(int id, int n) {
 		SendMessage=false;
 	}
 	public void absorbInfo(String msg) {
+		
+		
+		removeButtons();
+			
+		
 		String lines[] = msg.split("%");
 		for(int i=0;i<lines.length;i++) {
 			String Values[]=lines[i].split(":");
@@ -301,7 +445,15 @@ public void removeCards(int id, int n) {
 			}
 			if(i>1) {
 				if(Values[1].equals("Not Playing")) {
-					
+					if(i-1==pid) {
+						Stage stage=(Stage) Pane.getScene().getWindow();
+						stage.fireEvent(
+							    new WindowEvent(
+							        stage,
+							        WindowEvent.WINDOW_CLOSE_REQUEST
+							    )
+							);
+					}
 					
 				}
 				else{
@@ -341,7 +493,7 @@ public void removeCards(int id, int n) {
 			 PlayersHands[0][i].setSmooth(true);
 			 PlayersHands[0][i].setFitWidth(75);
 			 PlayersHands[0][i].toFront();
-			 PlayersHands[0][i].setRotate(0-3*i);
+			 PlayersHands[0][i].setRotate(0);
 		     Pane.getChildren().add(PlayersHands[0][i]);
 
 		}
@@ -360,12 +512,12 @@ public void removeCards(int id, int n) {
 		
 	}
 	
-	public void drawPlayer(int PlayerId,String Balance,String Bet,String Size,String Value,String Cards) {
-		if(PlayerId==pid) {
+	public void drawPlayer(int pid,String Balance,String Bet,String Size,String Value,String Cards) {
+		if(this.pid==pid) {
 			setBetValue(Integer.parseInt(Balance),Integer.parseInt(Bet));
 			
 		}
-		removeCards(PlayerId,Integer.parseInt(Size));
+		removeCards(pid,Integer.parseInt(Size));
 		String linesD[] = Cards.split(" ");
 		int n=Integer.parseInt(Size);
 		
@@ -373,22 +525,28 @@ public void removeCards(int id, int n) {
 		for (int i=0;i<n;i++) {
 			 System.out.println("../Resources/Cards/"+linesD[i]+".png");
 			 PlayersHands[pid][i]=new ImageView(new Image(getClass().getResourceAsStream("../Resources/Cards/"+linesD[i]+".png"))); 
-			 PlayersHands[pid][i].setLayoutX(659+25*i);
-			 PlayersHands[pid][i].setLayoutY(653-1*i);
+			 PlayersHands[pid][i].setLayoutX(PlayerPositionX[pid]+30*i-15);
+			 PlayersHands[pid][i].setLayoutY(PlayerPositionY[pid]-2*i-45);
 			 PlayersHands[pid][i].setPreserveRatio(true);
 			 PlayersHands[pid][i].setSmooth(true);
 			 PlayersHands[pid][i].setFitWidth(75);
+			 PlayersHands[pid][i].setRotate(PlayerRotation[pid]);
 			 PlayersHands[pid][i].toFront();
 		     Pane.getChildren().add(PlayersHands[pid][i]);
 		}
 		
-		PlayerCircle[pid]=new Circle(700,623,22);
-		PlayerCircle[pid].setFill(javafx.scene.paint.Color.AQUA);
+		PlayerCircle[pid]=new Circle(PlayerPositionX[pid]+30,PlayerPositionY[pid]-70,22);
+		if(pid==this.pid) {
+		PlayerCircle[pid].setFill(javafx.scene.paint.Color.LIGHTGREEN);
+		}
+		else {
+			PlayerCircle[pid].setFill(javafx.scene.paint.Color.AQUA);
+		}
 		Pane.getChildren().add(PlayerCircle[pid]);
 		PlayerPoints[pid]= new Label(Value);
 		PlayerPoints[pid].setText(Value);
-		PlayerPoints[pid].setLayoutX(700-10);
-		PlayerPoints[pid].setLayoutY(623-10);
+		PlayerPoints[pid].setLayoutX(PlayerPositionX[pid]+25);
+		PlayerPoints[pid].setLayoutY(PlayerPositionY[pid]-80);
 		PlayerPoints[pid].setFont( new Font("Arial",17));
 		PlayerPoints[pid].toFront();
 		Pane.getChildren().add(PlayerPoints[pid]);}

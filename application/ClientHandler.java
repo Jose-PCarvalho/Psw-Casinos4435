@@ -38,7 +38,7 @@ public class ClientHandler implements Runnable {
 				message =bufferedReader.readLine();
 				System.out.println("Message From Client:"+ message);
 				LastMessage=true;
-				if(message.equals("Shutdown")) {
+				if(message.contains("Shutdown")) {
 					closeEverything(socket,bufferedReader,bufferedWriter);
 					break;
 				}

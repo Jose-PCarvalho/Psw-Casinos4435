@@ -60,8 +60,13 @@ public class Gambler extends Base_participant {
     }
 
     public void setBet(int quantity){
+    	if(quantity>this.wallet) {
+    		this.bet+=this.wallet;
+    		this.wallet=0;
+    	}
+    	else {
         this.bet+=quantity;
-        this.wallet-=quantity;
+        this.wallet-=quantity;}
     }
     public void resetBet(){
         this.bet=0;
