@@ -37,6 +37,7 @@ public void newPlayer(int pid) {
 	numberOfPlayers = getNumberOfPlayers() + 1;
 	OccupiedSlots[pid]=true;
 	playerEndedTurn[pid]=false;
+	kick[pid]=false;
 }
 
 public String AvailableSpots() {
@@ -60,6 +61,7 @@ public void freeSpot(int pid) {
 		betEntered[pid]=false;
 		playerEndedTurn[pid]=false;
 		WinDrawLose[pid]=-1;
+		kick[pid]=false;
 	}
 }
 

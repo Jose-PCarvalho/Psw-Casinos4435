@@ -1,8 +1,17 @@
 package application;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import BlackJack.dkeep.Game;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -49,7 +58,7 @@ public class Controller {
  Game g;
  String GameState="";
  boolean playGridOn=false;
- int pid;
+ static int pid;
  boolean joined=false;
  ImageView JoinButton1= new ImageView(Join);
  ImageView JoinButton2= new ImageView(Join);
@@ -59,7 +68,9 @@ public class Controller {
  ImageView JoinButton6= new ImageView(Join);
  ImageView JoinButton7= new ImageView(Join);
  boolean buttonFlag=true;
- 
+ private static Socket socket;
+ private static  BufferedReader bufferedReader;
+ private static BufferedWriter bufferedWriter;
  
  
  
@@ -73,7 +84,8 @@ public class Controller {
 
  private String message="";
 
- 
+
+
  
 @FXML 
 public void BetEntered(MouseEvent e) {
@@ -138,18 +150,119 @@ public void setBetValue() {
  }
  
  public void initialize() {
+	 
 	 populateGrid();
 	 message="Player Joined";
 	 messageResquest();
 	 
 	 
-	 //g=new Game();
-	 //setBetValue(g.P.getWallet(),g.P.getBet());
+	 
+	  try {
+		socket = new Socket("localhost", 1234);
+		bufferedWriter=new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+		bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		  
+	} catch (UnknownHostException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	} catch (IOException e1) {
+		
+		e1.printStackTrace();
+	}
+	  ;
+	  
+	  
+	  
+
+
+	  new Thread(() -> {
+	    try{
+	        while(socket.isConnected() && !socket.isClosed()){
+	            String messageFromServer= bufferedReader.readLine();
+
+	            System.out.println(messageFromServer);
+
+	            Platform.runLater( () -> {
+	            	if(messageFromServer.contains("Available Spots") && this.joined==false) {
+	            		this.setJoinButton(messageFromServer);
+	            	}
+	            	if(messageFromServer.contains("GameState") && this.joined==true) {
+	            		this.absorbInfo(messageFromServer);
+	            	}
+
+	            });
+
+
+	        }
+	    }
+	    catch(IOException e){
+	    	e.printStackTrace();
+	    }
+
+	  }).start();
+	  
+	  
 	
-	 
-	 
+	  new Thread(() -> {
+	    while(socket.isConnected() && !socket.isClosed()){
+	    	Platform.runLater( () -> {
+	    		boolean ReadyFlag=this.isReady();
+	    		String message=this.getMessage();
+	    		
+	    		
+	    		if(ReadyFlag) {
+	    			try {
+	    			System.out.println("I just sent this message"+  message);
+   	    		bufferedWriter.write(message);
+     				bufferedWriter.newLine();
+     				bufferedWriter.flush();
+     				this.messageSent();
+	    			}catch(IOException e) {
+	    				e.printStackTrace();
+	    			}
+	    		}
+
+           });	
+			try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		}
+
+	  }).start();
+	  
+	  
  
  }
+
+ public static void shutdown() {
+	 System.out.println("Stage is closing");
+     try {
+     	try {
+     	if(bufferedWriter!=null) {
+     	bufferedWriter.write("Shutdown "+pid);
+			bufferedWriter.newLine();
+			bufferedWriter.flush();}}
+     	catch(IOException e) {
+     		e.printStackTrace();
+     	}
+     	if(socket!=null)
+				socket.close();
+     	if(bufferedReader!=null)
+				bufferedReader.close();
+			if(bufferedWriter!=null)
+				bufferedWriter.close();	
+			
+     	
+    
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+ }
+
  
  public void setJoinButton(String message) {
 	 
