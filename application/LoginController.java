@@ -50,15 +50,23 @@ public final class LoginController{
     private Stage stage;
     private Scene scene;
     private Parent root;
+    static Connection conn;
+    
+  
 
     public void userLogIn(ActionEvent event) throws IOException, SQLException{
-    	
-    	
+    	if(conn==null) {
+    		ConnectDB();
+    		}
+    	else if(conn.isClosed()) {
+    		ConnectDB();
+    	}
         if(usernameTF.getText().isEmpty() && PasswordTF.getText().isEmpty()){
             ErrorMsg.setText("Please enter your data.");
         }
-        if(UserNameExists(usernameTF.getText()) == true) {
-        	if(FindPassword(usernameTF.getText(), PasswordTF.getText()) == true) {
+        String username=usernameTF.getText();
+        if(UserNameExists(username) == true) {
+        	if(FindPassword(username, PasswordTF.getText()) == true) {
         		setUser();
         		changeScene(event,"../Resources/afterloginMC.fxml");
         		
@@ -77,11 +85,11 @@ public final class LoginController{
 		stage=(Stage) ((Node)event.getSource()).getScene().getWindow();
 		scene= new Scene(root);
 		stage.setScene(scene);
+		
     }
     public void setUser() throws SQLException {
     	
     	String sql_username_exist = "SELECT * FROM blackjack.users WHERE username='"+usernameTF.getText()+"'";
-    	Connection conn = getConnection();
     	Statement statement = conn.createStatement();
 		ResultSet resultSet = statement.executeQuery(sql_username_exist);
 		String reg_name=null;
@@ -91,18 +99,15 @@ public final class LoginController{
 		boolean reg_admin=false;
 		while (resultSet.next()) {
 			reg_name = resultSet.getString("name");
-	    	System.out.println(reg_name);
 			reg_password = resultSet.getString("password");
-	    	System.out.println(reg_password);
 		    reg_birth = resultSet.getDate("birthdate");
-	    	System.out.println(reg_birth);
 		    reg_money = resultSet.getInt("money");
-	    	System.out.println(reg_money);
 		    reg_admin = resultSet.getBoolean("admin");	
-	    	System.out.println(reg_admin);
         }
-		conn.close();
-		AfterLogIn.setAccount(reg_name,usernameTF.getText() , reg_password, reg_birth, reg_money, reg_admin);
+		
+		
+		
+		AfterLogIn.setAccount(reg_name,usernameTF.getText() , reg_password, reg_birth, reg_money, reg_admin, conn);
 		
     	
     }
@@ -119,25 +124,25 @@ public final class LoginController{
 
     
     
-    public static Connection getConnection() throws SQLException {
+    public static void ConnectDB() throws SQLException {
     	String url = "jdbc:postgresql://db.fe.up.pt/meec1a0405";
 		Properties props = new Properties();
 		props.setProperty("user","meec1a0405");
 		props.setProperty("password","IICQHlXb");
-		Connection conn=null;
+		conn=null;
 		try {
 			 conn = DriverManager.getConnection(url, props);
-			 return conn;
+			 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        return null;
+        
     }
     
     public static boolean UserNameExists (String usernameField) throws SQLException {
     	String sql_username_exist = "SELECT username FROM blackjack.users";
-    	Connection conn = getConnection();
+    	
     	
     	Statement statement = conn.createStatement();
 		ResultSet resultSet = statement.executeQuery(sql_username_exist);
@@ -148,13 +153,13 @@ public final class LoginController{
             }
         }
 		
-		conn.close();
+		
     	return false;
     }
     
     public static boolean FindPassword (String usernameField, String passField) throws SQLException {
     	String sql_pass= "SELECT password FROM blackjack.users WHERE username='"+usernameField+"'";
-    	Connection conn = getConnection();
+    	
     	
     	Statement statement = conn.createStatement();
 		ResultSet resultSet = statement.executeQuery(sql_pass);
@@ -165,26 +170,11 @@ public final class LoginController{
             }
         }
 		
-		conn.close();
+		
     	return false;
     }
     
-    public static boolean isAdmin (String usernameField) throws SQLException {
-    	String sql_isAdmin= "SELECT admin FROM blackjack.users WHERE username='"+usernameField+"'";
-    	Connection conn = getConnection();
-    	
-    	Statement statement = conn.createStatement();
-		ResultSet resultSet = statement.executeQuery(sql_isAdmin);
-		
-		while (resultSet.next()) {
-            if(usernameField.equals(resultSet.getString("admin")) == true) {
-            	return true;
-            }
-        }
-		
-		conn.close();
-    	return false;
-    }
+   
     
     
 }

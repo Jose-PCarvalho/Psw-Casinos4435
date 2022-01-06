@@ -7,6 +7,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import BlackJack.dkeep.Game;
@@ -71,6 +75,7 @@ public class Controller {
  private static Socket socket;
  private static  BufferedReader bufferedReader;
  private static BufferedWriter bufferedWriter;
+ static Account user;
  
  
  
@@ -83,9 +88,15 @@ public class Controller {
  private boolean SendMessage=false;
 
  private String message="";
+ private static Connection conn;
 
 
 
+
+public static void setAccount(Account acc, Connection connect){
+ 	user=acc;
+ 	conn=connect;
+ } 
  
 @FXML 
 public void BetEntered(MouseEvent e) {
@@ -286,7 +297,7 @@ public void setBetValue() {
 	     		JoinButton1.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
 	    			pid=Integer.parseInt(val);
 	    			joined=true;
-	    			setMessage("New Player on position:" + Integer.toString(pid));
+	    			setMessage("New Player on position:" + Integer.toString(pid)+"%"+user.username+"%"+Integer.toString(user.money));
 	    			messageResquest();
 	    			removeButtons();
 	    			event.consume();
@@ -303,7 +314,7 @@ public void setBetValue() {
 	     		JoinButton2.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
 	    			pid=Integer.parseInt(val);
 	    			joined=true;
-	    			setMessage("New Player on position:" + Integer.toString(pid));
+	    			setMessage("New Player on position:" + Integer.toString(pid)+"%"+user.username+"%"+Integer.toString(user.money));
 	    			messageResquest();
 	    			removeButtons();
 	    			event.consume();
@@ -321,7 +332,7 @@ public void setBetValue() {
 	     		JoinButton3.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
 	    			pid=Integer.parseInt(val);
 	    			joined=true;
-	    			setMessage("New Player on position:" + Integer.toString(pid));
+	    			setMessage("New Player on position:" + Integer.toString(pid)+"%"+user.username+"%"+Integer.toString(user.money));
 	    			messageResquest();
 	    			removeButtons();
 	    			event.consume();
@@ -338,7 +349,7 @@ public void setBetValue() {
 	     		JoinButton4.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
 	    			pid=Integer.parseInt(val);
 	    			joined=true;
-	    			setMessage("New Player on position:" + Integer.toString(pid));
+	    			setMessage("New Player on position:" + Integer.toString(pid)+"%"+user.username+"%"+Integer.toString(user.money));
 	    			messageResquest();
 	    			removeButtons();
 	    			event.consume();
@@ -355,7 +366,7 @@ public void setBetValue() {
 	     		JoinButton5.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
 	    			pid=Integer.parseInt(val);
 	    			joined=true;
-	    			setMessage("New Player on position:" + Integer.toString(pid));
+	    			setMessage("New Player on position:" + Integer.toString(pid)+"%"+user.username+"%"+Integer.toString(user.money));
 	    			messageResquest();
 	    			removeButtons();
 	    			event.consume();
@@ -373,7 +384,7 @@ public void setBetValue() {
 	     		JoinButton6.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
 	    			pid=Integer.parseInt(val);
 	    			joined=true;
-	    			setMessage("New Player on position:" + Integer.toString(pid));
+	    			setMessage("New Player on position:" + Integer.toString(pid)+"%"+user.username+"%"+Integer.toString(user.money));
 	    			messageResquest();
 	    			removeButtons();
 	    			event.consume();
@@ -390,7 +401,7 @@ public void setBetValue() {
 	     		JoinButton7.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
 	    			pid=Integer.parseInt(val);
 	    			joined=true;
-	    			setMessage("New Player on position:" + Integer.toString(pid));
+	    			setMessage("New Player on position:" + Integer.toString(pid)+"%"+user.username+"%"+Integer.toString(user.money));
 	    			messageResquest();
 	    			removeButtons();
 	    			event.consume();
@@ -627,7 +638,15 @@ public void removeCards(int id, int n) {
 	
 	public void drawPlayer(int pid,String Balance,String Bet,String Size,String Value,String Cards) {
 		if(this.pid==pid) {
-			setBetValue(Integer.parseInt(Balance),Integer.parseInt(Bet));
+			user.money=Integer.parseInt(Balance);
+			setBetValue(user.money,Integer.parseInt(Bet));
+			try {
+				UpdateMoney(user.username,user.money);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
 			
 		}
 		removeCards(pid,Integer.parseInt(Size));
@@ -665,6 +684,16 @@ public void removeCards(int id, int n) {
 		Pane.getChildren().add(PlayerPoints[pid]);}
 		
 	}
+	
+	 public void UpdateMoney (String username, int actual_money) throws SQLException {    	
+	    	String update_account_money = "UPDATE blackjack.users SET money='"+actual_money+"' WHERE username='"+username+"'";
+	    	Statement statement = conn.createStatement();
+			statement.executeUpdate(update_account_money);
+			System.out.println("ATÃO");
+				
+			
+			
+	    }
 }
 
 

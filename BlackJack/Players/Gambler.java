@@ -10,10 +10,10 @@ public class Gambler extends Base_participant {
     private int bet;
     private boolean Active;
 
-    public Gambler(String name,int age, String gender){
-        super(name, age, gender);
+    public Gambler(String name,int balance){
+        super(name);
         newHands();    
-        wallet=50000;
+        wallet=balance;
     }
 
     public void newHands(){

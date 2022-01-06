@@ -25,15 +25,15 @@ public class Game{
 
 
 public Game(){
-    D=new Dealer("Dolores Aveiro", 66, "Feminino", 4);
+    D=new Dealer("Dolores Aveiro", 4);
     //P=new Gambler("Nuno Daniel",21,"Masculino");
     inter=new cli();
     start=true;
 }
 
 
-public void newPlayer(int pid) {
-	Players[pid]=new Gambler("Nuno Daniel",21,"Masculino");
+public void newPlayer(int pid, String name, int Balance) {
+	Players[pid]=new Gambler(name,Balance);
 	numberOfPlayers = getNumberOfPlayers() + 1;
 	OccupiedSlots[pid]=true;
 	playerEndedTurn[pid]=false;

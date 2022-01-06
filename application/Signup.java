@@ -60,7 +60,6 @@ public class Signup {
     }
 
     public void CreateAccount(ActionEvent Event) throws IOException, InterruptedException, SQLException {
-        Main m = new Main();
         if (usernameField.getText().isEmpty() || AgeBD.getValue() == null || PasswordField.getText().isEmpty() || NameField.getText().isEmpty()) {
             CAError.setText("Please input data.");
         }
@@ -74,7 +73,7 @@ public class Signup {
         		CAError.setText("UserName already exists. Choose other.");
         	}
         	else {
-        		InsertNewUser(NameField.getText(), usernameField.getText(), PasswordField.getText(), AgeBD.getValue(), 1000, true);
+        		InsertNewUser(NameField.getText(), usernameField.getText(), PasswordField.getText(), AgeBD.getValue(), 1000, false);
         		CAError.setText("Account successfully created.");
         		//Thread.sleep(500);
         		changeScene(Event,"../Resources/login.fxml");

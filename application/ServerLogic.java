@@ -36,10 +36,14 @@ public class ServerLogic {
     					
     				}
     				if(server.messageList.get(i).contains("New Player on position:")) {
+    					String lines[] = server.messageList.get(i).split("%");
+    					System.out.println(server.messageList.get(i));
     					System.out.println("Server: New Player");
-    					String numberOnly= server.messageList.get(i).replaceAll("[^0-9]", "");
+    					String numberOnly= lines[0].replaceAll("[^0-9]", "");
     					System.out.println("Server: New Player" + numberOnly);
-    					g.newPlayer(Integer.parseInt(numberOnly));
+    					String userName=lines[1];
+    					String balance=lines[2];
+    					g.newPlayer(Integer.parseInt(numberOnly),userName,Integer.parseInt(balance));
     					server.broadcastMessage(g.getInfo());
     					
     				}
