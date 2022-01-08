@@ -1091,7 +1091,7 @@ public class AfterLogIn implements Initializable {
         EnterTable1.setOnMouseClicked(event -> {
            
             try {
-            	Controller.setAccount(user, conn);
+            	//Controller.setAccount(user, conn);
                 changeScene(event,"../Resources/Main.fxml");
             } catch (IOException e) {
                 e.printStackTrace();
@@ -1248,8 +1248,7 @@ public class AfterLogIn implements Initializable {
                 Table1Text.setVisible(true);
             }
             else {
-                //change scene
-               
+
                 try {
                     changeScene(event,"../Resources/Main.fxml");
                 } catch (IOException e) {

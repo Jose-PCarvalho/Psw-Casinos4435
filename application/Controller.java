@@ -89,13 +89,16 @@ public class Controller {
 
  private String message="";
  private static Connection conn;
+ static int table;
+ 
 
 
 
 
-public static void setAccount(Account acc, Connection connect){
+public static void setAccount(Account acc, Connection connect,int t){
  	user=acc;
  	conn=connect;
+ 	table=t;
  } 
  
 @FXML 
@@ -110,8 +113,8 @@ public void BetEntered(MouseEvent e) {
 	        Integer colIndex = GridPane.getColumnIndex(clickedNode);
 	       
 	        currentBet=BetValues[colIndex];
-	        setMessage("Player"+Integer.toString(pid)+ ":Bet Entered" + currentBet);
-	        messageResquest();
+	        setMessage( "Bet Entered%" + currentBet+"%"+Integer.toString(pid)+"%"+table);
+	        messageRequest();
 	        
 	        
 
@@ -125,8 +128,8 @@ public void BetEntered(MouseEvent e) {
 public void BetConfirmed() {
 	if(GameState.equals("Betting") && currentBet>0) {
 		ConfirmButton.setImage(null);
-		setMessage("Player"+Integer.toString(pid)+ ":Bet Confirmed");
-        messageResquest();
+		setMessage("Bet Confirmed%"+pid+"%"+table);
+        messageRequest();
 		currentBet=0;
 	}
 	
@@ -163,8 +166,8 @@ public void setBetValue() {
  public void initialize() {
 	 
 	 populateGrid();
-	 message="Player Joined";
-	 messageResquest();
+	 message="Player Joined%"+table+"%"+user.name;
+	 messageRequest();
 	 
 	 
 	 
@@ -245,6 +248,19 @@ public void setBetValue() {
 	  }).start();
 	  
 	  
+	  
+	  Platform.runLater( () -> {
+  		
+  		Stage stage=(Stage) Pane.getScene().getWindow();
+  		stage.setOnCloseRequest(event -> {
+  		    shutdown();
+  		    
+  		});
+  		
+  		
+  	});
+	  
+	  
  
  }
 
@@ -253,7 +269,7 @@ public void setBetValue() {
      try {
      	try {
      	if(bufferedWriter!=null) {
-     	bufferedWriter.write("Shutdown "+pid);
+     	bufferedWriter.write("Leave Table%"+pid+"%"+table);
 			bufferedWriter.newLine();
 			bufferedWriter.flush();}}
      	catch(IOException e) {
@@ -297,8 +313,8 @@ public void setBetValue() {
 	     		JoinButton1.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
 	    			pid=Integer.parseInt(val);
 	    			joined=true;
-	    			setMessage("New Player on position:" + Integer.toString(pid)+"%"+user.username+"%"+Integer.toString(user.money));
-	    			messageResquest();
+	    			setMessage("New Player on position:" + Integer.toString(pid)+"%"+user.username+"%"+Integer.toString(user.money)+"%"+table);
+	    			messageRequest();
 	    			removeButtons();
 	    			event.consume();
 	    		     });}
@@ -314,8 +330,8 @@ public void setBetValue() {
 	     		JoinButton2.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
 	    			pid=Integer.parseInt(val);
 	    			joined=true;
-	    			setMessage("New Player on position:" + Integer.toString(pid)+"%"+user.username+"%"+Integer.toString(user.money));
-	    			messageResquest();
+	    			setMessage("New Player on position:" + Integer.toString(pid)+"%"+user.username+"%"+Integer.toString(user.money)+"%"+table);
+	    			messageRequest();
 	    			removeButtons();
 	    			event.consume();
 	    		     });
@@ -332,8 +348,8 @@ public void setBetValue() {
 	     		JoinButton3.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
 	    			pid=Integer.parseInt(val);
 	    			joined=true;
-	    			setMessage("New Player on position:" + Integer.toString(pid)+"%"+user.username+"%"+Integer.toString(user.money));
-	    			messageResquest();
+	    			setMessage("New Player on position:" + Integer.toString(pid)+"%"+user.username+"%"+Integer.toString(user.money)+"%"+table);
+	    			messageRequest();
 	    			removeButtons();
 	    			event.consume();
 	    		     });}
@@ -349,8 +365,8 @@ public void setBetValue() {
 	     		JoinButton4.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
 	    			pid=Integer.parseInt(val);
 	    			joined=true;
-	    			setMessage("New Player on position:" + Integer.toString(pid)+"%"+user.username+"%"+Integer.toString(user.money));
-	    			messageResquest();
+	    			setMessage("New Player on position:" + Integer.toString(pid)+"%"+user.username+"%"+Integer.toString(user.money)+"%"+table);
+	    			messageRequest();
 	    			removeButtons();
 	    			event.consume();
 	    		     });}
@@ -366,8 +382,8 @@ public void setBetValue() {
 	     		JoinButton5.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
 	    			pid=Integer.parseInt(val);
 	    			joined=true;
-	    			setMessage("New Player on position:" + Integer.toString(pid)+"%"+user.username+"%"+Integer.toString(user.money));
-	    			messageResquest();
+	    			setMessage("New Player on position:" + Integer.toString(pid)+"%"+user.username+"%"+Integer.toString(user.money)+"%"+table);
+	    			messageRequest();
 	    			removeButtons();
 	    			event.consume();
 	    		     });}
@@ -384,8 +400,8 @@ public void setBetValue() {
 	     		JoinButton6.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
 	    			pid=Integer.parseInt(val);
 	    			joined=true;
-	    			setMessage("New Player on position:" + Integer.toString(pid)+"%"+user.username+"%"+Integer.toString(user.money));
-	    			messageResquest();
+	    			setMessage("New Player on position:" + Integer.toString(pid)+"%"+user.username+"%"+Integer.toString(user.money)+"%"+table);
+	    			messageRequest();
 	    			removeButtons();
 	    			event.consume();
 	    		     });}
@@ -401,8 +417,8 @@ public void setBetValue() {
 	     		JoinButton7.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
 	    			pid=Integer.parseInt(val);
 	    			joined=true;
-	    			setMessage("New Player on position:" + Integer.toString(pid)+"%"+user.username+"%"+Integer.toString(user.money));
-	    			messageResquest();
+	    			setMessage("New Player on position:" + Integer.toString(pid)+"%"+user.username+"%"+Integer.toString(user.money)+"%"+table);
+	    			messageRequest();
 	    			removeButtons();
 	    			event.consume();
 	    		     });}
@@ -458,17 +474,17 @@ public void Play(MouseEvent e) {
 	    	Integer colIndex = GridPane.getColumnIndex(clickedNode);
 	    	if(colIndex==0) {
 	    		
-	    		 setMessage("Playing: Player" + Integer.toString(pid) +" Double");
-		         messageResquest();
+	    		 setMessage("Playing Double%" +pid +"%"+ table);
+		         messageRequest();
 	    		
 	    	}
 	    	else if(colIndex==1) {
-	    		setMessage("Playing: Player" + Integer.toString(pid) +" Hit");
-		        messageResquest();
+	    		setMessage("Playing Hit%" + pid +"%"+ table);
+		        messageRequest();
 	    	}
 	    	else if(colIndex==2) {
-	    		setMessage("Playing: Player" + Integer.toString(pid) +" Stand");
-		        messageResquest();
+	    		setMessage("Playing Stand%" + pid + "%"+table);
+		        messageRequest();
 	    	}
 	    	
 	        
@@ -497,11 +513,11 @@ public void gameOver(String Result) {
 public void newGame() {
 	
 	Pane.getChildren().remove(FinalScreen);
-	setMessage("New Game");
+	setMessage("New Game%"+table);
 	for (int i=0;i<8;i++) {
 		removeCards(i,10);
 	}
-    messageResquest();
+    messageRequest();
 	
 	
 	
@@ -535,7 +551,7 @@ public void removeCards(int id, int n) {
 	public void setMessage(String str) {	
 		 message=str;
 	}
-	public void messageResquest() {
+	public void messageRequest() {
 		SendMessage=true;
 	}
 	public void messageSent() {
@@ -554,6 +570,9 @@ public void removeCards(int id, int n) {
 				System.out.println(a);
 			}
 			if(i==0) {
+				int t=Integer.parseInt(Values[2]);
+				if(t!=table) 
+					break;
 				GameState=Values[1];
 				if(GameState.contains("Playing") && playGridOn==false) {
 					setPlayGrid();	

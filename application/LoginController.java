@@ -68,7 +68,7 @@ public final class LoginController{
         if(UserNameExists(username) == true) {
         	if(FindPassword(username, PasswordTF.getText()) == true) {
         		setUser();
-        		changeScene(event,"../Resources/afterloginMC.fxml");
+        		changeScene(event,"../Resources/AfterLogin.fxml");
         		
         	}
         	else {
@@ -107,7 +107,7 @@ public final class LoginController{
 		
 		
 		
-		AfterLogIn.setAccount(reg_name,usernameTF.getText() , reg_password, reg_birth, reg_money, reg_admin, conn);
+		AfterLoginController.setAccount(reg_name,usernameTF.getText() , reg_password, reg_birth, reg_money, reg_admin, conn);
 		
     	
     }
