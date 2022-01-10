@@ -29,6 +29,7 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
@@ -470,7 +471,7 @@ public class AfterLogIn implements Initializable {
     public static Date birth;
     public static int balance;
     public static boolean admin;
-    
+    private static Connection conn;
     
     public void changeScene(ActionEvent event, String path) throws IOException {
     	FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
@@ -491,12 +492,9 @@ public class AfterLogIn implements Initializable {
         changeScene(event,"../Resources/login.fxml");
     }
     
-    public static void setAccount(String name, String username, String password, Date birth, int balance, boolean admin){
+    public static void setAccount(String name, String username, String password, Date birth, int balance, boolean admin, Connection connect){
     	user= new Account(name, username, password, birth, balance,admin);
-    	/*Prof_Name.setText(" � Profile Name: " + user.name);
-    	Prof_UserName.setText(" � Username: " + user.username);
-    	Prof_Password.setText(" � Password: " + password.replaceAll(user.password, "*"));
-        Balance.setText("� Current Balance: " + user.money);*/
+    	conn=connect;
     }
 
     @Override
@@ -504,7 +502,7 @@ public class AfterLogIn implements Initializable {
     	
     	Prof_Name.setText(" � Profile Name: " + user.name);
     	Prof_UserName.setText(" � Username: " + user.username);
-    	Prof_Password.setText(" � Password: " + user.password.replaceAll(user.password, "*"));
+    	Prof_Password.setText(" � Password: " + user.password.replaceAll("(?s).", "*"));
         Balance.setText("� Current Balance: " + user.money);
         Slider.setTranslateX(400);
         AccountTab.setTranslateX(-1400);
@@ -1093,6 +1091,7 @@ public class AfterLogIn implements Initializable {
         EnterTable1.setOnMouseClicked(event -> {
            
             try {
+            	//Controller.setAccount(user, conn);
                 changeScene(event,"../Resources/Main.fxml");
             } catch (IOException e) {
                 e.printStackTrace();
@@ -1112,7 +1111,7 @@ public class AfterLogIn implements Initializable {
 
     private void BackgroundMusic() {
         Music.setOnMouseClicked(event ->{
-        	String path = getClass().getResource("../Resources/music.mp3").getPath();
+            String path = getClass().getResource("../resources/music.mp3").getPath();
             Media media = new Media(new File(path).toURI().toString());
             mediaPlayer = new AudioClip(media.getSource());
             mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
@@ -1173,14 +1172,14 @@ public class AfterLogIn implements Initializable {
             SlidePane.setVisible(true);
             Confirm.setVisible(true);
             MoneyAmount.setVisible(false);
-            SlideBut.setMax(balance);
+            SlideBut.setMax(user.money);
             flag = 1;
         });
 
         DepositBut.setOnMouseClicked(event -> {
             MoneyAmount.setVisible(true);
             Confirm.setVisible(true);
-            SlideBut.setMax(balance);
+            SlideBut.setMax(user.money);
             SlidePane.setVisible(false);
             flag = 2;
         });
@@ -1195,15 +1194,15 @@ public class AfterLogIn implements Initializable {
             }
             else {
                 if (flag == 1) {
-                    balance -= s_money;
+                    user.money -= s_money;
                     flag_s = true;
-                    SlideBut.setMax(balance);
+                    SlideBut.setMax(user.money);
                     //System.out.println("tou1");
                 }
                 else if(flag == 2){
-                    balance += money;
+                    user.money += money;
                     flag_s = true;
-                    SlideBut.setMax(balance);
+                    SlideBut.setMax(user.money);
                     //System.out.println("tou8");
                 }
             }
@@ -1212,9 +1211,15 @@ public class AfterLogIn implements Initializable {
                 Confirm.setVisible(false);
                 MoneyAmount.setVisible(false);
                 SlidePane.setVisible(false);
-                Balance.setText("- Current Balance: " + balance);
+                Balance.setText("Current Balance: " + user.money);
                 SlideBut.setMax(balance);
                 flag = 0;
+                try {
+					UpdateMoney(user.username,user.money);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
         });
 
@@ -1243,8 +1248,7 @@ public class AfterLogIn implements Initializable {
                 Table1Text.setVisible(true);
             }
             else {
-                //change scene
-               
+
                 try {
                     changeScene(event,"../Resources/Main.fxml");
                 } catch (IOException e) {
@@ -1398,13 +1402,26 @@ public class AfterLogIn implements Initializable {
     }
     
     public void UpdateMoney (String username, int actual_money) throws SQLException {    	
-    	Connection conn = getConnection();
     	String update_account_money = "UPDATE blackjack.users SET money='"+actual_money+"' WHERE username='"+username+"'";
-
     	Statement statement = conn.createStatement();
 		statement.executeUpdate(update_account_money);
 		
-		conn.close();
+    }
+    
+    public void getUser(String username) throws SQLException {
+    	
+    	String sql_username_exist = "SELECT money, password FROM blackjack.users WHERE username='"+user.username+"'";
+    	Statement statement = conn.createStatement();
+		ResultSet resultSet = statement.executeQuery(sql_username_exist);
+		while (resultSet.next()) {
+			user.password = resultSet.getString("password");
+		    user.money = resultSet.getInt("money");
+		}
+
+
+    	
+    	
+    	
     }
 }
 

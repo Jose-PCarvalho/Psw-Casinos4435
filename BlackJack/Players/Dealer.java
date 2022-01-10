@@ -11,8 +11,8 @@ public class Dealer extends Base_participant {
 
 
 
-    public Dealer(String name,int age, String gender,int numberOfDecks){
-        super(name, age, gender);
+    public Dealer(String name,int numberOfDecks){
+        super(name);
         this.dShoe=new Shoe(numberOfDecks);
         this.DealerHand=new Hand("Dealer");
         

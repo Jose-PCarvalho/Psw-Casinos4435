@@ -19,25 +19,27 @@ public class Game{
     private boolean[] playerEndedTurn= {false,false,false,false,false,false,false,false};
     private int numberOfWins=0;
     private boolean[] kick= {false,false,false,false,false,false,false,false};
+    int table;
     
-    
 
 
 
-public Game(){
-    D=new Dealer("Dolores Aveiro", 66, "Feminino", 4);
-    //P=new Gambler("Nuno Daniel",21,"Masculino");
-    inter=new cli();
+public Game(int table){
+    D=new Dealer("Dolores Aveiro", 4);
+    this.table=table;
     start=true;
 }
 
 
-public void newPlayer(int pid) {
-	Players[pid]=new Gambler("Nuno Daniel",21,"Masculino");
+public void newPlayer(int pid, String name, int Balance) {
+	Players[pid]=new Gambler(name,Balance);
 	numberOfPlayers = getNumberOfPlayers() + 1;
 	OccupiedSlots[pid]=true;
 	playerEndedTurn[pid]=false;
 	kick[pid]=false;
+	if(gameState.equals("Waiting for Players")) {
+		newGame();
+	}
 }
 
 public String AvailableSpots() {
@@ -172,7 +174,7 @@ public void endGame() {
 
 public void PlayerPlay(String Message,int pid) {
 	if(playerEndedTurn[pid]==false) {
-	if(Message.contains("Playing")==true) {
+	
 		if(Message.contains("Hit")==true) {
 			D.setAction("Player Hit");
             D.doAction(Players[pid]);
@@ -196,7 +198,7 @@ public void PlayerPlay(String Message,int pid) {
             D.doAction(Players[pid]);
             Players[pid].setBet(Players[pid].getBet()); 
             }
-		}}
+		}
   checkPlayerTurns();
 }
 
@@ -257,7 +259,7 @@ public void setGameState(String gameState) {
 
 
 public String getInfo(){
-	String info="GameState:"+ getGameState()+"%";
+	String info="GameState:"+ getGameState()+":"+table+"%";
 	info+= "Dealer" + ":Hand Size:" + D.DealerHand.getHandsize() + ":Hand Value:" + D.DealerHand.getHandValue() +":Hand Cards:" +D.DealerHand.toString()+" %";
 	for(int i=1;i<8;i++) {
 		if(OccupiedSlots[i] && kick[i]==false) {
@@ -269,6 +271,24 @@ public String getInfo(){
 			info+="Player"+Integer.toString(i)+":" +"Not Playing"+"%";
 		}
 	}
+	
+	return info;
+}
+public String lobbyInfo(){
+	String info="";
+	info+= D.getName()+"%";
+	for(int i=1;i<8;i++) {
+		if(OccupiedSlots[i] && kick[i]==false) {
+			
+			info+= Players[i].getName()+"%";
+
+		}
+		else{
+			info+=" %";
+		}
+		
+	}
+	info+="&";
 	
 	return info;
 }
@@ -318,6 +338,14 @@ public void checkPlayerTurns() {
 	}
 		
 	}
+}
+
+public void kickPlayer(int i) {
+	kick[i]=true;
+}
+
+public void changeDealerName(String Name) {
+	D.setName(Name);
 }
 
 }

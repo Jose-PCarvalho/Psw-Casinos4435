@@ -42,6 +42,10 @@ public class ClientHandler implements Runnable {
 					closeEverything(socket,bufferedReader,bufferedWriter);
 					break;
 				}
+				else if(message.contains("Leave Table")) {
+					closeEverything(socket,bufferedReader,bufferedWriter);
+					break;
+				}
 				
 				
 			}catch(IOException e) {

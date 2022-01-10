@@ -9,10 +9,9 @@ public class Base_participant {
     
     private String gender;
 
-    public Base_participant(String name,int age, String gender){
+    public Base_participant(String name){
         this.name=name;
-        this.age=age;
-        this.gender=gender;
+       
     }
 
     public int getAge(){
@@ -21,6 +20,10 @@ public class Base_participant {
 
     public String getName(){
         return name;
+    }
+    
+    public void setName(String name){
+        this.name=name;
     }
     
     public String getGender(){
