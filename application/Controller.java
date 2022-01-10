@@ -1,7 +1,9 @@
 package application;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -13,20 +15,38 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
+
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXSlider;
+import com.jfoenix.controls.JFXToggleButton;
+
 import BlackJack.dkeep.Game;
 import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -45,10 +65,45 @@ public class Controller {
  @FXML 
  Label BetGUI;
  @FXML
- ImageView ConfirmButton;
- @FXML
  GridPane PlayGrid;
- @FXML AnchorPane Pane;
+ @FXML 
+ AnchorPane Pane;
+@FXML 
+Button MenuButton;
+@FXML 
+JFXButton HelpBut;
+@FXML 
+JFXToggleButton Music;
+@FXML 
+JFXSlider slideBut;
+@FXML 
+AnchorPane Menu;
+@FXML 
+Label  NameLabel;
+@FXML 
+Label usernameLabel;
+@FXML 
+Label passwordLabel;
+@FXML 
+Label balanceLabel;
+@FXML 
+AnchorPane accMenu;
+@FXML 
+Button confirmButton;
+@FXML 
+Button pictureButton;
+@FXML 
+Button withdrawButton;
+@FXML 
+Button depositButton;
+@FXML 
+Button closeAcc;
+@FXML 
+Button MyAccBut;
+@FXML 
+TextField depositTF;
+@FXML 
+ImageView ProfileImage;
  
  final int[] BetValues= {1,2,5,10,20,25,50,100,250,500,1000,2000,5000};
  int currentBet=0;
@@ -61,9 +116,18 @@ public class Controller {
  ImageView FinalScreen;
  Game g;
  String GameState="";
+ private Stage stage;
+ private Scene scene;
+ private Parent root;
+ private File filePath;
+ private AudioClip mediaPlayer;
  boolean playGridOn=false;
  static int pid;
  boolean joined=false;
+ boolean MenuFlag=false;
+ boolean accMenuFlag=false;
+ boolean operationFlag=false;
+ int operation;
  ImageView JoinButton1= new ImageView(Join);
  ImageView JoinButton2= new ImageView(Join);
  ImageView JoinButton3= new ImageView(Join);
@@ -71,6 +135,9 @@ public class Controller {
  ImageView JoinButton5= new ImageView(Join);
  ImageView JoinButton6= new ImageView(Join);
  ImageView JoinButton7= new ImageView(Join);
+ Button ConfirmButton = new Button("Confirm Bet");
+ Button CancelButton = new Button("Cancel Bet");
+ Button AllIn = new Button("All-In");
  boolean buttonFlag=true;
  private static Socket socket;
  private static  BufferedReader bufferedReader;
@@ -82,8 +149,8 @@ public class Controller {
  
  ImageView[][] PlayersHands= new ImageView[8][10];
  ImageView[] DealerHand= new ImageView[10];
- int PlayerPositionX[]= {0,185,347,507,682,865,1029,1183};
- int PlayerPositionY[]= {0,556,629,688,697,687,637,553};
+ int PlayerPositionX[]= {0,225,400,585,782,980,1170,1345};
+ int PlayerPositionY[]= {0,590,678,738,750,734,676,588};
  int PlayerRotation[]= {0,30,20,10,0,-10,-20,-30};
 
  private boolean SendMessage=false;
@@ -109,7 +176,8 @@ public void BetEntered(MouseEvent e) {
 	 Node clickedNode = e.getPickResult().getIntersectedNode();
 	    if (clickedNode != ChipGrid) {
 	        if(currentBet==0) {
-	        	ConfirmButton.setImage(confirmImage);
+	        	ConfirmButton.setVisible(true);
+	        	CancelButton.setVisible(true);
 	        	confirmFlag=false;
 	        }
 	        Integer colIndex = GridPane.getColumnIndex(clickedNode);
@@ -129,7 +197,6 @@ public void BetEntered(MouseEvent e) {
 
 public void BetConfirmed() {
 	if(GameState.equals("Betting") && currentBet>0) {
-		ConfirmButton.setImage(null);
 		setMessage("Bet Confirmed%"+pid+"%"+table);
         messageRequest();
 		currentBet=0;
@@ -170,8 +237,79 @@ public void setBetValue() {
 	 populateGrid();
 	 message="Player Joined%"+table+"%"+user.name;
 	 messageRequest();
+	 NameLabel.setText("Profile Name : " + user.name);
+ 	 usernameLabel.setText("Username : " + user.username);
+ 	 passwordLabel.setText("Password : " + user.password.replaceAll("(?s).", "*"));
+     balanceLabel.setText("Current Balance : " + user.money);
+     Menu.setVisible(false);
+     accMenu.setVisible(false);
+     confirmButton.setVisible(false);
+     depositTF.setVisible(false);
+     slideBut.setVisible(false);
+	 ConfirmButton = new Button("Confirm Bet");
+	 ConfirmButton.setFont(Font.font("System", 18));
+	 ConfirmButton.setTextFill(Color.WHITE);
+	 ConfirmButton.setLayoutX(1450);
+	 ConfirmButton.setLayoutY(750);
+	 ConfirmButton.setPrefWidth(156);
+	 ConfirmButton.setPrefHeight(45);
+	 ConfirmButton.setVisible(false);
+	 ConfirmButton.setCursor(Cursor.HAND);
+	 ConfirmButton.setStyle("-fx-background-color : grey;"+"-fx-background-radius : 20;");
+	 ConfirmButton.applyCss();
+	 ConfirmButton.setOnMouseClicked( event -> { 
+		 
+		 if(GameState.equals("Betting") && currentBet>0) {
+				ConfirmButton.setVisible(false);
+				CancelButton.setVisible(false);
+				setMessage("Bet Confirmed%"+pid+"%"+table);
+		        messageRequest();
+				currentBet=0;
+			}
+		 
+		 
+	 });
 	 
+	 CancelButton = new Button("Cancel Bet");
+	 CancelButton.setFont(Font.font("System", 18));
+	 CancelButton.setTextFill(Color.WHITE);
+	 CancelButton.setLayoutX(1450);
+	 CancelButton.setLayoutY(815);
+	 CancelButton.setPrefWidth(156);
+	 CancelButton.setPrefHeight(45);
+	 CancelButton.setVisible(false);
+	 CancelButton.setCursor(Cursor.HAND);
+	 CancelButton.setStyle("-fx-background-color : grey;"+"-fx-background-radius : 20;");
+	 CancelButton.applyCss();
+	 /*ConfirmButton.setOnMouseClicked( event -> { 
+     
+		 if(GameState.equals("Betting") && currentBet>0) {
+			 	ConfirmButton.setVisible(false);
+				CancelButton.setVisible(false);
+				setMessage("Bet Canceled%"+pid+"%"+table);
+		        messageRequest();
+				currentBet=0;
+			}
+		 
+		 
+	 });
+	 */
 	 
+	 AllIn = new Button("All-In");
+	 AllIn.setFont(Font.font("System", 20));
+	 AllIn.setTextFill(Color.WHITE);
+	 AllIn.setLayoutX(1200);
+	 AllIn.setLayoutY(878);
+	 AllIn.setPrefWidth(93);
+	 AllIn.setPrefHeight(88);
+	 AllIn.setVisible(true);
+	 AllIn.setCursor(Cursor.HAND);
+	 AllIn.setStyle("-fx-background-color : grey;"+"-fx-background-radius : 60;");
+	 AllIn.applyCss();
+	 
+	 Pane.getChildren().add(ConfirmButton);
+	 Pane.getChildren().add(CancelButton);
+	 Pane.getChildren().add(AllIn);
 	 
 	  try {
 		socket = new Socket("localhost", 1234);
@@ -266,6 +404,131 @@ public void setBetValue() {
  
  }
 
+ @FXML
+	private void MenuPressed() {
+		if(MenuFlag==true) {
+			Menu.setVisible(false);
+			MenuFlag=false;
+			Menu.toFront();
+		}
+		else if(MenuFlag==false) {
+			Menu.setVisible(true);
+			MenuFlag=true;
+			Menu.toFront();
+		}
+		
+	}
+	@FXML
+	private void openAccMenu() {
+		accMenuFlag=true;
+		accMenu.setVisible(accMenuFlag);
+	    accMenu.toFront();
+		
+	}
+	@FXML
+	private void closeAccMenu() {
+		accMenuFlag=false;
+		accMenu.setVisible(accMenuFlag);
+		accMenu.toFront();
+		
+	}
+	
+	@FXML
+	private void depositMoney() {
+		if(operationFlag==false) {
+		depositTF.setVisible(true);
+		confirmButton.setVisible(true);
+		operation=1;
+		operationFlag=true;}
+	}
+	@FXML
+	private void withdraw() {
+		if(operationFlag==false) {
+		slideBut.setVisible(true);
+		confirmButton.setVisible(true);
+		slideBut.setMax(user.money);
+		operation=2;
+		operationFlag=true;}
+	}
+	
+	
+	@FXML
+	private void confirm() {
+		if(operation==1) {
+			user.money=user.money+Integer.parseInt(depositTF.getText());
+			try {
+				UpdateMoney(user.username,user.money);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			balanceLabel.setText("Current Balance: " +user.money);
+			depositTF.clear();
+			depositTF.setVisible(false);
+			confirmButton.setVisible(false);
+			operationFlag=false;
+		}
+		
+		
+		if(operation==2) {
+			user.money-=slideBut.getValue();
+			try {
+				UpdateMoney(user.username,user.money);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			balanceLabel.setText("Current Balance: " + user.money);
+			
+			slideBut.setVisible(false);
+			confirmButton.setVisible(false);
+			operationFlag=false;
+		}
+	}
+	
+	@FXML
+    public void chooseImage() throws IOException{
+        Stage stage = (Stage) pictureButton.getScene().getWindow();
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open image");
+        
+        
+        this.filePath = fileChooser.showOpenDialog(stage);
+        
+        try {
+        	BufferedImage bufferedImage = ImageIO.read(filePath);
+        	Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+        	ProfileImage.setImage(image);
+        	ProfileImage.setFitWidth(200.0);
+        	ProfileImage.setFitHeight(150.0);
+        	
+        	ProfileImage.setSmooth(true);
+        	ProfileImage.setCache(true);
+        	
+        	
+        }catch (IOException e) {
+        	System.err.println(e.getMessage());
+        }
+    }
+    
+    @FXML
+    private void BackgroundMusic() {
+       
+            String path = getClass().getResource("../resources/music.mp3").getPath();
+            Media media = new Media(new File(path).toURI().toString());
+            mediaPlayer = new AudioClip(media.getSource());
+            mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+            mediaPlayer.setVolume(0.1);
+            if(Music.isSelected()){
+                mediaPlayer.play();
+            }
+            else if(!(Music.isSelected())){
+                mediaPlayer.stop();
+            }
+        
+    }
+    
+    
  public static void shutdown() {
 	 System.out.println("Stage is closing");
      try {
@@ -311,6 +574,7 @@ public void setBetValue() {
 	    		JoinButton1.setSmooth(true);
 	    		JoinButton1.setFitWidth(75);
 	    		JoinButton1.toFront();
+	    		JoinButton1.setCursor(Cursor.HAND);
 	     		Pane.getChildren().add(JoinButton1);
 	     		JoinButton1.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
 	    			pid=Integer.parseInt(val);
@@ -328,6 +592,7 @@ public void setBetValue() {
 	    		JoinButton2.setSmooth(true);
 	    		JoinButton2.setFitWidth(75);
 	    		JoinButton2.toFront();
+	    		JoinButton2.setCursor(Cursor.HAND);
 	     		Pane.getChildren().add(JoinButton2);
 	     		JoinButton2.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
 	    			pid=Integer.parseInt(val);
@@ -346,6 +611,7 @@ public void setBetValue() {
 	    		JoinButton3.setSmooth(true);
 	    		JoinButton3.setFitWidth(75);
 	    		JoinButton3.toFront();
+	    		JoinButton3.setCursor(Cursor.HAND);
 	     		Pane.getChildren().add(JoinButton3);
 	     		JoinButton3.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
 	    			pid=Integer.parseInt(val);
@@ -363,6 +629,7 @@ public void setBetValue() {
 	    		JoinButton4.setSmooth(true);
 	    		JoinButton4.setFitWidth(75);
 	    		JoinButton4.toFront();
+	    		JoinButton4.setCursor(Cursor.HAND);
 	     		Pane.getChildren().add(JoinButton4);
 	     		JoinButton4.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
 	    			pid=Integer.parseInt(val);
@@ -380,6 +647,7 @@ public void setBetValue() {
 	    		JoinButton5.setSmooth(true);
 	    		JoinButton5.setFitWidth(75);
 	    		JoinButton5.toFront();
+	    		JoinButton5.setCursor(Cursor.HAND);
 	     		Pane.getChildren().add(JoinButton5);
 	     		JoinButton5.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
 	    			pid=Integer.parseInt(val);
@@ -398,6 +666,7 @@ public void setBetValue() {
 	    		JoinButton6.setSmooth(true);
 	    		JoinButton6.setFitWidth(75);
 	    		JoinButton6.toFront();
+	    		JoinButton6.setCursor(Cursor.HAND);
 	     		Pane.getChildren().add(JoinButton6);
 	     		JoinButton6.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
 	    			pid=Integer.parseInt(val);
@@ -415,6 +684,7 @@ public void setBetValue() {
 	    		JoinButton7.setSmooth(true);
 	    		JoinButton7.setFitWidth(75);
 	    		JoinButton7.toFront();
+	    		JoinButton7.setCursor(Cursor.HAND);
 	     		Pane.getChildren().add(JoinButton7);
 	     		JoinButton7.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
 	    			pid=Integer.parseInt(val);
@@ -505,7 +775,7 @@ public void gameOver(String Result) {
 	if(!gameFinalized) {
 	 String[] Screens= { "../Resources/GeneralAssets/LosingScreen.png","../Resources/GeneralAssets/WinningScreen.png","../Resources/GeneralAssets/DrawScreen.png" };
 	 FinalScreen= new ImageView(new Image(getClass().getResourceAsStream(Screens[Integer.parseInt(Result)])));
-	 FinalScreen.setLayoutX(500);
+	 FinalScreen.setLayoutX(600);
 	 FinalScreen.setLayoutY(200+120);
 	 FinalScreen.setPreserveRatio(true);
 	 Pane.getChildren().add(FinalScreen);
@@ -643,7 +913,7 @@ public void removeCards(int id, int n) {
 		for (int i=0;i<n;i++) {
 			// System.out.println("../Resources/Cards/"+lines[i]+".png");
 			 PlayersHands[0][i]=new ImageView(new Image(getClass().getResourceAsStream("../Resources/Cards/"+lines[i]+".png"))); 
-			 PlayersHands[0][i].setLayoutX(650+65*i);
+			 PlayersHands[0][i].setLayoutX(700+65*i);
 			 PlayersHands[0][i].setLayoutY(40);
 			 PlayersHands[0][i].setPreserveRatio(true);
 			 PlayersHands[0][i].setSmooth(true);
@@ -654,12 +924,12 @@ public void removeCards(int id, int n) {
 
 		}
 		
-		PlayerCircle[0]=new Circle(700,199,22);
+		PlayerCircle[0]=new Circle(800,199,22);
 		PlayerCircle[0].setFill(javafx.scene.paint.Color.AQUA);
 		Pane.getChildren().add(PlayerCircle[0]);
 		PlayerPoints[0]= new Label(Value);
 		PlayerPoints[0].setText(Value);
-		PlayerPoints[0].setLayoutX(700-6);
+		PlayerPoints[0].setLayoutX(800-6);
 		PlayerPoints[0].setLayoutY(199-10);
 		PlayerPoints[0].setFont( new Font("Arial",17));
 		PlayerPoints[0].toFront();
@@ -725,7 +995,20 @@ public void removeCards(int id, int n) {
 			
 			
 	    }
+
+
+	 public void changeScene(MouseEvent event, String path) throws IOException {
+		 FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
+		 root= loader.load();
+		 stage=(Stage) ((Node)event.getSource()).getScene().getWindow();
+		 scene= new Scene(root);
+		 stage.setScene(scene);
+	 }
+
+
+	 public void LeaveTable(MouseEvent event) throws IOException{
+    
+		 changeScene(event,"../Resources/AfterLogin.fxml");
+	 }
 }
-
-
 

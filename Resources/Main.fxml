@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXSlider?>
+<?import com.jfoenix.controls.JFXToggleButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -9,14 +16,14 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="Pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="909.0" prefWidth="1430.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
+<AnchorPane fx:id="Pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="984.0" prefWidth="1636.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
    <children>
-      <ImageView fitHeight="909.0" fitWidth="1588.0" layoutX="-24.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="985.0" fitWidth="1660.0" layoutX="-24.0" pickOnBounds="true">
          <image>
             <Image url="@Side-bets-blackjack-explanation.jpg" />
          </image>
       </ImageView>
-      <GridPane fx:id="ChipGrid" layoutX="198.0" layoutY="848.0" onMouseClicked="#BetEntered" prefHeight="30.0" prefWidth="1002.0">
+      <GridPane fx:id="ChipGrid" layoutX="198.0" layoutY="907.0" onMouseClicked="#BetEntered" prefHeight="30.0" prefWidth="1002.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -35,39 +42,41 @@
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
       </GridPane>
-      <ImageView fitHeight="107.0" fitWidth="194.0" layoutX="7.0" layoutY="796.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="107.0" fitWidth="194.0" layoutX="14.0" layoutY="861.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@GeneralAssets/Rect.png" />
          </image>
       </ImageView>
-      <Label layoutX="40.0" layoutY="809.0" text="Balance">
+      <Label layoutX="47.0" layoutY="876.0" text="Balance">
          <font>
             <Font size="31.0" />
          </font>
       </Label>
-      <Label fx:id="WalletGUI" layoutX="40.0" layoutY="848.0" prefHeight="45.0" prefWidth="105.0" textAlignment="CENTER">
+      <Label fx:id="WalletGUI" layoutX="47.0" layoutY="915.0" prefHeight="45.0" prefWidth="105.0" textAlignment="CENTER">
          <font>
             <Font size="29.0" />
          </font>
       </Label>
-      <ImageView fitHeight="107.0" fitWidth="194.0" layoutX="1259.0" layoutY="795.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="107.0" fitWidth="194.0" layoutX="1441.0" layoutY="862.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@GeneralAssets/Rect.png" />
          </image>
       </ImageView>
-      <Label layoutX="1322.0" layoutY="809.0" text="Bet">
+      <Label layoutX="1504.0" layoutY="876.0" text="Bet">
          <font>
             <Font size="31.0" />
          </font>
       </Label>
-      <Label fx:id="BetGUI" layoutX="1302.0" layoutY="849.0" prefHeight="43.0" prefWidth="85.0">
+      <Label fx:id="BetGUI" layoutX="1484.0" layoutY="916.0" prefHeight="43.0" prefWidth="85.0">
          <font>
             <Font size="29.0" />
          </font>
       </Label>
-      <ImageView fx:id="ConfirmButton" fitHeight="150.0" fitWidth="200.0" layoutX="1245.0" layoutY="722.0" onMouseClicked="#BetConfirmed" pickOnBounds="true" preserveRatio="true" />
-      <GridPane fx:id="PlayGrid" layoutX="507.0" layoutY="400.0" onMouseClicked="#Play" prefHeight="128.0" prefWidth="384.0" style="-fx-background-color: transparent;">
+      <GridPane fx:id="PlayGrid" layoutX="614.0" layoutY="438.0" onMouseClicked="#Play" prefHeight="128.0" prefWidth="384.0" style="-fx-background-color: transparent;">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -76,6 +85,148 @@
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
       </GridPane>
+      <Button fx:id="MenuButton" layoutX="1494.0" layoutY="18.0" mnemonicParsing="false" onMouseClicked="#MenuPressed" prefHeight="50.0" prefWidth="118.0" style="-fx-background-color: #ac2e2e; -fx-background-radius: 20;" text="Menu" textFill="WHITE">
+         <font>
+            <Font name="Arial" size="25.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <AnchorPane fx:id="Menu" layoutX="1237.0" layoutY="79.0" prefHeight="899.0" prefWidth="317.0" style="-fx-background-color: #A47474; -fx-background-radius: 30;" visible="false">
+         <children>
+            <JFXButton fx:id="MyAccBut" contentDisplay="RIGHT" graphicTextGap="30.0" layoutX="155.0" layoutY="740.0" onMouseClicked="#openAccMenu" prefHeight="58.0" prefWidth="206.0" text="My Account" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <graphic>
+                  <ImageView fitHeight="36.0" fitWidth="66.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@GeneralAssets/baseline_account_circle_black_24dp.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
+            <JFXButton fx:id="HelpBut" contentDisplay="RIGHT" graphicTextGap="30.0" layoutX="222.0" layoutY="790.0" prefHeight="58.0" prefWidth="133.0" text="Help" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+               <graphic>
+                  <ImageView fitHeight="36.0" fitWidth="66.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@GeneralAssets/baseline_help_outline_black_24dp.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </JFXButton>
+            <JFXToggleButton fx:id="Music" contentDisplay="RIGHT" graphicTextGap="120.0" layoutX="24.0" layoutY="125.0" onMouseClicked="#BackgroundMusic" text="Background Music" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </JFXToggleButton>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="accMenu" layoutX="86.0" layoutY="97.0" prefHeight="810.0" prefWidth="1151.0" style="-fx-background-color: #D2A4A4; -fx-background-radius: 30;" visible="false">
+         <children>
+            <ImageView fx:id="ProfileImage" fitHeight="266.0" fitWidth="414.0" layoutX="644.0" layoutY="79.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@GeneralAssets/profile.png" />
+               </image>
+            </ImageView>
+            <Label layoutX="40.0" layoutY="13.0" prefHeight="98.0" prefWidth="222.0" style="-fx-font-family: Share; -fx-font-size: 40;" text="My Account" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="25.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="55.0" fitWidth="47.0" layoutX="269.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@GeneralAssets/baseline_account_circle_black_24dp.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="NameLabel" layoutX="36.0" layoutY="122.0" prefHeight="73.0" prefWidth="482.0" style="-fx-font-family: Share; -fx-font-size: 35;" text="Profile Name: Pinto da Costa">
+               <font>
+                  <Font size="25.0" />
+               </font>
+            </Label>
+            <Label fx:id="usernameLabel" layoutX="36.0" layoutY="216.0" prefHeight="73.0" prefWidth="482.0" style="-fx-font-family: Share; -fx-font-size: 35;" text="Username: Pinto da Costa">
+               <font>
+                  <Font size="25.0" />
+               </font>
+            </Label>
+            <Label fx:id="passwordLabel" layoutX="35.0" layoutY="301.0" prefHeight="73.0" prefWidth="482.0" style="-fx-font-family: Share; -fx-font-size: 35;" text="Password: ****">
+               <font>
+                  <Font size="25.0" />
+               </font>
+            </Label>
+            <Label fx:id="balanceLabel" layoutX="37.0" layoutY="387.0" prefHeight="73.0" prefWidth="482.0" style="-fx-font-family: Share; -fx-font-size: 35;" text="Current Balance: 400">
+               <font>
+                  <Font size="25.0" />
+               </font>
+            </Label>
+            <Button fx:id="withdrawButton" layoutX="911.0" layoutY="649.0" mnemonicParsing="false" onMouseClicked="#withdraw" prefHeight="61.0" prefWidth="183.0" style="-fx-background-color: #024f14; -fx-background-radius: 15;" text="Withdraw Money" textFill="WHITE">
+               <font>
+                  <Font size="20.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button fx:id="depositButton" layoutX="912.0" layoutY="725.0" mnemonicParsing="false" onMouseClicked="#depositMoney" prefHeight="61.0" prefWidth="183.0" style="-fx-background-color: #024f14; -fx-background-radius: 15;" text="Deposit Money" textFill="WHITE">
+               <font>
+                  <Font size="20.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button fx:id="pictureButton" layoutX="714.0" layoutY="345.0" mnemonicParsing="false" onMouseClicked="#chooseImage" prefHeight="55.0" prefWidth="275.0" style="-fx-background-color: #024f14; -fx-background-radius: 15;" text="Change Profile Picture" textFill="WHITE">
+               <font>
+                  <Font size="20.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button fx:id="confirmButton" layoutX="531.0" layoutY="656.0" mnemonicParsing="false" onMouseClicked="#confirm" prefHeight="35.0" prefWidth="155.0" style="-fx-background-color: #024f14; -fx-background-radius: 15;" text="Confirm" textFill="WHITE">
+               <font>
+                  <Font size="20.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <TextField fx:id="depositTF" layoutX="456.0" layoutY="597.0" prefHeight="46.0" prefWidth="296.0" style="-fx-background-color: #CDFFCC; -fx-background-radius: 20;" />
+            <Button fx:id="closeAcc" layoutX="1100.0" layoutY="9.0" mnemonicParsing="false" onMouseClicked="#closeAccMenu" prefHeight="44.0" prefWidth="47.0" style="-fx-background-radius: 30; -fx-background-color: #024f14;" text="X" textFill="WHITE">
+               <font>
+                  <Font size="20.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <JFXSlider fx:id="slideBut" blockIncrement="50.0" layoutX="508.0" layoutY="613.0" max="5000.0" prefHeight="14.0" prefWidth="202.0" value="2500.0" />
+         </children>
+      </AnchorPane>
+      <Button layoutX="1329.0" layoutY="18.0" mnemonicParsing="false" onMouseClicked="#LeaveTable" prefHeight="50.0" prefWidth="139.0" style="-fx-background-radius: 60; -fx-background-color: grey;" text="Leave Table" textFill="WHITE">
+         <font>
+            <Font name="Calibri" size="20.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

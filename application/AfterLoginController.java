@@ -52,6 +52,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.scene.Cursor;
 
 
 public class AfterLoginController {
@@ -224,6 +225,7 @@ public class AfterLoginController {
 			TableButton[i].setPrefHeight(210);
 			Pane.getChildren().add(TableButton[i]);
 			TableButton[i].setOpacity(0.0);
+			TableButton[i].setCursor(Cursor.HAND);
 			
 			
 			final Button myButton =TableButton[i];
@@ -278,6 +280,7 @@ public class AfterLoginController {
 		XButton[i].setPrefWidth(16);
 		XButton[i].setPrefHeight(24);
 		XButton[i].setStyle("-fx-background-color : grey;"+"-fx-background-radius : 20;");
+		XButton[i].setCursor(Cursor.HAND);
 		XButton[i].applyCss();
 		TableMenu[i].getChildren().add(XButton[i]);
 		
@@ -308,6 +311,7 @@ public class AfterLoginController {
 			EnterButton[i].setStyle("-fx-background-color : green;"+"-fx-background-radius : 20;" +"-fx-text-fill: white;" +" -fx-font-size: 11pt ;");
 			EnterButton[i].setLayoutX(180);
 			EnterButton[i].setLayoutY(300);
+			EnterButton[i].setCursor(Cursor.HAND);
 			TableMenu[i].getChildren().add(EnterButton[i]);
 			final Button myButton1=EnterButton[i];
 			final int t=i;
@@ -353,6 +357,7 @@ public class AfterLoginController {
 					kickButton[i][j].setPrefWidth(58);
 					kickButton[i][j].setPrefHeight(14);
 					kickButton[i][j].setStyle("-fx-background-color : grey;"+"-fx-background-radius : 20;");
+					kickButton[i][j].setCursor(Cursor.HAND);
 					TableMenuGrid[i].add(kickButton[i][j], 2, j);
 					final Button myButton=kickButton[i][j];
 					final int player=j;
@@ -412,6 +417,7 @@ public class AfterLoginController {
 					kickButton[i][j].setPrefWidth(58);
 					kickButton[i][j].setPrefHeight(14);
 					kickButton[i][j].setStyle("-fx-background-color : grey;"+"-fx-background-radius : 20;");
+					kickButton[i][j].setCursor(Cursor.HAND);
 			}
 				
 

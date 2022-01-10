@@ -33,7 +33,7 @@ public final class LoginController{
     @FXML
     private Button CancelBut;
     @FXML
-    private static Label ErrorMsg;
+    private Label ErrorMsg;
     @FXML
     private ImageView brandingImageView;
     @FXML

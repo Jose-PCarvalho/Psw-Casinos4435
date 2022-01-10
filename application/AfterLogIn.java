@@ -1111,7 +1111,7 @@ public class AfterLogIn implements Initializable {
 
     private void BackgroundMusic() {
         Music.setOnMouseClicked(event ->{
-        	String path = getClass().getResource("../Resources/music.mp3").getPath();
+            String path = getClass().getResource("../resources/music.mp3").getPath();
             Media media = new Media(new File(path).toURI().toString());
             mediaPlayer = new AudioClip(media.getSource());
             mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
