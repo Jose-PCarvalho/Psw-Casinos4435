@@ -76,6 +76,7 @@ public class Controller {
  private static  BufferedReader bufferedReader;
  private static BufferedWriter bufferedWriter;
  static Account user;
+ boolean gameFinalized=false;
  
  
  
@@ -104,6 +105,7 @@ public static void setAccount(Account acc, Connection connect,int t){
 @FXML 
 public void BetEntered(MouseEvent e) {
 	if(GameState.equals("Betting")) {
+		
 	 Node clickedNode = e.getPickResult().getIntersectedNode();
 	    if (clickedNode != ChipGrid) {
 	        if(currentBet==0) {
@@ -495,24 +497,28 @@ public void Play(MouseEvent e) {
 }
 
 public void gameOver(String Result) {
-	removePlayGrid();
-	//int who=g.whoWon();
+	if(playGridOn) {
+	removePlayGrid();}
+	if(Integer.parseInt(Result)==-1) {
+		Result="0";
+	}
+	if(!gameFinalized) {
 	 String[] Screens= { "../Resources/GeneralAssets/LosingScreen.png","../Resources/GeneralAssets/WinningScreen.png","../Resources/GeneralAssets/DrawScreen.png" };
 	 FinalScreen= new ImageView(new Image(getClass().getResourceAsStream(Screens[Integer.parseInt(Result)])));
 	 FinalScreen.setLayoutX(500);
 	 FinalScreen.setLayoutY(200+120);
 	 FinalScreen.setPreserveRatio(true);
 	 Pane.getChildren().add(FinalScreen);
+	 gameFinalized=true;
 	 FinalScreen.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{
 	         newGame();
+	         Pane.getChildren().remove(FinalScreen);
 	         event.consume();
-	     });
+	     });}
 
 }
 
 public void newGame() {
-	
-	Pane.getChildren().remove(FinalScreen);
 	setMessage("New Game%"+table);
 	for (int i=0;i<8;i++) {
 		removeCards(i,10);
@@ -526,7 +532,7 @@ public void newGame() {
 public void removeCards(int id, int n) {
 
 	
-	System.out.println(n);
+	//System.out.println(n);
 	for (int i=0;i<n;i++) {
 		
 	     Pane.getChildren().remove(PlayersHands[id][i]);
@@ -566,17 +572,16 @@ public void removeCards(int id, int n) {
 		String lines[] = msg.split("%");
 		for(int i=0;i<lines.length;i++) {
 			String Values[]=lines[i].split(":");
-			for(String a:Values) {
+			/*for(String a:Values) {
 				System.out.println(a);
-			}
+			}*/
 			if(i==0) {
 				int t=Integer.parseInt(Values[2]);
 				if(t!=table) 
 					break;
 				GameState=Values[1];
-				if(GameState.contains("Playing") && playGridOn==false) {
-					setPlayGrid();	
-				}
+				if(!GameState.equals("Finished"))
+					gameFinalized=false;
 			}
 			if(i==1) {
 				String DealerHandSize=Values[2];
@@ -606,7 +611,15 @@ public void removeCards(int id, int n) {
 					String PlayerHandSize=Values[6];
 					String PlayerHandValue=Values[8];
 					String PlayerHandCards=Values[10];
-					String PlayerResult=Values[12];				
+					String PlayerResult=Values[12];	
+					boolean Participating=Boolean.parseBoolean(Values[14]);
+					boolean endedTurn=Boolean.parseBoolean(Values[16]);
+					if(GameState.contains("Playing") && playGridOn==false && Participating==true && PlayerId==pid && !endedTurn) {
+						setPlayGrid();	
+					}
+					else if( playGridOn==true && endedTurn && PlayerId==pid ) {
+						removePlayGrid();
+					}
 					drawPlayer(PlayerId,PlayerBalance,PlayerBet,PlayerHandSize,PlayerHandValue,PlayerHandCards);		
 					if(GameState.equals("Finished")) { 
 						if(pid==PlayerId)
@@ -628,7 +641,7 @@ public void removeCards(int id, int n) {
 		int n=Integer.parseInt(Size);
 		if(Integer.parseInt(Value)>0) {
 		for (int i=0;i<n;i++) {
-			 System.out.println("../Resources/Cards/"+lines[i]+".png");
+			// System.out.println("../Resources/Cards/"+lines[i]+".png");
 			 PlayersHands[0][i]=new ImageView(new Image(getClass().getResourceAsStream("../Resources/Cards/"+lines[i]+".png"))); 
 			 PlayersHands[0][i].setLayoutX(650+65*i);
 			 PlayersHands[0][i].setLayoutY(40);
@@ -674,7 +687,7 @@ public void removeCards(int id, int n) {
 		
 		if(Integer.parseInt(Value)>0) {
 		for (int i=0;i<n;i++) {
-			 System.out.println("../Resources/Cards/"+linesD[i]+".png");
+			// System.out.println("../Resources/Cards/"+linesD[i]+".png");
 			 PlayersHands[pid][i]=new ImageView(new Image(getClass().getResourceAsStream("../Resources/Cards/"+linesD[i]+".png"))); 
 			 PlayersHands[pid][i].setLayoutX(PlayerPositionX[pid]+30*i-15);
 			 PlayersHands[pid][i].setLayoutY(PlayerPositionY[pid]-2*i-45);
@@ -708,7 +721,6 @@ public void removeCards(int id, int n) {
 	    	String update_account_money = "UPDATE blackjack.users SET money='"+actual_money+"' WHERE username='"+username+"'";
 	    	Statement statement = conn.createStatement();
 			statement.executeUpdate(update_account_money);
-			System.out.println("ATÃO");
 				
 			
 			

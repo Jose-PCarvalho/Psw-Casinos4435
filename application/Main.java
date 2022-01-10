@@ -25,7 +25,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage stage) throws IOException {
 		stage.setResizable(false);
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("../Resources/init.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/Resources/init.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("Casinos 4435");
         stage.setScene(scene);

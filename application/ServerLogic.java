@@ -16,24 +16,43 @@ public class ServerLogic {
 		for(int k=0;k<6;k++) {
 			g[k]=new Game(k);
 		}
+		
+		
+		new Thread(() -> {   //sanity check thread
+			while(!server.serverSocket.isClosed()) {
+				for(int j=1;j<6;j++) {   	    		
+		    		if(g[j].sanityCheck()) {
+		    			server.broadcastMessage(updateLobby());
+		    			server.broadcastMessage(g[j].getInfo());
+		    		}
+	    	}
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}).start();
+		
+		
+		
+		
 		new Thread(() -> {
 			int ID;
 			int bet;
     	    while(!server.serverSocket.isClosed()) {
     	    	ArrayList<String> remove= new ArrayList<String>();
     	    	server.receiveMessageClientHandlers();
-    	    	if(g[0].getNumberOfPlayers()==0) {
-    	    		g[0].newGame();
-    	    	}
     	    	
     	    	for (int i=0;i<server.messageList.size();i++) {
-    	    		
+    	    		System.out.println("Novas mensagens "+server.messageList.size());
     	    		if(server.messageList.get(i).contains("LobbyInfoRequest")) {
     	    			
     	    			server.broadcastMessage(updateLobby());
     	    		
     	    		}
-    	    		if(server.messageList.get(i).contains("DealerRequest%")) {
+    	    		else if(server.messageList.get(i).contains("DealerRequest%")) {
     	    			String lines[]=server.messageList.get(i).split("%");
     	    			String Name=lines[1];
     	    			int table=Integer.parseInt(lines[2]);
@@ -41,7 +60,7 @@ public class ServerLogic {
     	    			server.broadcastMessage(updateLobby());
     	    		
     	    		}
-    	    		if(server.messageList.get(i).contains("KickRequest")) {
+    	    		else if(server.messageList.get(i).contains("KickRequest")) {
     	    			String lines[]=server.messageList.get(i).split("%");
     	    			int table=Integer.parseInt(lines[1]);
     	    			int player=Integer.parseInt(lines[2]);
@@ -52,20 +71,20 @@ public class ServerLogic {
     	    		}
     	    		
     	    		
-    	    		if(server.messageList.get(i).contains("Leave Table")) {
+    	    		else if(server.messageList.get(i).contains("Leave Table")) {
     	    			String lines[]=server.messageList.get(i).split("%");
     	    			int table=Integer.parseInt(lines[2]);
     	    			int player=Integer.parseInt(lines[1]);
     	    			g[table].freeSpot(player);
     	    			server.broadcastMessage(updateLobby());
     	    		}
-    	    		if(server.messageList.get(i).contains("Player Joined")) {
+    	    		else if(server.messageList.get(i).contains("Player Joined")) {
     	    			String lines[]=server.messageList.get(i).split("%");
     	    			int table=Integer.parseInt(lines[1]);
     					server.broadcastMessage(g[table].AvailableSpots());
     					
     				}
-    				if(server.messageList.get(i).contains("New Player on position:")) {
+    	    		else if(server.messageList.get(i).contains("New Player on position:")) {
     					String lines[] = server.messageList.get(i).split("%");
     					System.out.println(server.messageList.get(i));
     					System.out.println("Server: New Player");
@@ -81,7 +100,7 @@ public class ServerLogic {
     					
     				}
     				
-    				if(server.messageList.get(i).contains("Bet Entered") ) {
+    	    		else if(server.messageList.get(i).contains("Bet Entered") ) {
     					System.out.println("Server: New Bet");
     					String parse[]=server.messageList.get(i).split("%");
     					
@@ -95,7 +114,7 @@ public class ServerLogic {
     					
     				}
     				
-    				if(server.messageList.get(i).contains("Bet Confirmed")  ) {
+    	    		else if(server.messageList.get(i).contains("Bet Confirmed")  ) {
     					System.out.println("Server: New Bet");
     					String parse[]=server.messageList.get(i).split("%");
     					ID=Integer.parseInt(parse[1]);
@@ -106,54 +125,45 @@ public class ServerLogic {
     					
     				}
     				
-    				if(server.messageList.get(i).contains("Hit")) {
+    	    		else if(server.messageList.get(i).contains("Hit")) {
     					System.out.println("Server: Hit");
     					String parse[]=server.messageList.get(i).split("%");
     					ID=Integer.parseInt(parse[1]);
     					int table=Integer.parseInt(parse[2]);
     					if(g[table].getGameState().equals("Playing")) {
     					g[table].PlayerPlay(server.messageList.get(i), ID);
-    					if(g[table].getGameState().equals("Ending")) {
-    						g[table].endGame();
-    					}
     					server.broadcastMessage(g[table].getInfo());
     					}
     					
     				}
-    				if(server.messageList.get(i).contains("Stand")) {
+    	    		else if(server.messageList.get(i).contains("Stand")) {
     					System.out.println("Server: Stand");
     					String parse[]=server.messageList.get(i).split("%");
     					ID=Integer.parseInt(parse[1]);
     					int table=Integer.parseInt(parse[2]);
     					if(g[table].getGameState().equals("Playing")) {
     					g[table].PlayerPlay(server.messageList.get(i), ID);
-    					if(g[table].getGameState().equals("Ending")) {
-    						g[table].endGame();
-    					}
     					server.broadcastMessage(g[table].getInfo());
     					}
     					
     				}
-    				if(server.messageList.get(i).contains("Double")) {
+    	    		else if(server.messageList.get(i).contains("Double")) {
     					System.out.println("Server: Double");
     					String parse[]=server.messageList.get(i).split("%");
     					ID=Integer.parseInt(parse[1]);
     					int table=Integer.parseInt(parse[2]);
     					if(g[table].getGameState().equals("Playing")) {
     					g[table].PlayerPlay(server.messageList.get(i), ID);
-    					if(g[table].getGameState().equals("Ending")) {
-    						g[table].endGame();
-    					}
     					server.broadcastMessage(g[table].getInfo());
     					}
     					
     				}
     				
-    				if(server.messageList.get(i).contains("New Game")) {
+    	    		else if(server.messageList.get(i).contains("New Game")) {
     					String parse[]=server.messageList.get(i).split("%");
     					int table=Integer.parseInt(parse[1]);
     					if(g[table].getGameState()=="Finished") {
-	    					g[table].newGame();
+	    					g[table].newGameRequest();
 	    					server.broadcastMessage(g[table].getInfo());
 	    					}
     					
@@ -162,7 +172,7 @@ public class ServerLogic {
     			
     		       
     		        
-    				if(server.messageList.get(i).equals("break"))
+    	    		else if(server.messageList.get(i).equals("break"))
     					break;   	    			
     	    		remove.add(server.messageList.get(i));
     	    	}

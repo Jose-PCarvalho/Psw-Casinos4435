@@ -1,5 +1,9 @@
 package BlackJack.dkeep;
 import BlackJack.Players.*;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
 import BlackJack.Interface.*;
 public class Game{
     public Gambler P;
@@ -20,6 +24,16 @@ public class Game{
     private int numberOfWins=0;
     private boolean[] kick= {false,false,false,false,false,false,false,false};
     int table;
+    Timer betTimer= new Timer();
+    TimerTask betTimerTask;
+    boolean betTimeisUp=false;
+    Timer playTimer= new Timer();
+    TimerTask playTimerTask;
+    boolean playTimeisUp=false;
+    Timer newGameTimer= new Timer();
+    TimerTask newGameTimerTask;
+    boolean newGameTimeisUp=false;
+    int GameRequest=0;
     
 
 
@@ -28,6 +42,9 @@ public Game(int table){
     D=new Dealer("Dolores Aveiro", 4);
     this.table=table;
     start=true;
+    for(int i=0;i<8;i++) {
+    	Players[i]=new Gambler("Default",0);
+    }
 }
 
 
@@ -55,59 +72,27 @@ public String AvailableSpots() {
 }
 
 public void freeSpot(int pid) {
-	numberOfPlayers = getNumberOfPlayers() - 1;
-	System.out.print("Slot nr"+pid+" freed\n");
-	OccupiedSlots[pid]=false;
-	if(betEntered[pid]) {
-		numberOfBets--;
-		betEntered[pid]=false;
-		playerEndedTurn[pid]=false;
-		WinDrawLose[pid]=-1;
-		kick[pid]=false;
+	if(OccupiedSlots[pid]==true) {
+		numberOfPlayers = getNumberOfPlayers() - 1;
+		System.out.print("Slot nr"+pid+" freed\n");
+		OccupiedSlots[pid]=false;
+		if(betEntered[pid]) {
+			numberOfBets--;
+			betEntered[pid]=false;
+			playerEndedTurn[pid]=false;
+			WinDrawLose[pid]=-1;
+			kick[pid]=false;
+		}
 	}
 }
 
-public boolean gameControllerPlayerSide(String Act){
-    P.setAction(Act);
-    
-    
-        if(P.getAction().equals("Hit")==true){
-            D.setAction("Player Hit");
-            D.doAction(P);
-            return true;
-            
-        }
-        else if(P.getAction().equals("Stand")==true){
-            D.setAction("Player Stand");
-            D.doAction(P);
-            return true;
-            
-        }
-        
-    
-    return false;
 
-}
-
-public boolean startGame(int bet){
-    
-        if(bet>=0){
-            D.setAction("Dealer Start");
-            D.doAction(P);
-            D.setAction("Player Bet");
-            D.doAction(P);
-            P.setBet(bet);
-            
-            start=false;
-            return true;
-            
-        
-    }
-    return false;
-}
 
 public void newGame() {
+	newGameTimer.cancel();
+	newGameTimeisUp=false;
 	start=true;
+	GameRequest=0;
 	D.newGame();
 	for(int i=1;i<8;i++) {
 		if(OccupiedSlots[i]) {
@@ -117,39 +102,41 @@ public void newGame() {
 			betEntered[i]=false;
 			playerEndedTurn[i]=false;
 			WinDrawLose[i]=-1;
-			if(Players[i].getWallet()==0) {
-				kick[i]=true;
-				
-			}
+
 		}
 	}
     
     GameIsPlaying=true;
     PlayerTurn=true;
     numberOfBets=0;
-    setGameState("Betting");
+    setGameState("Waiting for Players");
     numberOfWins=0;
 }
 
 public void endGame() {
-	
+	playTimer.cancel();
+	playTimeisUp=false;
 	D.DealerHand.resetHidden();
 	while(true) {
-		
+		System.out.println("Calculating Outcomes");
 		numberOfWins=0;
+		int numberOfDraws=0;
 		for(int i=0;i<8;i++) {
 			if(betEntered[i]) {
+				playerEndedTurn[i]=true;
 				if(whoWon(i)==1) {
 					numberOfWins++;
 				}
+				else if(whoWon(i)==2) {
+					numberOfDraws++;
+				}
 			}
 		}
-		System.out.println("Estás aqui? "+numberOfWins + " "+  D.DealerHand.getHandValue() + " " +  D.isBust());
-		if(numberOfWins>0 && D.DealerHand.getHandValue()<17 && !D.isBust()) {
+		if((numberOfWins>0 ||numberOfDraws>0 )&& D.DealerHand.getHandValue()<17 && !D.isBust()) {
 			D.setAction("Dealer Draw");
 	        D.doAction(Players[4]);
 		}
-		if(numberOfWins==0 || D.DealerHand.getHandValue()>=17 || D.isBust() ){
+		if((numberOfWins==0 && numberOfDraws==0) || D.DealerHand.getHandValue()>=17 || D.isBust() ){
 			setGameState("Finished");
 			
 			for(int i=0;i<8;i++) {
@@ -193,10 +180,12 @@ public void PlayerPlay(String Message,int pid) {
             D.doAction(Players[pid]);  
             }
 		else if(Message.contains("Double")==true) {
-			D.setAction("Player Hit");
-			playerEndedTurn[pid]=true;
-            D.doAction(Players[pid]);
-            Players[pid].setBet(Players[pid].getBet()); 
+			if(Players[pid].getWallet()>Players[pid].getBet()) {
+				D.setAction("Player Hit");
+				playerEndedTurn[pid]=true;
+	            D.doAction(Players[pid]);
+	            Players[pid].setBet(Players[pid].getBet()); 
+	            }
             }
 		}
   checkPlayerTurns();
@@ -210,11 +199,16 @@ public void payBet(int pid,int result) {
 	
 	
 	if(result==1 ) {
-		Players[pid].deposit(Players[pid].getBet()*2);
+		if(Players[pid].PlayerHand[0].getHandsize()==2) {
+			Players[pid].deposit((Players[pid].getBet()*3)/2);
+		}
+		else {
+		Players[pid].deposit(Players[pid].getBet()*2);}
 		 }
 	else if(result==2) {
-		Players[pid].deposit(Players[pid].getBet()*2);	
+		Players[pid].deposit(Players[pid].getBet());	
 	}
+	
 	
 	
 	
@@ -222,7 +216,7 @@ public void payBet(int pid,int result) {
 }
 public int whoWon(int i) {
 	
-		if(OccupiedSlots[i]) {
+		if(betEntered[i]) {
 			if(Players[i].isBust()) {
 				WinDrawLose[i]=0;
 				return 0;
@@ -262,9 +256,9 @@ public String getInfo(){
 	String info="GameState:"+ getGameState()+":"+table+"%";
 	info+= "Dealer" + ":Hand Size:" + D.DealerHand.getHandsize() + ":Hand Value:" + D.DealerHand.getHandValue() +":Hand Cards:" +D.DealerHand.toString()+" %";
 	for(int i=1;i<8;i++) {
-		if(OccupiedSlots[i] && kick[i]==false) {
+		if(OccupiedSlots[i]) {
 			
-			info+= "Player"+Integer.toString(i) + ":Wallet:"+Integer.toString(Players[i].getWallet())+":Bet:"+Integer.toString(Players[i].getBet()) +":Hand Size:" + Players[i].PlayerHand[0].getHandsize() + ":Hand Value:" +Players[i].PlayerHand[0].getHandValue() +":Hand Cards:"+ Players[i].PlayerHand[0].toString()+" "+":Result:" +Integer.toString(WinDrawLose[i]) +"%";
+			info+= "Player"+Integer.toString(i) + ":Wallet:"+Integer.toString(Players[i].getWallet())+":Bet:"+Integer.toString(Players[i].getBet()) +":Hand Size:" + Players[i].PlayerHand[0].getHandsize() + ":Hand Value:" +Players[i].PlayerHand[0].getHandValue() +":Hand Cards:"+ Players[i].PlayerHand[0].toString()+" "+":Result:" +Integer.toString(WinDrawLose[i]) +":Participating:"+betEntered[i]+":TurnEnded:"+playerEndedTurn[i]+"%";
 
 		}
 		else{
@@ -275,6 +269,7 @@ public String getInfo(){
 	return info;
 }
 public String lobbyInfo(){
+	
 	String info="";
 	info+= D.getName()+"%";
 	for(int i=1;i<8;i++) {
@@ -304,22 +299,76 @@ public void confirmBet(int pid) {
 		betEntered[pid]=true;
 		numberOfBets++;
 	}
+	
+	if(getNumberOfParticipatingPlayers()==1) {
+		betTimer=new Timer();
+		betTimerTask=new TimerTask(){
+			int counter=10;
+
+			@Override
+			public void run() {
+				if(counter>0) {
+					counter--;
+					System.out.println("Time Remaining "+ counter);
+					if(counter==0) {
+						System.out.println("Time is Up ");
+						betTimeisUp=true;
+						
+					}
+				}
+				
+				
+			}
+			
+		};
+		betTimer.scheduleAtFixedRate(betTimerTask, 0, 1000);
+	}
 	if(numberOfBets==numberOfPlayers) {
-		setGameState("Playing");
 		startPlaying();
+		
 	}
 }
 
 public void startPlaying() {
+	betTimeisUp=false;
+	betTimer.cancel();
+	setGameState("Playing");
 	D.setAction("Dealer Start");
     D.doAction(P);
 	for(int i=1;i<8;i++) {
 		if(betEntered[i]) {
 	        D.setAction("Player Bet");
 	        D.doAction(Players[i]);
+	        if(Players[i].PlayerHand[0].getHandValue()==21) {
+            	playerEndedTurn[i]=true;
+            }
 			
 		}
 	}
+	checkPlayerTurns();
+	
+	playTimer=new Timer();
+	playTimerTask=new TimerTask(){
+		int counter=30;
+
+		@Override
+		public void run() {
+			if(counter>0) {
+				counter--;
+				System.out.println("Time Remaining "+ counter);
+				if(counter==0) {
+					System.out.println("Time is Up ");
+					playTimeisUp=true;
+					
+					
+				}
+			}
+			
+			
+		}
+		
+	};
+	playTimer.scheduleAtFixedRate(playTimerTask, 0, 1000);
 }
 
 
@@ -333,19 +382,96 @@ public void checkPlayerTurns() {
 	if(playerEndedTurn[i]) {
 		n++;
 	}
-	if(n==getNumberOfPlayers()) {
+	if(n==getNumberOfParticipatingPlayers()) {
 		setGameState("Ending");
+		endGame();
 	}
 		
 	}
 }
 
 public void kickPlayer(int i) {
-	kick[i]=true;
+	freeSpot(i);
+}
+public int getNumberOfParticipatingPlayers() {
+	int n=0;
+	for(int i=1;i<8;i++) {
+		if(betEntered[i])
+			n++;
+	}
+	return n;
 }
 
 public void changeDealerName(String Name) {
 	D.setName(Name);
+}
+
+public boolean sanityCheck() {
+	boolean UpdateNeed=false;
+	if(numberOfPlayers==0 && !getGameState().equals("Waiting for Players")) {
+		newGame(); 
+		UpdateNeed= true;
+	}
+	if(getGameState().equals("Ending")) {
+		endGame();
+		UpdateNeed= true;
+	}
+	if(numberOfPlayers!=0 && getGameState().equals("Waiting for Players")) {
+		setGameState("Betting");
+		UpdateNeed= true;
+		
+	}
+	for(int i=1;i<7;i++) {
+		if(getGameState().equals("Betting") && Players[i].getWallet()==0 && Players[i].getBet()==0 && OccupiedSlots[i]) {
+			freeSpot(i);
+			UpdateNeed= true;
+		}
+		
+	}
+	if(getGameState().equals("Betting") && betTimeisUp) {
+		startPlaying();
+		UpdateNeed= true;
+	}
+	else if(getGameState().equals("Playing") && playTimeisUp) {
+		endGame();
+		UpdateNeed= true;
+	}
+	else if(getGameState().equals("Finished") && newGameTimeisUp) {
+		newGame();
+		UpdateNeed= true;
+	}
+	return UpdateNeed;
+}
+
+public void newGameRequest() {
+	GameRequest++;
+	if(GameRequest==1) {
+		newGameTimer=new Timer();
+		newGameTimerTask=new TimerTask(){
+			int counter=10;
+
+			@Override
+			public void run() {
+				if(counter>0) {
+					counter--;
+					System.out.println("Time Remaining "+ counter);
+					if(counter==0) {
+						System.out.println("Time is Up ");
+						newGameTimeisUp=true;
+						newGameTimer.cancel();
+					}
+				}
+				
+				
+			}
+			
+		};
+		newGameTimer.scheduleAtFixedRate(newGameTimerTask, 0, 1000);
+	}
+	if(GameRequest==getNumberOfParticipatingPlayers()) {
+		newGameTimer.cancel();
+		newGame();
+	}
 }
 
 }
