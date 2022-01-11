@@ -425,7 +425,7 @@ public boolean sanityCheck() {
 		UpdateNeed= true;
 		
 	}
-	for(int i=1;i<7;i++) {
+	for(int i=1;i<8;i++) {
 		if(getGameState().equals("Betting") && Players[i].getWallet()==0 && Players[i].getBet()==0 && OccupiedSlots[i]) {
 			freeSpot(i);
 			UpdateNeed= true;

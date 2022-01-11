@@ -982,7 +982,7 @@ public void removeCards(int id, int n) {
 			// System.out.println("../Resources/Cards/"+linesD[i]+".png");
 			 PlayersHands[pid][i]=new ImageView(new Image(getClass().getResourceAsStream("../Resources/Cards/"+linesD[i]+".png"))); 
 			 PlayersHands[pid][i].setLayoutX(PlayerPositionX[pid]+30*i-15);
-			 PlayersHands[pid][i].setLayoutY(PlayerPositionY[pid]-2*i-45);
+			 PlayersHands[pid][i].setLayoutY(PlayerPositionY[pid]-45+5*i);
 			 PlayersHands[pid][i].setPreserveRatio(true);
 			 PlayersHands[pid][i].setSmooth(true);
 			 PlayersHands[pid][i].setFitWidth(75);
