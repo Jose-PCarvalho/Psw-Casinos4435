@@ -124,6 +124,16 @@ public class ServerLogic {
 	    					server.broadcastMessage(g[table].getInfo());}
     					
     				}
+    	    		else if(server.messageList.get(i).contains("Bet Canceled")  ) {
+    					System.out.println("Server: New Bet");
+    					String parse[]=server.messageList.get(i).split("%");
+    					ID=Integer.parseInt(parse[1]);
+    					int table=Integer.parseInt(parse[2]);
+    					if(g[table].getGameState().equals("Betting")) {
+	    					g[table].cancelBet(ID);
+	    					server.broadcastMessage(g[table].getInfo());}
+    					
+    				}
     				
     	    		else if(server.messageList.get(i).contains("Hit")) {
     					System.out.println("Server: Hit");

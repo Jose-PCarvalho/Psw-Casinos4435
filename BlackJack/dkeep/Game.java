@@ -289,7 +289,11 @@ public String lobbyInfo(){
 }
 
 public void setBet(int pid, int value) {
-	Players[pid].setBet(value);
+	if(value==-1) {
+		Players[pid].setBet(Players[pid].getWallet());
+	}
+	else {
+	Players[pid].setBet(value);}
 	
 	
 }
@@ -472,6 +476,16 @@ public void newGameRequest() {
 		newGameTimer.cancel();
 		newGame();
 	}
+}
+
+
+public void cancelBet(int iD) {
+	if(!betEntered[iD]) {
+		betEntered[iD]=false;
+		Players[iD].deposit(Players[iD].getBet());
+		Players[iD].resetBet();
+	}
+	
 }
 
 }

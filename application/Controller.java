@@ -108,7 +108,6 @@ ImageView ProfileImage;
  final int[] BetValues= {1,2,5,10,20,25,50,100,250,500,1000,2000,5000};
  int currentBet=0;
  int walletValue=10000;
- boolean confirmFlag=true;
  Image confirmImage = new Image(getClass().getResourceAsStream("../Resources/GeneralAssets/Confirm.png"));
  Image Join = new Image(getClass().getResourceAsStream("../Resources/GeneralAssets/Join.png"));
  Circle PlayerCircle[] = new Circle[8];
@@ -178,7 +177,6 @@ public void BetEntered(MouseEvent e) {
 	        if(currentBet==0) {
 	        	ConfirmButton.setVisible(true);
 	        	CancelButton.setVisible(true);
-	        	confirmFlag=false;
 	        }
 	        Integer colIndex = GridPane.getColumnIndex(clickedNode);
 	       
@@ -196,10 +194,12 @@ public void BetEntered(MouseEvent e) {
  }
 
 public void BetConfirmed() {
-	if(GameState.equals("Betting") && currentBet>0) {
+	if(GameState.equals("Betting") && currentBet!=0) {
 		setMessage("Bet Confirmed%"+pid+"%"+table);
         messageRequest();
 		currentBet=0;
+		ConfirmButton.setVisible(false);
+		CancelButton.setVisible(false);
 	}
 	
 	
@@ -250,7 +250,7 @@ public void setBetValue() {
 	 ConfirmButton.setFont(Font.font("System", 18));
 	 ConfirmButton.setTextFill(Color.WHITE);
 	 ConfirmButton.setLayoutX(1450);
-	 ConfirmButton.setLayoutY(750);
+	 ConfirmButton.setLayoutY(730);
 	 ConfirmButton.setPrefWidth(156);
 	 ConfirmButton.setPrefHeight(45);
 	 ConfirmButton.setVisible(false);
@@ -258,54 +258,51 @@ public void setBetValue() {
 	 ConfirmButton.setStyle("-fx-background-color : grey;"+"-fx-background-radius : 20;");
 	 ConfirmButton.applyCss();
 	 ConfirmButton.setOnMouseClicked( event -> { 
-		 
-		 if(GameState.equals("Betting") && currentBet>0) {
-				ConfirmButton.setVisible(false);
-				CancelButton.setVisible(false);
-				setMessage("Bet Confirmed%"+pid+"%"+table);
-		        messageRequest();
-				currentBet=0;
-			}
-		 
-		 
+	 BetConfirmed();
 	 });
 	 
 	 CancelButton = new Button("Cancel Bet");
 	 CancelButton.setFont(Font.font("System", 18));
 	 CancelButton.setTextFill(Color.WHITE);
 	 CancelButton.setLayoutX(1450);
-	 CancelButton.setLayoutY(815);
+	 CancelButton.setLayoutY(665);
 	 CancelButton.setPrefWidth(156);
 	 CancelButton.setPrefHeight(45);
 	 CancelButton.setVisible(false);
 	 CancelButton.setCursor(Cursor.HAND);
 	 CancelButton.setStyle("-fx-background-color : grey;"+"-fx-background-radius : 20;");
 	 CancelButton.applyCss();
-	 /*ConfirmButton.setOnMouseClicked( event -> { 
-     
-		 if(GameState.equals("Betting") && currentBet>0) {
-			 	ConfirmButton.setVisible(false);
-				CancelButton.setVisible(false);
-				setMessage("Bet Canceled%"+pid+"%"+table);
-		        messageRequest();
-				currentBet=0;
-			}
-		 
+	 CancelButton.setOnMouseClicked(event ->{
+		    setMessage( "Bet Canceled"+"%"+Integer.toString(pid)+"%"+table);
+	        messageRequest();
+	        CancelButton.setVisible(false);
+	        ConfirmButton.setVisible(false);
+	        currentBet=0;
 		 
 	 });
-	 */
+	 
 	 
 	 AllIn = new Button("All-In");
-	 AllIn.setFont(Font.font("System", 20));
+	 AllIn.setFont(Font.font("System", 18));
 	 AllIn.setTextFill(Color.WHITE);
-	 AllIn.setLayoutX(1200);
-	 AllIn.setLayoutY(878);
-	 AllIn.setPrefWidth(93);
-	 AllIn.setPrefHeight(88);
+	 AllIn.setLayoutX(1450);
+	 AllIn.setLayoutY(795);
+	 AllIn.setPrefWidth(156);
+	 AllIn.setPrefHeight(45);
 	 AllIn.setVisible(true);
 	 AllIn.setCursor(Cursor.HAND);
-	 AllIn.setStyle("-fx-background-color : grey;"+"-fx-background-radius : 60;");
+	 AllIn.setStyle("-fx-background-color : grey;"+"-fx-background-radius : 20;");
 	 AllIn.applyCss();
+	 AllIn.setOnMouseClicked( event -> { 
+		 if(GameState.equals("Betting")) {
+			 if(currentBet==0) {
+		        	ConfirmButton.setVisible(true);
+		        	CancelButton.setVisible(true);
+		        }
+			 currentBet=-1;
+		 	setMessage( "Bet Entered%" + currentBet+"%"+Integer.toString(pid)+"%"+table);
+	        messageRequest();}
+	});
 	 
 	 Pane.getChildren().add(ConfirmButton);
 	 Pane.getChildren().add(CancelButton);
@@ -553,6 +550,33 @@ public void setBetValue() {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+ }
+ 
+ public static void closeSocket() {
+	 System.out.println("Stage is closing");
+     try {
+     	try {
+     	if(bufferedWriter!=null) {
+     	bufferedWriter.write("Leave Table%"+pid+"%"+table);
+			bufferedWriter.newLine();
+			bufferedWriter.flush();}}
+     	catch(IOException e) {
+     		e.printStackTrace();
+     	}
+     	if(socket!=null)
+				socket.close();
+     	if(bufferedReader!=null)
+				bufferedReader.close();
+			if(bufferedWriter!=null)
+				bufferedWriter.close();	
+			
+     	
+    
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	 
  }
 
  
@@ -864,13 +888,11 @@ public void removeCards(int id, int n) {
 			if(i>1) {
 				if(Values[1].equals("Not Playing")) {
 					if(i-1==pid) {
-						Stage stage=(Stage) Pane.getScene().getWindow();
-						stage.fireEvent(
-							    new WindowEvent(
-							        stage,
-							        WindowEvent.WINDOW_CLOSE_REQUEST
-							    )
-							);
+						try {
+							LeaveTable();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
 					}
 					
 				}
@@ -997,18 +1019,19 @@ public void removeCards(int id, int n) {
 	    }
 
 
-	 public void changeScene(MouseEvent event, String path) throws IOException {
+	 public void changeScene(String path) throws IOException {
 		 FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
 		 root= loader.load();
-		 stage=(Stage) ((Node)event.getSource()).getScene().getWindow();
+		 stage=(Stage) Pane.getScene().getWindow();
 		 scene= new Scene(root);
 		 stage.setScene(scene);
 	 }
 
 
-	 public void LeaveTable(MouseEvent event) throws IOException{
-    
-		 changeScene(event,"../Resources/AfterLogin.fxml");
+	 public void LeaveTable() throws IOException{
+		 
+		 closeSocket();
+		 changeScene("/Resources/AfterLogin.fxml");
 	 }
 }
 

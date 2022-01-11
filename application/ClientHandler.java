@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class ClientHandler implements Runnable {
 	
@@ -17,13 +18,18 @@ public class ClientHandler implements Runnable {
 	private String name;
 	String message;
 	boolean LastMessage;
-	
+	private ReentrantLock mutex = new ReentrantLock();
 	public ClientHandler(Socket socket,Server server) {
 		try {
 			this.socket=socket;
 			this.bufferedWriter=new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			this.bufferedReader=new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			Server.clientHandlers.add(this);
+			try {
+	            mutex.lock();
+	            Server.clientHandlers.add(this);
+	        } finally {
+	            mutex.unlock();
+	        }
 		}catch(IOException e) {
 			e.printStackTrace();
 		}

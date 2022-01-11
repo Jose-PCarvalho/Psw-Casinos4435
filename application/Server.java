@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javafx.application.Platform;
 
@@ -20,6 +21,7 @@ public class Server {
 	public boolean newMessage=false;
 	public static ArrayList<ClientHandler> clientHandlers =new ArrayList<>();
 	ArrayList<String> messageList= new ArrayList<String>();
+	private ReentrantLock mutex = new ReentrantLock();
 
 	public Server(ServerSocket serverSocket) {
 		this.serverSocket=serverSocket;	
@@ -125,25 +127,31 @@ public class Server {
 	
 	
 	public void broadcastMessage(String messageToSend) {
-		ArrayList<ClientHandler> remove =new ArrayList<>();
-		for(ClientHandler clientHandler: clientHandlers) {
-			try {
-				if(clientHandler.socket.isClosed()) {
-					remove.add(clientHandler);
-				}
-				else {
-					clientHandler.bufferedWriter.write(messageToSend);
-					clientHandler.bufferedWriter.newLine();
-					clientHandler.bufferedWriter.flush();
-					}
-			}catch(IOException e) {
-				e.printStackTrace();
-				closeEverything(clientHandler.socket,clientHandler.bufferedReader,clientHandler.bufferedWriter);
-				
-			}
-			
-		}
-		clientHandlers.removeAll(remove);
+		try {
+            mutex.lock();
+            ArrayList<ClientHandler> remove =new ArrayList<>();
+    		for(ClientHandler clientHandler: clientHandlers) {
+    			try {
+    				if(clientHandler.socket.isClosed()) {
+    					remove.add(clientHandler);
+    				}
+    				else {
+    					clientHandler.bufferedWriter.write(messageToSend);
+    					clientHandler.bufferedWriter.newLine();
+    					clientHandler.bufferedWriter.flush();
+    					}
+    			}catch(IOException e) {
+    				e.printStackTrace();
+    				closeEverything(clientHandler.socket,clientHandler.bufferedReader,clientHandler.bufferedWriter);
+    				
+    			}
+    			
+    		}
+    		clientHandlers.removeAll(remove);
+    		
+        } finally {
+            mutex.unlock();
+        }
 		
 	}
 	
@@ -152,12 +160,20 @@ public class Server {
 	}
 	
 	public void receiveMessageClientHandlers() {
-		for(ClientHandler clientHandler: clientHandlers) {
-			if(clientHandler.LastMessage) {
-				messageList.add(clientHandler.message);
-				clientHandler.LastMessage=false;
-			}
-		}
+		try {
+            mutex.lock();
+            ArrayList<ClientHandler> copy =new ArrayList<>();
+    		copy=clientHandlers;
+    		for(ClientHandler clientHandler: copy) {
+    			if(clientHandler.LastMessage) {
+    				messageList.add(clientHandler.message);
+    				clientHandler.LastMessage=false;
+    			}
+    		} 
+        } finally {
+            mutex.unlock();
+        }
+		
 	}
 	
 

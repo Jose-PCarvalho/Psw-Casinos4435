@@ -23,7 +23,7 @@
             <Image url="@Side-bets-blackjack-explanation.jpg" />
          </image>
       </ImageView>
-      <GridPane fx:id="ChipGrid" layoutX="198.0" layoutY="907.0" onMouseClicked="#BetEntered" prefHeight="30.0" prefWidth="1002.0">
+      <GridPane fx:id="ChipGrid" layoutX="289.0" layoutY="907.0" onMouseClicked="#BetEntered" prefHeight="30.0" prefWidth="1002.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -46,32 +46,32 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </GridPane>
-      <ImageView fitHeight="107.0" fitWidth="194.0" layoutX="14.0" layoutY="861.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="128.0" fitWidth="222.0" layoutX="14.0" layoutY="840.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@GeneralAssets/Rect.png" />
          </image>
       </ImageView>
-      <Label layoutX="47.0" layoutY="876.0" text="Balance">
+      <Label layoutX="63.0" layoutY="853.0" text="Balance">
          <font>
             <Font size="31.0" />
          </font>
       </Label>
-      <Label fx:id="WalletGUI" layoutX="47.0" layoutY="915.0" prefHeight="45.0" prefWidth="105.0" textAlignment="CENTER">
+      <Label fx:id="WalletGUI" layoutX="43.0" layoutY="907.0" prefHeight="45.0" prefWidth="145.0" textAlignment="CENTER">
          <font>
             <Font size="29.0" />
          </font>
       </Label>
-      <ImageView fitHeight="107.0" fitWidth="194.0" layoutX="1441.0" layoutY="862.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="128.0" fitWidth="212.0" layoutX="1427.0" layoutY="843.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@GeneralAssets/Rect.png" />
          </image>
       </ImageView>
-      <Label layoutX="1504.0" layoutY="876.0" text="Bet">
+      <Label layoutX="1506.0" layoutY="853.0" text="Bet">
          <font>
             <Font size="31.0" />
          </font>
       </Label>
-      <Label fx:id="BetGUI" layoutX="1484.0" layoutY="916.0" prefHeight="43.0" prefWidth="85.0">
+      <Label fx:id="BetGUI" layoutX="1456.0" layoutY="916.0" prefHeight="43.0" prefWidth="145.0">
          <font>
             <Font size="29.0" />
          </font>
@@ -225,7 +225,7 @@
       </AnchorPane>
       <Button layoutX="1329.0" layoutY="18.0" mnemonicParsing="false" onMouseClicked="#LeaveTable" prefHeight="50.0" prefWidth="139.0" style="-fx-background-radius: 60; -fx-background-color: grey;" text="Leave Table" textFill="WHITE">
          <font>
-            <Font name="Calibri" size="20.0" />
+            <Font name="Arial Bold" size="19.0" />
          </font>
       </Button>
    </children>
