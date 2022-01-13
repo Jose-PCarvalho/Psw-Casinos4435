@@ -54,9 +54,9 @@
                   <Font size="18.0" />
                </font>
             </Button>
-            <Label fx:id="ErrorMsg" alignment="CENTER" contentDisplay="CENTER" layoutX="36.0" layoutY="355.0" opacity="0.96" prefHeight="21.0" prefWidth="268.0" textFill="#ff0000ed">
+            <Label fx:id="ErrorMsg" alignment="CENTER" contentDisplay="CENTER" layoutX="37.0" layoutY="355.0" prefHeight="41.0" prefWidth="265.0" style="-fx-background-color: brown; -fx-background-radius: 15;" textFill="#ffffffed" visible="false">
                <font>
-                  <Font name="Arial" size="24.0" />
+                  <Font name="Arial" size="20.0" />
                </font>
             </Label>
          </children>

@@ -460,6 +460,7 @@ public class AfterLoginController {
 		}
 		else if(MenuFlag==false) {
 			Menu.setVisible(true);
+			Menu.toFront();
 			MenuFlag=true;
 		}
 		
@@ -468,6 +469,7 @@ public class AfterLoginController {
 	private void openAccMenu() {
 		accMenuFlag=true;
 		accMenu.setVisible(accMenuFlag);
+		accMenu.toFront();
 		disableTableButtons();
 		
 	}

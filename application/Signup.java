@@ -23,6 +23,9 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Properties;
 import java.util.Scanner;
+
+import javax.naming.Context;
+
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -65,21 +68,22 @@ public class Signup {
         }
         
         else if(GetYears(AgeBD.getValue()) < 18 && AgeBD.getValue() != null){
-        	CAError.setText("You are too young to play this game. Now Exiting.");
+        	CAError.setText("You are too young to play this game.");
         }
         
         else {
         	if(UserNameExists(usernameField.getText()) == true) {
-        		CAError.setText("UserName already exists. Choose other.");
+        		CAError.setText("Username already exists.\nChoose other.");
         	}
         	else {
         		InsertNewUser(NameField.getText(), usernameField.getText(), PasswordField.getText(), AgeBD.getValue(), 1000, false);
         		CAError.setText("Account successfully created.");
-        		//Thread.sleep(500);
+        		
         		changeScene(Event,"../Resources/login.fxml");
         	}
 
         }
+        CAError.setVisible(true);
     }
 
     public void GoBack(ActionEvent Event) throws IOException {

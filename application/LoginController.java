@@ -54,7 +54,7 @@ public final class LoginController{
     
   
 
-    public void userLogIn(ActionEvent event) throws IOException, SQLException{
+    public void userLogIn(ActionEvent event) throws IOException, SQLException, InterruptedException{
     	if(conn==null) {
     		ConnectDB();
     		}
@@ -62,23 +62,26 @@ public final class LoginController{
     		ConnectDB();
     	}
         if(usernameTF.getText().isEmpty() && PasswordTF.getText().isEmpty()){
-            ErrorMsg.setText("Please enter your data.");
-        }
-        String username=usernameTF.getText();
-        if(UserNameExists(username) == true) {
-        	if(FindPassword(username, PasswordTF.getText()) == true) {
-        		setUser();
-        		changeScene(event,"../Resources/AfterLogin.fxml");
-        		
-        	}
-        	else {
-        		ErrorMsg.setText("Wrong password.");
-        	}
+        	ErrorMsg.setText("Please enter your data.");
         }
         else {
-        	ErrorMsg.setText("Wrong username.");
+        	String username=usernameTF.getText();
+            if(UserNameExists(username) == true) {
+            	if(FindPassword(username, PasswordTF.getText()) == true) {
+            		setUser();
+            		changeScene(event,"../Resources/AfterLogin.fxml");	
+            	}
+            	else {
+            		ErrorMsg.setText("Wrong password.Try again.");
+            	}
+            }
+            else {
+            	ErrorMsg.setText("Wrong username.Try again.");
+            }
         }
+        ErrorMsg.setVisible(true);
     }
+    
     public void changeScene(ActionEvent event, String path) throws IOException {
     	FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
 		root= loader.load();

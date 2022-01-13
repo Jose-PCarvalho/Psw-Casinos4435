@@ -157,8 +157,7 @@ ImageView ProfileImage;
  private String message="";
  private static Connection conn;
  static int table;
- 
-
+ @FXML Label timeL;
 
 
 
@@ -233,7 +232,6 @@ public void setBetValue() {
  }
  
  public void initialize() {
-	 
 	 populateGrid();
 	 message="Player Joined%"+table+"%"+user.name;
 	 messageRequest();
@@ -876,7 +874,18 @@ public void removeCards(int id, int n) {
 				GameState=Values[1];
 				if(!GameState.equals("Finished"))
 					gameFinalized=false;
+				if(GameState.equals("Betting")) {
+					timeL.setText(GameState+" -Time Remaing :"+Values[3]);
+					}
+				else if(GameState.equals("Playing")) {
+					timeL.setText(GameState+" -Time Remaing :"+Values[4]);
+					}
+				else if(GameState.equals("Finished")) {
+					timeL.setText(GameState+" -Time Remaing :"+Values[5]);
+					}
+				
 			}
+			
 			if(i==1) {
 				String DealerHandSize=Values[2];
 				String DealerHandValue=Values[4];

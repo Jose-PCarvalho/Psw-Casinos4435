@@ -32,8 +32,13 @@ public class Game{
     boolean playTimeisUp=false;
     Timer newGameTimer= new Timer();
     TimerTask newGameTimerTask;
+    int newGameCounter=0;
     boolean newGameTimeisUp=false;
     int GameRequest=0;
+	private int betCounter=0;
+	private int playCounter=0;
+	private boolean playTimerisUp;
+	private boolean betTimerisUp;
     
 
 
@@ -91,6 +96,11 @@ public void freeSpot(int pid) {
 public void newGame() {
 	newGameTimer.cancel();
 	newGameTimeisUp=false;
+	playTimer.cancel();
+	betTimer.cancel();
+	betCounter=10;
+	playTimerisUp=false;
+	betTimerisUp=false;
 	start=true;
 	GameRequest=0;
 	D.newGame();
@@ -150,6 +160,29 @@ public void endGame() {
 		}
 		
 	}
+	
+	newGameTimer=new Timer();
+	newGameCounter=15;
+	newGameTimerTask=new TimerTask(){
+	
+
+		@Override
+		public void run() {
+			if(newGameCounter>0) {
+				newGameCounter--;
+				System.out.println("Time Remaining "+ newGameCounter);
+				if(newGameCounter==0) {
+					System.out.println("Time is Up ");
+					newGameTimeisUp=true;
+					newGameTimer.cancel();
+				}
+			}
+			
+			
+		}
+		
+	};
+	newGameTimer.scheduleAtFixedRate(newGameTimerTask, 0, 1000);
 	
 	
 	
@@ -253,7 +286,7 @@ public void setGameState(String gameState) {
 
 
 public String getInfo(){
-	String info="GameState:"+ getGameState()+":"+table+"%";
+	String info="GameState:"+ getGameState()+":"+table+":"+betCounter+":"+playCounter+":"+newGameCounter+"%";
 	info+= "Dealer" + ":Hand Size:" + D.DealerHand.getHandsize() + ":Hand Value:" + D.DealerHand.getHandValue() +":Hand Cards:" +D.DealerHand.toString()+" %";
 	for(int i=1;i<8;i++) {
 		if(OccupiedSlots[i]) {
@@ -305,16 +338,17 @@ public void confirmBet(int pid) {
 	}
 	
 	if(getNumberOfParticipatingPlayers()==1) {
+		betCounter=10;
 		betTimer=new Timer();
 		betTimerTask=new TimerTask(){
-			int counter=10;
+		
 
 			@Override
 			public void run() {
-				if(counter>0) {
-					counter--;
-					System.out.println("Time Remaining "+ counter);
-					if(counter==0) {
+				if(betCounter>0) {
+					betCounter--;
+					System.out.println("Time Remaining "+ betCounter);
+					if(betCounter==0) {
 						System.out.println("Time is Up ");
 						betTimeisUp=true;
 						
@@ -352,15 +386,16 @@ public void startPlaying() {
 	checkPlayerTurns();
 	
 	playTimer=new Timer();
+	playCounter=30;
 	playTimerTask=new TimerTask(){
-		int counter=30;
+		
 
 		@Override
 		public void run() {
-			if(counter>0) {
-				counter--;
-				System.out.println("Time Remaining "+ counter);
-				if(counter==0) {
+			if(playCounter>0) {
+				playCounter--;
+				System.out.println("Time Remaining "+ playCounter);
+				if(playCounter==0) {
 					System.out.println("Time is Up ");
 					playTimeisUp=true;
 					
@@ -444,34 +479,14 @@ public boolean sanityCheck() {
 		newGame();
 		UpdateNeed= true;
 	}
+	if(!getGameState().equals("Waiting for Players"))
+		UpdateNeed=true;
 	return UpdateNeed;
 }
 
 public void newGameRequest() {
 	GameRequest++;
-	if(GameRequest==1) {
-		newGameTimer=new Timer();
-		newGameTimerTask=new TimerTask(){
-			int counter=10;
-
-			@Override
-			public void run() {
-				if(counter>0) {
-					counter--;
-					System.out.println("Time Remaining "+ counter);
-					if(counter==0) {
-						System.out.println("Time is Up ");
-						newGameTimeisUp=true;
-						newGameTimer.cancel();
-					}
-				}
-				
-				
-			}
-			
-		};
-		newGameTimer.scheduleAtFixedRate(newGameTimerTask, 0, 1000);
-	}
+	
 	if(GameRequest==getNumberOfParticipatingPlayers()) {
 		newGameTimer.cancel();
 		newGame();
