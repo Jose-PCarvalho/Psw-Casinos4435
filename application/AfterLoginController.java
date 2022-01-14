@@ -51,6 +51,8 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.scene.Cursor;
@@ -95,6 +97,9 @@ public class AfterLoginController {
 	@FXML TextField depositTF;
 	private static Connection conn;
 	@FXML ImageView ProfileImage;
+	@FXML AnchorPane HelpMenu;
+	@FXML Button closeHelp;
+	@FXML TextFlow HelpText;
 	
 	AnchorPane[] TableMenu=new AnchorPane[6];
 	 private Stage stage;
@@ -130,6 +135,49 @@ public class AfterLoginController {
 		confirmButton.setVisible(false);
 		depositTF.setVisible(false);
 		slideBut.setVisible(false);
+		
+		HelpMenu.setVisible(false);
+		Text text1=new Text("What is Casinos4435?\r\n");
+		text1.setStyle("-fx-font-weight: bold; -fx-font-size: 24px;");
+		Text text2 = new Text("Casinos4435 is an online gambling platform that strives to give the best online casino experience. So we present you the BlackJack Game.\n");
+		text2.setStyle("-fx-font-size: 18px;");
+		Text text3 = new Text("\nHow to play BlackJack?\n");
+		text3.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+		Text text4 = new Text("The goal is to beat the dealer's hand without going over 21.\r\n"
+				+ "Basic Blackjack Rules:\r\n"
+				+ " - Aces are worth 1 or 11, depending on whether the player or dealer is given a score higher than 21.\r\n"
+				+ " - Face cards are worth 10.\r\n"
+				+ " - And all others cards have their face value.\r\n"
+				+ " - Each player starts with two cards, one of the dealer's cards is hidden until the end.\r\n"
+				+ " - To 'Hit' is to ask for another card. To 'Stand' is to hold your score and end your turn.\r\n"
+				+ " - If you go over 21 you bust, and the dealer wins regardless of the dealer's hand.\r\n"
+				+ " - If you are dealt 21 from the start (Ace & 10), you got a blackjack.\r\n"
+				+ " - Blackjack means you win 1.5 the amount of your bet.\r\n"
+				+ " - Dealer will hit until his/her cards total 17 or higher.\r\n"
+				+ " - Doubling is like a hit, only the bet is doubled and you only get one more card.\r\n"
+				+ " - You can only double on the first move.\r\n"
+				+ " - When you win, you receive double your bet.\r\n"
+				+ " - When you lose, you lose your bet.\r\n"
+				+ " - When you draw, you receive your bet.\n");
+		text4.setStyle("-fx-font-size: 18px;");
+		Text text5 = new Text("\nPay attencion to timers:\r\n"
+				+ " - The players have 15 seconds to place their bets after a player's first bet.\r\n"
+				+ " - The players have 30 seconds to complete their play.\r\n"
+				+ " - The players have 10 seconds between the end of play and the start of a new game.\r\n");
+		text5.setStyle("-fx-font-size: 18px;");
+		Text text6 = new Text("\nFAQ\n");
+		text6.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+		Text text7 = new Text("How to deposit money?\r\n"
+				+ "Go to: Menu > My Account > Deposit Money (Write the amount to deposit) > Confirm\r\n"
+				+ "\r\n"
+				+ "How to withdraw money?\r\n"
+				+ "Go to: Menu > My Account > Withdraw Money (Choose the amount to withdraw) > Confirm\r\n"
+				+ "\r\n"
+				+ "How to delete an account?\r\n"
+				+ "Go to: Menu > My Account > Delete Account > Confirm\r\n"
+				+ "");
+		text7.setStyle("-fx-font-size: 18px;");
+		HelpText.getChildren().addAll(text1, text2,text3,text4,text5,text6,text7);
         
         
         try {
@@ -518,6 +566,18 @@ public class AfterLoginController {
 		enableTableButtons();
 	
 		
+	}
+	
+	@FXML
+	private void openHelp() {
+		HelpMenu.setVisible(true);
+		HelpMenu.toFront();
+		disableTableButtons();
+	}
+	@FXML
+	private void closeHelp() {
+		HelpMenu.setVisible(false);
+		enableTableButtons();
 	}
 	
 	@FXML

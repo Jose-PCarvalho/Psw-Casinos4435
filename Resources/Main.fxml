@@ -3,10 +3,12 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXSlider?>
 <?import com.jfoenix.controls.JFXToggleButton?>
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -15,6 +17,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.TextFlow?>
 
 <AnchorPane fx:id="Pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="984.0" prefWidth="1636.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
    <children>
@@ -117,12 +120,12 @@
                   </ImageView>
                </graphic>
             </JFXButton>
-            <JFXButton fx:id="HelpBut" contentDisplay="RIGHT" graphicTextGap="30.0" layoutX="222.0" layoutY="790.0" prefHeight="58.0" prefWidth="133.0" text="Help" textFill="WHITE">
+            <JFXButton fx:id="HelpBut" contentDisplay="RIGHT" graphicTextGap="30.0" layoutX="222.0" layoutY="790.0" onMouseClicked="#openHelp" prefHeight="58.0" prefWidth="133.0" text="Help" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
                <graphic>
-                  <ImageView fitHeight="36.0" fitWidth="66.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="36.0" fitWidth="66.0" onMouseClicked="#closeHelp" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@GeneralAssets/baseline_help_outline_black_24dp.png" />
                      </image>
@@ -227,11 +230,84 @@
          <font>
             <Font name="Arial Bold" size="19.0" />
          </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
       </Button>
       <Label fx:id="timeL" layoutX="14.0" layoutY="18.0" prefHeight="50.0" prefWidth="351.0" text="Time Remaing" textFill="WHITE">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
       </Label>
+      <AnchorPane fx:id="HelpMenu" layoutX="86.0" layoutY="97.0" prefHeight="810.0" prefWidth="1151.0" style="-fx-background-color: #D2A4A4; -fx-background-radius: 30;" visible="false">
+         <children>
+            <Label alignment="CENTER" layoutX="25.0" layoutY="15.0" prefHeight="98.0" prefWidth="155.0" style="-fx-font-family: Share; -fx-font-size: 40;" text="Help" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="25.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="55.0" fitWidth="47.0" layoutX="180.0" layoutY="41.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../casinos-4435-3/Resources/GeneralAssets/baseline_help_outline_black_24dp.png" />
+               </image>
+            </ImageView>
+            <ScrollPane layoutX="42.0" layoutY="104.0" style="-fx-background: #D2A4A4; -fx-border-color: #D2A4A4;" stylesheets="@../scroll.css">
+               <content>
+                  <TextFlow fx:id="HelpText" prefHeight="679.0" prefWidth="1067.0" />
+               </content>
+               <styleClass>
+                  <String fx:value="thumb" />
+                  <String fx:value="corner" />
+                  <String fx:value="decrement-button" />
+                  <String fx:value="increment-button" />
+                  <String fx:value="scroll-bar" />
+                  <String fx:value="scroll-pane" />
+                  <String fx:value="track" />
+               </styleClass>
+            </ScrollPane>
+         </children>
+      </AnchorPane>
+      <Button fx:id="ChatBut" layoutX="1202.0" layoutY="18.0" mnemonicParsing="false" onMouseClicked="#LeaveTable" prefHeight="50.0" prefWidth="105.0" style="-fx-background-radius: 60; -fx-background-color: grey;" text="Chat" textFill="WHITE">
+         <font>
+            <Font name="Arial Bold" size="19.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <AnchorPane fx:id="Chat" layoutX="1202.0" layoutY="97.0" prefHeight="714.0" prefWidth="414.0" style="-fx-background-color: #D2A4A4; -fx-background-radius: 30;">
+         <children>
+            <ScrollPane layoutX="19.0" layoutY="62.0" prefHeight="561.0" prefWidth="379.0" style="-fx-background: #D2A4A4; -fx-border-color: #D2A4A4;" stylesheets="@../scroll.css">
+               <content>
+                  <TextFlow fx:id="ChatText" prefHeight="543.0" prefWidth="375.0" />
+               </content>
+               <styleClass>
+                  <String fx:value="corner" />
+                  <String fx:value="decrement-button" />
+                  <String fx:value="increment-button" />
+                  <String fx:value="scroll-bar" />
+                  <String fx:value="scroll-pane" />
+                  <String fx:value="thumb" />
+                  <String fx:value="track" />
+               </styleClass>
+            </ScrollPane>
+            <TextField fx:id="ChatInput" layoutX="60.0" layoutY="637.0" prefHeight="43.0" prefWidth="296.0" promptText="Chat" style="-fx-background-color: white; -fx-background-radius: 20;">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </TextField>
+            <Button fx:id="closeChat" layoutX="363.0" layoutY="8.0" mnemonicParsing="false" onMouseClicked="#closeHelp" prefHeight="44.0" prefWidth="45.0" style="-fx-background-radius: 30; -fx-background-color: #024f14;" text="X" textFill="WHITE">
+               <font>
+                  <Font size="20.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+         </children>
+      </AnchorPane>
    </children>
 </AnchorPane>
