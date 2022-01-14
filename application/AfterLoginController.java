@@ -29,6 +29,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -101,13 +102,16 @@ public class AfterLoginController {
 	 private Parent root;
 	 private File filePath;
 	 private AudioClip mediaPlayer;
-	private boolean SendMessage;
-	private String message;
+	 private boolean SendMessage;
+	 private String message;
 	 static Account user;
 	 private static Socket socket;
 	 private static  BufferedReader bufferedReader;
 	 private static BufferedWriter bufferedWriter;
-	
+	 Label[] DealerLabel=  new Label[6];
+	 Label[] NrPlayer= new Label[6];
+	 int[] labelPosX= {0,150,659,1164+4,430-4,925-4};
+	 int[] labelPosY= {0,257,257,257,590,590};
 
 	
 	public void initialize() {
@@ -120,6 +124,7 @@ public class AfterLoginController {
 		setXButtons();
 		setMenuGrids();
 		setPlayers();
+		setLabels();
 		Menu.setVisible(false);
 		accMenu.setVisible(false);
 		confirmButton.setVisible(false);
@@ -193,7 +198,6 @@ public class AfterLoginController {
     			try {
     			Thread.sleep(100);
     		} catch (InterruptedException e) {
-    			// TODO Auto-generated catch block
     			e.printStackTrace();
     		}
     		}
@@ -303,6 +307,30 @@ public class AfterLoginController {
 
 	}
 	
+	private void setLabels() {
+		for(int i=1;i<6;i++) {
+			DealerLabel[i]=new Label("Teste");
+			DealerLabel[i].setLayoutX(labelPosX[i]);
+			DealerLabel[i].setLayoutY(labelPosY[i]);
+			DealerLabel[i].setFont(new Font("System", 20));
+			DealerLabel[i].setPrefWidth(318);
+			DealerLabel[i].setPrefHeight(30);
+			DealerLabel[i].setAlignment(Pos.CENTER);
+			DealerLabel[i].setTextFill(Color.WHITE);
+			Pane.getChildren().add(DealerLabel[i]);
+			NrPlayer[i]=new Label("0");
+			NrPlayer[i].setLayoutX(labelPosX[i]);
+			NrPlayer[i].setLayoutY(labelPosY[i]+138);
+			NrPlayer[i].setFont(new Font("System", 20));
+			NrPlayer[i].setPrefWidth(318);
+			NrPlayer[i].setPrefHeight(30);
+			NrPlayer[i].setAlignment(Pos.CENTER);
+			NrPlayer[i].setTextFill(Color.WHITE);
+			Pane.getChildren().add(NrPlayer[i]);
+			
+		}
+		
+	}
 	private void setPlayers() {
 		for(int i=1;i<6;i++) {
 			EnterButton[i]=new Button("Enter");
@@ -627,15 +655,29 @@ public class AfterLoginController {
     	
     	String lines[] = messageFromServer.split("&");
     	for(int i=1;i<lines.length;i++) {
+    		int n=-1;
     		String player[]=lines[i].split("%");
     		for(int j=0;j<player.length;j++) {
     			changePlayer(i,j,player[j]);
+    			if(j==0) {
+    				changeDealerLabel(i,player[j]);
+    			}
+    			if(!player[j].equals(" ")) {
+    				n++;
+    			}
     		}
+    		changeNrLabel(i, n);
     	}
     	
     	
     }
     
+    private void changeDealerLabel(int i, String Name) {
+    	DealerLabel[i].setText(Name);
+    }
+    private void changeNrLabel(int i,int n) {
+    	NrPlayer[i].setText(Integer.toString(n));
+    }
     public boolean isReady(){
 		return SendMessage;
 		

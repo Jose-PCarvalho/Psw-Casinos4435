@@ -143,7 +143,7 @@ ImageView ProfileImage;
  private static BufferedWriter bufferedWriter;
  static Account user;
  boolean gameFinalized=false;
- 
+
  
  
  ImageView[][] PlayersHands= new ImageView[8][10];
@@ -800,21 +800,24 @@ public void gameOver(String Result) {
 	 FinalScreen.setLayoutX(600);
 	 FinalScreen.setLayoutY(200+120);
 	 FinalScreen.setPreserveRatio(true);
-	 Pane.getChildren().add(FinalScreen);
 	 gameFinalized=true;
+	 Pane.getChildren().add(FinalScreen);
 	 FinalScreen.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{
 	         newGame();
 	         Pane.getChildren().remove(FinalScreen);
 	         event.consume();
-	     });}
+	     });
+	 }
 
 }
 
 public void newGame() {
-	setMessage("New Game%"+table);
+	
+	
 	for (int i=0;i<8;i++) {
 		removeCards(i,10);
 	}
+	setMessage("New Game%"+table);
     messageRequest();
 	
 	

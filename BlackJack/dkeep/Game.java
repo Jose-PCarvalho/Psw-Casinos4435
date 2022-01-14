@@ -37,8 +37,7 @@ public class Game{
     int GameRequest=0;
 	private int betCounter=0;
 	private int playCounter=0;
-	private boolean playTimerisUp;
-	private boolean betTimerisUp;
+
     
 
 
@@ -99,8 +98,8 @@ public void newGame() {
 	playTimer.cancel();
 	betTimer.cancel();
 	betCounter=10;
-	playTimerisUp=false;
-	betTimerisUp=false;
+	playTimeisUp=false;
+	betTimeisUp=false;
 	start=true;
 	GameRequest=0;
 	D.newGame();
@@ -124,6 +123,7 @@ public void newGame() {
 }
 
 public void endGame() {
+	System.out.println("Entrei aqui");
 	playTimer.cancel();
 	playTimeisUp=false;
 	D.DealerHand.resetHidden();
@@ -170,7 +170,7 @@ public void endGame() {
 		public void run() {
 			if(newGameCounter>0) {
 				newGameCounter--;
-				System.out.println("Time Remaining "+ newGameCounter);
+				System.out.println("Time new Game Remaining "+ newGameCounter);
 				if(newGameCounter==0) {
 					System.out.println("Time is Up ");
 					newGameTimeisUp=true;
@@ -220,8 +220,10 @@ public void PlayerPlay(String Message,int pid) {
 	            Players[pid].setBet(Players[pid].getBet()); 
 	            }
             }
+		
+		checkPlayerTurns();
 		}
-  checkPlayerTurns();
+  
 }
 
 public boolean getGameIsPlaying() {
@@ -421,11 +423,11 @@ public void checkPlayerTurns() {
 	if(playerEndedTurn[i]) {
 		n++;
 	}
+	
+	}
 	if(n==getNumberOfParticipatingPlayers()) {
 		setGameState("Ending");
 		endGame();
-	}
-		
 	}
 }
 
@@ -451,10 +453,10 @@ public boolean sanityCheck() {
 		newGame(); 
 		UpdateNeed= true;
 	}
-	if(getGameState().equals("Ending")) {
+	/*if(getGameState().equals("Ending")) {
 		endGame();
 		UpdateNeed= true;
-	}
+	}*/
 	if(numberOfPlayers!=0 && getGameState().equals("Waiting for Players")) {
 		setGameState("Betting");
 		UpdateNeed= true;
