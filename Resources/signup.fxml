@@ -47,6 +47,23 @@
             <Font name="Arial" size="20.0" />
          </font>
       </Label>
+      <AnchorPane fx:id="AgeError" layoutX="457.0" layoutY="201.0" prefHeight="345.0" prefWidth="490.0" style="-fx-background-color: lightyellow; -fx-background-radius: 20;" visible="false">
+         <children>
+            <Label alignment="CENTER" layoutX="16.0" layoutY="11.0" prefHeight="225.0" prefWidth="456.0" text="You are too young to play this &#10;game.&#10;&#10;Now exiting the App.">
+               <font>
+                  <Font name="System Bold" size="24.0" />
+               </font>
+            </Label>
+            <Button fx:id="AgeOk" layoutX="173.0" layoutY="264.0" mnemonicParsing="false" onMouseClicked="#quit" prefHeight="51.0" prefWidth="143.0" style="-fx-background-color: green; -fx-background-radius: 20;" text="OK" textFill="WHITE">
+               <font>
+                  <Font size="24.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+         </children>
+      </AnchorPane>
    </children>
    <padding>
       <Insets bottom="3.0" right="1.0" />

@@ -49,6 +49,9 @@ public class Signup {
     private Label CAError;
     @FXML
     private DatePicker AgeBD;
+    @FXML AnchorPane AgeError;
+    @FXML Button AgeOk;
+    
     
     private Stage stage;
     private Scene scene;
@@ -65,27 +68,37 @@ public class Signup {
     public void CreateAccount(ActionEvent Event) throws IOException, InterruptedException, SQLException {
         if (usernameField.getText().isEmpty() || AgeBD.getValue() == null || PasswordField.getText().isEmpty() || NameField.getText().isEmpty()) {
             CAError.setText("Please input data.");
+            CAError.setVisible(true);
         }
         
         else if(GetYears(AgeBD.getValue()) < 18 && AgeBD.getValue() != null){
-        	CAError.setText("You are too young to play this game.");
+        	//CAError.setText("You are too young to play this game.");
+        	AgeError.setVisible(true);
+        	
         }
         
         else {
         	if(UserNameExists(usernameField.getText()) == true) {
         		CAError.setText("Username already exists.\nChoose other.");
+        		CAError.setVisible(true);
         	}
         	else {
         		InsertNewUser(NameField.getText(), usernameField.getText(), PasswordField.getText(), AgeBD.getValue(), 1000, false);
         		CAError.setText("Account successfully created.");
+        		CAError.setVisible(true);
         		
         		changeScene(Event,"../Resources/login.fxml");
         	}
 
         }
-        CAError.setVisible(true);
     }
 
+    @FXML 
+    private void quit() {
+    	Stage stage = (Stage) AgeOk.getScene().getWindow();
+    	stage.close();
+    }
+    
     public void GoBack(ActionEvent Event) throws IOException {
         
         changeScene(Event,"../Resources/login.fxml");

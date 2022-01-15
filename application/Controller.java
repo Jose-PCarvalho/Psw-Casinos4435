@@ -79,8 +79,6 @@ JFXButton HelpBut;
 @FXML 
 JFXToggleButton Music;
 @FXML 
-JFXSlider slideBut;
-@FXML 
 AnchorPane Menu;
 @FXML 
 Label  NameLabel;
@@ -93,19 +91,9 @@ Label balanceLabel;
 @FXML 
 AnchorPane accMenu;
 @FXML 
-Button confirmButton;
-@FXML 
-Button pictureButton;
-@FXML 
-Button withdrawButton;
-@FXML 
-Button depositButton;
-@FXML 
 Button closeAcc;
 @FXML 
 Button MyAccBut;
-@FXML 
-TextField depositTF;
 @FXML 
 ImageView ProfileImage;
 @FXML AnchorPane HelpMenu;
@@ -114,6 +102,14 @@ ImageView ProfileImage;
 @FXML Button chatBut; 
 @FXML AnchorPane Chat;
 @FXML TextFlow ChatText;
+@FXML AnchorPane kickMSG;
+
+private AudioClip mediaPlayer;
+private File directory;
+private File[] files;
+private int songNumber;
+private ArrayList<File> songs;
+
 boolean chatFlag=false;
  final int[] BetValues= {1,2,5,10,20,25,50,100,250,500,1000,2000,5000};
  int currentBet=0;
@@ -129,7 +125,6 @@ boolean chatFlag=false;
  private Scene scene;
  private Parent root;
  private File filePath;
- private AudioClip mediaPlayer;
  boolean playGridOn=false;
  static int pid;
  boolean joined=false;
@@ -243,6 +238,21 @@ public void setBetValue() {
  }
  
  public void initialize() {
+	 
+	 songs = new ArrayList<File>();
+		directory = new File("music");
+		files = directory.listFiles();
+		if(files != null) {
+			for(File file : files) {
+				songs.add(file);
+				//System.out.println(file);
+			}
+		}
+		
+		//media = new Media(songs.get(songNumber).toURI().toString());
+		mediaPlayer = new AudioClip(songs.get(songNumber).toURI().toString());
+		
+		
 	 populateGrid();
 	 message="Player Joined%"+table+"%"+user.name;
 	 messageRequest();
@@ -252,9 +262,6 @@ public void setBetValue() {
      balanceLabel.setText("Current Balance : " + user.money);
      Menu.setVisible(false);
      accMenu.setVisible(false);
-     confirmButton.setVisible(false);
-     depositTF.setVisible(false);
-     slideBut.setVisible(false);
      HelpMenu.setVisible(false);
 	 ConfirmButton = new Button("Confirm Bet");
 	 ConfirmButton.setFont(Font.font("System", 18));
@@ -498,7 +505,7 @@ public void setBetValue() {
 		HelpMenu.toFront();
 	}
 	
-	@FXML
+	/*@FXML
 	private void depositMoney() {
 		if(operationFlag==false) {
 		depositTF.setVisible(true);
@@ -514,10 +521,19 @@ public void setBetValue() {
 		slideBut.setMax(user.money);
 		operation=2;
 		operationFlag=true;}
+	}*/
+	
+	@FXML
+	private void kickOK() throws IOException  {
+		//kickMSG.setVisible(false);
+		closeSocket();
+		changeScene("/Resources/AfterLogin.fxml");
+		mediaPlayer.stop();
+		//Leave table
 	}
 	
 	
-	@FXML
+	/*@FXML
 	private void confirm() {
 		if(operation==1) {
 			user.money=user.money+Integer.parseInt(depositTF.getText());
@@ -575,24 +591,43 @@ public void setBetValue() {
         	System.err.println(e.getMessage());
         }
     }
-    
+    */
+	
     @FXML
     private void BackgroundMusic() {
        
-            String path = getClass().getResource("../resources/music.mp3").getPath();
-            Media media = new Media(new File(path).toURI().toString());
-            mediaPlayer = new AudioClip(media.getSource());
-            mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-            mediaPlayer.setVolume(0.1);
-            if(Music.isSelected()){
-                mediaPlayer.play();
-            }
-            else if(!(Music.isSelected())){
-                mediaPlayer.stop();
-            }
+    	/*String path = getClass().getResource("../music/music.mp3").getPath();
+        Media media = new Media(new File(path).toURI().toString());
+        mediaPlayer = new AudioClip(media.getSource());*/
+        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        mediaPlayer.setVolume(0.1);
+        if(Music.isSelected()){
+            mediaPlayer.play();
+        }
+        else if(!(Music.isSelected())){
+            mediaPlayer.stop();
+        }
         
     }
     
+    @FXML 
+    private void NextMusic() {
+    	if(songNumber < songs.size() - 1) {
+    		songNumber++;
+    		mediaPlayer.stop();
+    		
+    		mediaPlayer = new AudioClip(songs.get(songNumber).toURI().toString());
+    		BackgroundMusic();
+    	}
+    	else {
+    		songNumber = 0;
+    		mediaPlayer.stop();
+    		
+    		mediaPlayer = new AudioClip(songs.get(songNumber).toURI().toString());
+    		BackgroundMusic();
+    	}
+    	
+    }
     
  public static void shutdown() {
 	 System.out.println("Stage is closing");
@@ -1114,7 +1149,10 @@ public void removeCards(int id, int n) {
 		 
 		 closeSocket();
 		 changeScene("/Resources/AfterLogin.fxml");
+		 mediaPlayer.stop();
 	 }
+	 
+	
 	 
 	 public void clickChat() {
 		 chatFlag=!chatFlag;

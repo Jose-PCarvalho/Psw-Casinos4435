@@ -15,6 +15,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -35,6 +36,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -77,6 +79,7 @@ public class AfterLoginController {
 	boolean accMenuFlag=false;
 	boolean operationFlag=false;
 	int operation;
+	int ParamChange;
 	@FXML AnchorPane Pane;
 	@FXML Button MenuButton;
 	@FXML JFXButton HelpBut;
@@ -100,13 +103,27 @@ public class AfterLoginController {
 	@FXML AnchorPane HelpMenu;
 	@FXML Button closeHelp;
 	@FXML TextFlow HelpText;
+	@FXML AnchorPane changeParam;
+	@FXML AnchorPane delete;
+	@FXML Label ParamLabel;
+	@FXML PasswordField Pass;
+	@FXML PasswordField PassConfirm;
+	@FXML TextField Param;
+	@FXML AnchorPane NewComer;
+	
+	
+	//private Media media;
+	private AudioClip mediaPlayer;
+	private File directory;
+	private File[] files;
+	private int songNumber;
+	private ArrayList<File> songs;
 	
 	AnchorPane[] TableMenu=new AnchorPane[6];
 	 private Stage stage;
 	 private Scene scene;
 	 private Parent root;
 	 private File filePath;
-	 private AudioClip mediaPlayer;
 	 private boolean SendMessage;
 	 private String message;
 	 static Account user;
@@ -120,6 +137,20 @@ public class AfterLoginController {
 
 	
 	public void initialize() {
+		
+		songs = new ArrayList<File>();
+		directory = new File("music");
+		files = directory.listFiles();
+		if(files != null) {
+			for(File file : files) {
+				songs.add(file);
+				//System.out.println(file);
+			}
+		}
+		
+		//media = new Media(songs.get(songNumber).toURI().toString());
+		mediaPlayer = new AudioClip(songs.get(songNumber).toURI().toString());
+		
 		NameLabel.setText("Profile Name : " + user.name);
     	usernameLabel.setText("Username : " + user.username);
     	passwordLabel.setText("Password : " + user.password.replaceAll("(?s).", "*"));
@@ -135,6 +166,12 @@ public class AfterLoginController {
 		confirmButton.setVisible(false);
 		depositTF.setVisible(false);
 		slideBut.setVisible(false);
+		delete.setVisible(false);
+		changeParam.setVisible(false);
+		Pass.setVisible(false);
+		PassConfirm.setVisible(false);
+		Param.setVisible(false);
+		NewComer.toFront();
 		
 		HelpMenu.setVisible(false);
 		Text text1=new Text("What is Casinos4435?\r\n");
@@ -400,6 +437,7 @@ public class AfterLoginController {
 	        		closeSocket();
 	        		try {
 						changeScene(event,"../resources/Main.fxml");
+						mediaPlayer.stop();
 						
 						
 					} catch (IOException e) {
@@ -598,6 +636,91 @@ public class AfterLoginController {
 		operationFlag=true;}
 	}
 	
+	@FXML
+	private void closeNewComer() {
+		NewComer.setVisible(false);
+	}
+	
+	@FXML
+	private void changeParametersPName() {
+		changeParam.setVisible(true);
+		changeParam.toFront();
+		ParamLabel.setText("Write New Profile Name: ");
+		Pass.setVisible(false);
+		PassConfirm.setVisible(false);
+		Param.setVisible(true);
+		ParamChange = 1;
+		
+	}
+	
+	@FXML
+	private void changeParametersUName() {
+		changeParam.setVisible(true);
+		changeParam.toFront();
+		ParamLabel.setText("Write New Username: ");
+		Pass.setVisible(false);
+		PassConfirm.setVisible(false);
+		Param.setVisible(true);
+		ParamChange = 2;
+	}
+	
+	@FXML
+	private void changeParametersPass() {
+		changeParam.setVisible(true);
+		changeParam.toFront();
+		ParamLabel.setText("");
+		Param.setVisible(false);
+		Pass.setVisible(true);
+		PassConfirm.setVisible(true);
+		ParamChange = 3;
+	}
+	
+	@FXML
+	private void deleteAcc() {
+		delete.setVisible(true);
+		delete.toFront();
+	}
+	
+	@FXML
+	private void closeParamPopUp() {
+		changeParam.setVisible(false);
+		Param.setText("");
+	}
+	
+	@FXML
+	private void closeDelete() {
+		delete.setVisible(false);
+	}
+	
+	@FXML
+	private void changeParameters() throws SQLException {
+		
+		
+		if(ParamChange == 1) {
+			String change = Param.getText();
+			UpdatePName(user.username,change);
+			closeParamPopUp();
+			NameLabel.setText("Profile Name : " + user.name);
+		}
+		else if(ParamChange == 2) {
+			String change = Param.getText();
+			UpdateUName(user.username,change);
+			closeParamPopUp();
+			usernameLabel.setText("Username : " + user.username);
+			
+		}
+		else if(ParamChange == 3) {
+			String pass = Pass.getText();
+			if(PassConfirm.getText().equals(pass)) {
+				UpdatePass(user.username,pass);
+				closeParamPopUp();
+				passwordLabel.setText("Password : " + user.password.replaceAll("(?s).", "*"));
+			}
+			else{
+				ParamLabel.setText("Passwords must match.");
+			}
+		}
+	}
 	
 	@FXML
 	private void confirm() {
@@ -654,6 +777,7 @@ public class AfterLoginController {
     public void userLogOut(ActionEvent event) throws IOException{
         
         changeScene(event,"../Resources/login.fxml");
+        mediaPlayer.stop();
     }
     
     public static void setAccount(String name, String username, String password, Date birth, int balance, boolean admin, Connection connect){
@@ -666,6 +790,27 @@ public class AfterLoginController {
     	Statement statement = conn.createStatement();
 		statement.executeUpdate(update_account_money);
 		
+    }
+    
+    public void UpdatePName (String username, String PName) throws SQLException {
+    	String update_profile_name = "UPDATE blackjack.users SET name= '" + PName + "' WHERE username ='"+ username +"'";
+    	Statement statement = conn.createStatement();
+    	statement.executeUpdate(update_profile_name);
+    	user.name = PName;
+    }
+    
+    public void UpdateUName(String username, String UName) throws SQLException{
+    	String update_username = "UPDATE blackjack.users SET username= '" + UName + "' WHERE username ='" + username + "'";
+    	Statement statement = conn.createStatement();
+    	statement.executeUpdate(update_username);
+    	user.username = UName;
+    }
+    
+    public void UpdatePass(String username, String Pass) throws SQLException{
+    	String update_pass = "UPDATE blackjack.users SET password= '" + Pass + "' WHERE username ='" + username + "'";
+    	Statement statement = conn.createStatement();
+    	statement.executeUpdate(update_pass);
+    	user.password = Pass;
     }
     
     @FXML
@@ -696,9 +841,9 @@ public class AfterLoginController {
     @FXML
     private void BackgroundMusic() {
        
-            String path = getClass().getResource("../resources/music.mp3").getPath();
+            /*String path = getClass().getResource("../music/music.mp3").getPath();
             Media media = new Media(new File(path).toURI().toString());
-            mediaPlayer = new AudioClip(media.getSource());
+            mediaPlayer = new AudioClip(media.getSource());*/
             mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
             mediaPlayer.setVolume(0.1);
             if(Music.isSelected()){
@@ -708,6 +853,25 @@ public class AfterLoginController {
                 mediaPlayer.stop();
             }
         
+    }
+    
+    @FXML 
+    private void NextMusic() {
+    	if(songNumber < songs.size() - 1) {
+    		songNumber++;
+    		mediaPlayer.stop();
+    		
+    		mediaPlayer = new AudioClip(songs.get(songNumber).toURI().toString());
+    		BackgroundMusic();
+    	}
+    	else {
+    		songNumber = 0;
+    		mediaPlayer.stop();
+    		
+    		mediaPlayer = new AudioClip(songs.get(songNumber).toURI().toString());
+    		BackgroundMusic();
+    	}
+    	
     }
     
     
