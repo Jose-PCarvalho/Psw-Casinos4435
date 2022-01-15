@@ -145,7 +145,7 @@
             </JFXToggleButton>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="accMenu" layoutX="86.0" layoutY="97.0" prefHeight="810.0" prefWidth="1151.0" style="-fx-background-color: #D2A4A4; -fx-background-radius: 30;" visible="false">
+      <AnchorPane fx:id="accMenu" layoutX="51.0" layoutY="97.0" prefHeight="810.0" prefWidth="1151.0" style="-fx-background-color: #D2A4A4; -fx-background-radius: 30;" visible="false">
          <children>
             <ImageView fx:id="ProfileImage" fitHeight="266.0" fitWidth="414.0" layoutX="644.0" layoutY="79.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -239,7 +239,7 @@
             <Font name="System Bold" size="20.0" />
          </font>
       </Label>
-      <AnchorPane fx:id="HelpMenu" layoutX="86.0" layoutY="97.0" prefHeight="810.0" prefWidth="1151.0" style="-fx-background-color: #D2A4A4; -fx-background-radius: 30;" visible="false">
+      <AnchorPane fx:id="HelpMenu" layoutX="63.0" layoutY="97.0" prefHeight="810.0" prefWidth="1151.0" style="-fx-background-color: #D2A4A4; -fx-background-radius: 30;" visible="false">
          <children>
             <Label alignment="CENTER" layoutX="25.0" layoutY="15.0" prefHeight="98.0" prefWidth="155.0" style="-fx-font-family: Share; -fx-font-size: 40;" text="Help" textFill="WHITE">
                <font>
@@ -248,7 +248,7 @@
             </Label>
             <ImageView fitHeight="55.0" fitWidth="47.0" layoutX="180.0" layoutY="41.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../casinos-4435-3/Resources/GeneralAssets/baseline_help_outline_black_24dp.png" />
+                  <Image url="@GeneralAssets/baseline_help_outline_black_24dp.png" />
                </image>
             </ImageView>
             <ScrollPane layoutX="42.0" layoutY="104.0" style="-fx-background: #D2A4A4; -fx-border-color: #D2A4A4;" stylesheets="@../scroll.css">
@@ -265,9 +265,17 @@
                   <String fx:value="track" />
                </styleClass>
             </ScrollPane>
+            <Button fx:id="closeHelp" layoutX="1090.0" layoutY="19.0" mnemonicParsing="false" onMouseClicked="#closeHelp" prefHeight="44.0" prefWidth="47.0" style="-fx-background-radius: 30; -fx-background-color: #024f14;" text="X" textFill="WHITE">
+               <font>
+                  <Font size="20.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
          </children>
       </AnchorPane>
-      <Button fx:id="ChatBut" layoutX="1202.0" layoutY="18.0" mnemonicParsing="false" onMouseClicked="#LeaveTable" prefHeight="50.0" prefWidth="105.0" style="-fx-background-radius: 60; -fx-background-color: grey;" text="Chat" textFill="WHITE">
+      <Button fx:id="ChatBut" layoutX="1202.0" layoutY="18.0" mnemonicParsing="false" onMouseClicked="#clickChat" prefHeight="50.0" prefWidth="105.0" style="-fx-background-radius: 60; -fx-background-color: grey;" text="Chat" textFill="WHITE">
          <font>
             <Font name="Arial Bold" size="19.0" />
          </font>
@@ -275,7 +283,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <AnchorPane fx:id="Chat" layoutX="1202.0" layoutY="97.0" prefHeight="714.0" prefWidth="414.0" style="-fx-background-color: #D2A4A4; -fx-background-radius: 30;">
+      <AnchorPane fx:id="Chat" layoutX="1202.0" layoutY="97.0" prefHeight="683.0" prefWidth="414.0" style="-fx-background-color: #D2A4A4; -fx-background-radius: 30;" visible="false">
          <children>
             <ScrollPane layoutX="19.0" layoutY="62.0" prefHeight="561.0" prefWidth="379.0" style="-fx-background: #D2A4A4; -fx-border-color: #D2A4A4;" stylesheets="@../scroll.css">
                <content>
@@ -291,7 +299,7 @@
                   <String fx:value="track" />
                </styleClass>
             </ScrollPane>
-            <TextField fx:id="ChatInput" layoutX="60.0" layoutY="637.0" prefHeight="43.0" prefWidth="296.0" promptText="Chat" style="-fx-background-color: white; -fx-background-radius: 20;">
+            <TextField fx:id="ChatInput" layoutX="60.0" layoutY="637.0" onKeyPressed="#chatIn" prefHeight="43.0" prefWidth="296.0" promptText="Chat" style="-fx-background-color: white; -fx-background-radius: 20;">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
@@ -299,7 +307,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </TextField>
-            <Button fx:id="closeChat" layoutX="363.0" layoutY="8.0" mnemonicParsing="false" onMouseClicked="#closeHelp" prefHeight="44.0" prefWidth="45.0" style="-fx-background-radius: 30; -fx-background-color: #024f14;" text="X" textFill="WHITE">
+            <Button fx:id="closeChat" layoutX="363.0" layoutY="8.0" mnemonicParsing="false" onMouseClicked="#closeChat" prefHeight="44.0" prefWidth="45.0" style="-fx-background-radius: 30; -fx-background-color: #024f14;" text="X" textFill="WHITE">
                <font>
                   <Font size="20.0" />
                </font>

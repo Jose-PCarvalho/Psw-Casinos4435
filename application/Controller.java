@@ -37,6 +37,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -109,7 +111,10 @@ ImageView ProfileImage;
 @FXML AnchorPane HelpMenu;
 @FXML Button closeHelp;
 @FXML TextFlow HelpText;
- 
+@FXML Button chatBut; 
+@FXML AnchorPane Chat;
+@FXML TextFlow ChatText;
+boolean chatFlag=false;
  final int[] BetValues= {1,2,5,10,20,25,50,100,250,500,1000,2000,5000};
  int currentBet=0;
  int walletValue=10000;
@@ -148,6 +153,7 @@ ImageView ProfileImage;
  private static BufferedWriter bufferedWriter;
  static Account user;
  boolean gameFinalized=false;
+ @FXML TextField ChatInput;
 
  
  
@@ -379,12 +385,17 @@ public void setBetValue() {
 	            System.out.println(messageFromServer);
 
 	            Platform.runLater( () -> {
-	            	if(messageFromServer.contains("Available Spots") && this.joined==false) {
+	            	 if(messageFromServer.contains("Chat") && this.joined==true) {
+	            		this.updateChat(messageFromServer);
+	            	}
+	            	 else if(messageFromServer.contains("Available Spots") && this.joined==false) {
 	            		this.setJoinButton(messageFromServer);
 	            	}
-	            	if(messageFromServer.contains("GameState") && this.joined==true) {
+	            	else if(messageFromServer.contains("GameState") && this.joined==true) {
 	            		this.absorbInfo(messageFromServer);
 	            	}
+	            	
+	            	
 
 	            });
 
@@ -1103,6 +1114,38 @@ public void removeCards(int id, int n) {
 		 
 		 closeSocket();
 		 changeScene("/Resources/AfterLogin.fxml");
+	 }
+	 
+	 public void clickChat() {
+		 chatFlag=!chatFlag;
+		 Chat.setVisible(chatFlag);
+		 Chat.toFront();
+
+	 }
+	 public void chatIn(KeyEvent ke) {
+		 if (ke.getCode().equals(KeyCode.ENTER)) {
+	            if(!ChatInput.getText().equals(" ")) {
+	            	setMessage( "Chat%" + table+"%"+user.username+": "+ChatInput.getText());
+	            	messageRequest();
+	            	ChatInput.clear();
+	    	      
+	            
+	            }
+	        }
+	 }
+	 @FXML public void closeChat() {
+		 System.out.println("CLOSE");
+		 chatFlag=!chatFlag;
+		 Chat.setVisible(chatFlag);
+	 }
+	 
+	 public void updateChat(String messageFromServer) {
+		
+		 String lines[] = messageFromServer.split("%");
+		 Text t=new Text(lines[2]+"\n");
+		 t.setFont(Font.font("System", 14));
+		 ChatText.getChildren().addAll(t);
+		 
 	 }
 }
 

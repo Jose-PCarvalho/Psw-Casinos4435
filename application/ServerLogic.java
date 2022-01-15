@@ -47,6 +47,12 @@ public class ServerLogic {
     	    	
     	    	for (int i=0;i<server.messageList.size();i++) {
     	    		System.out.println("Novas mensagens "+server.messageList.size());
+    	    		
+    	    		if(server.messageList.get(i).contains("Chat")) {
+	    	    			
+	    	    		server.broadcastMessage(server.messageList.get(i));
+    	    		
+    	    		}
     	    		if(server.messageList.get(i).contains("LobbyInfoRequest")) {
     	    			
     	    			server.broadcastMessage(updateLobby());

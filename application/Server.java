@@ -35,9 +35,15 @@ public class Server {
 			while(!serverSocket.isClosed()) {
 				Socket socket= serverSocket.accept();
 				System.out.println("Clint has connected");
+				try {
+				mutex.lock();
 				ClientHandler clientHandler= new ClientHandler(socket,this);
 				Thread thread = new Thread(clientHandler);
-				thread.start();
+				thread.start();}
+				finally {
+					mutex.unlock();
+				}
+
 			}
 			
 		}catch(IOException e) {
