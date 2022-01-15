@@ -110,7 +110,12 @@ public class AfterLoginController {
 	@FXML PasswordField PassConfirm;
 	@FXML TextField Param;
 	@FXML AnchorPane NewComer;
-	
+	@FXML PasswordField deletePass;
+	@FXML Label PassMatch;
+	@FXML Button yesbut;
+	@FXML Button nobut;
+	@FXML Button AccSucc;
+	@FXML Label DeleteQuery;
 	
 	//private Media media;
 	private AudioClip mediaPlayer;
@@ -172,7 +177,9 @@ public class AfterLoginController {
 		PassConfirm.setVisible(false);
 		Param.setVisible(false);
 		NewComer.toFront();
-		
+		PassMatch.setVisible(false);
+		AccSucc.setVisible(false);
+		DeleteQuery.setText("Are you sure?");
 		HelpMenu.setVisible(false);
 		Text text1=new Text("What is Casinos4435?\r\n");
 		text1.setStyle("-fx-font-weight: bold; -fx-font-size: 24px;");
@@ -682,6 +689,27 @@ public class AfterLoginController {
 	}
 	
 	@FXML
+	private void deleteConfirm() throws SQLException {
+		if(deletePass.getText().equals(user.password)){
+			PassMatch.setVisible(false);
+			deletePass.setVisible(false);
+			AccSucc.setVisible(true);
+			yesbut.setVisible(false);
+			nobut.setVisible(false);
+			DeleteAccount(user.username);
+			DeleteQuery.setText("Account successfully deleted.");
+			
+		}
+		else {
+			PassMatch.setVisible(true);
+			AccSucc.setVisible(false);
+			deletePass.setVisible(true);
+			yesbut.setVisible(true);
+			nobut.setVisible(true);
+		}
+	}
+	
+	@FXML
 	private void closeParamPopUp() {
 		changeParam.setVisible(false);
 		Param.setText("");
@@ -774,8 +802,8 @@ public class AfterLoginController {
     }
     
     
-    public void userLogOut(ActionEvent event) throws IOException{
-        
+    public void userLogOut(MouseEvent event) throws IOException{
+        closeDelete();
         changeScene(event,"../Resources/login.fxml");
         mediaPlayer.stop();
     }
@@ -811,6 +839,12 @@ public class AfterLoginController {
     	Statement statement = conn.createStatement();
     	statement.executeUpdate(update_pass);
     	user.password = Pass;
+    }
+    
+    public void DeleteAccount(String username) throws SQLException{
+    	String delete = "DELETE FROM blackjack.users WHERE username= '" + username + "'";
+    	Statement statement = conn.createStatement();
+    	statement.executeUpdate(delete);
     }
     
     @FXML
