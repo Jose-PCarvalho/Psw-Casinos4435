@@ -3,13 +3,11 @@ import BlackJack.Players.*;
 
 import java.util.Timer;
 import java.util.TimerTask;
-
-import BlackJack.Interface.*;
 public class Game{
     public Gambler P;
     public Dealer D;
     Boolean start;
-    cli inter;
+
     
     boolean PlayerTurn=true;
     boolean GameIsPlaying=true;

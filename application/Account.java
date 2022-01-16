@@ -15,16 +15,18 @@ public class Account {
     public Date birth;
     public int money;
     public boolean admin;
+    public boolean newComer;
     
     /*****/
    
     
-    public Account(String name, String username, String password, Date birth, int money, boolean admin) {
+    public Account(String name, String username, String password, Date birth, int money, boolean admin,boolean newComer) {
     	this.name=name;
     	this.username=username;
     	this.password=password;
     	this.birth=birth;
     	this.money=money;
     	this.admin=admin;
+    	this.newComer=newComer;
     }
 }

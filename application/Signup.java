@@ -42,7 +42,7 @@ public class Signup {
     @FXML
     private TextField NameField;
     @FXML
-    private TextField PasswordField;
+    private PasswordField PasswordField;
     @FXML
     private Button CreateAccBut;
     @FXML

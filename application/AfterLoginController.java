@@ -155,7 +155,7 @@ public class AfterLoginController {
 		
 		//media = new Media(songs.get(songNumber).toURI().toString());
 		mediaPlayer = new AudioClip(songs.get(songNumber).toURI().toString());
-		
+		NewComer.setVisible(user.newComer);
 		NameLabel.setText("Profile Name : " + user.name);
     	usernameLabel.setText("Username : " + user.username);
     	passwordLabel.setText("Password : " + user.password.replaceAll("(?s).", "*"));
@@ -646,6 +646,11 @@ public class AfterLoginController {
 	@FXML
 	private void closeNewComer() {
 		NewComer.setVisible(false);
+		try {
+			notNewPlayer();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@FXML
@@ -808,8 +813,8 @@ public class AfterLoginController {
         mediaPlayer.stop();
     }
     
-    public static void setAccount(String name, String username, String password, Date birth, int balance, boolean admin, Connection connect){
-    	user= new Account(name, username, password, birth, balance,admin);
+    public static void setAccount(String name, String username, String password, Date birth, int balance, boolean admin,boolean newComer, Connection connect){
+    	user= new Account(name, username, password, birth, balance,admin, newComer);
     	conn=connect;
     }
     
@@ -845,6 +850,12 @@ public class AfterLoginController {
     	String delete = "DELETE FROM blackjack.users WHERE username= '" + username + "'";
     	Statement statement = conn.createStatement();
     	statement.executeUpdate(delete);
+    }
+    public void notNewPlayer() throws SQLException {
+    	String update_pass = "UPDATE blackjack.users SET newplayer= '" + false + "' WHERE username ='" + user.username + "'";
+    	Statement statement = conn.createStatement();
+    	statement.executeUpdate(update_pass);
+    	user.newComer=false;
     }
     
     @FXML

@@ -149,7 +149,7 @@ boolean chatFlag=false;
  static Account user;
  boolean gameFinalized=false;
  @FXML TextField ChatInput;
-
+ Color[] Colors = {Color.BLUE,Color.BLUE, Color.RED, Color.GREEN, Color.PURPLE, Color.BLACK,Color.YELLOW, Color.GRAY};
  
  
  ImageView[][] PlayersHands= new ImageView[8][10];
@@ -238,7 +238,7 @@ public void setBetValue() {
  }
  
  public void initialize() {
-	 
+	 kickMSG.setVisible(false);
 	 songs = new ArrayList<File>();
 		directory = new File("music");
 		files = directory.listFiles();
@@ -526,9 +526,8 @@ public void setBetValue() {
 	@FXML
 	private void kickOK() throws IOException  {
 		//kickMSG.setVisible(false);
-		closeSocket();
-		changeScene("/Resources/AfterLogin.fxml");
 		mediaPlayer.stop();
+		changeScene("/Resources/AfterLogin.fxml");
 		//Leave table
 	}
 	
@@ -1005,11 +1004,9 @@ public void removeCards(int id, int n) {
 			if(i>1) {
 				if(Values[1].equals("Not Playing")) {
 					if(i-1==pid) {
-						try {
-							LeaveTable();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
+						closeSocket();
+						kickMSG.setVisible(true);
+						//LeaveTable();
 					}
 					
 				}
@@ -1163,7 +1160,7 @@ public void removeCards(int id, int n) {
 	 public void chatIn(KeyEvent ke) {
 		 if (ke.getCode().equals(KeyCode.ENTER)) {
 	            if(!ChatInput.getText().equals(" ")) {
-	            	setMessage( "Chat%" + table+"%"+user.username+": "+ChatInput.getText());
+	            	setMessage( "Chat%" + table+"%"+user.username+": "+ChatInput.getText()+"%"+pid);
 	            	messageRequest();
 	            	ChatInput.clear();
 	    	      
@@ -1181,7 +1178,8 @@ public void removeCards(int id, int n) {
 		
 		 String lines[] = messageFromServer.split("%");
 		 Text t=new Text(lines[2]+"\n");
-		 t.setFont(Font.font("System", 14));
+		 t.setFill(Colors[Integer.parseInt(lines[3])]);
+		 t.setFont(Font.font("System", 18));
 		 ChatText.getChildren().addAll(t);
 		 
 	 }

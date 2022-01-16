@@ -100,17 +100,19 @@ public final class LoginController{
 		Date reg_birth=null;
 		int reg_money=0;
 		boolean reg_admin=false;
+		boolean reg_new=true;
 		while (resultSet.next()) {
 			reg_name = resultSet.getString("name");
 			reg_password = resultSet.getString("password");
 		    reg_birth = resultSet.getDate("birthdate");
 		    reg_money = resultSet.getInt("money");
 		    reg_admin = resultSet.getBoolean("admin");	
+		    reg_new = resultSet.getBoolean("newplayer");	
         }
 		
 		
 		
-		AfterLoginController.setAccount(reg_name,usernameTF.getText() , reg_password, reg_birth, reg_money, reg_admin, conn);
+		AfterLoginController.setAccount(reg_name,usernameTF.getText() , reg_password, reg_birth, reg_money, reg_admin,reg_new, conn);
 		
     	
     }
