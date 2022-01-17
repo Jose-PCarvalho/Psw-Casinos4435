@@ -37,16 +37,17 @@ public class Deck {
        } 
    }
 
-   public int insertCard(BlackJackCard Card){
+   public boolean insertCard(BlackJackCard Card){
        if(isAvailable(Card.getPosition())==false){
            Cards[Card.getPosition()]=Card;
            this.numberOfCards++;
-           return 1;
+           Available[Card.getPosition()]=true;
+           return true;
        }
-       return -1;
+       return false;
    }
 
-   private boolean isAvailable(int position){
+   public boolean isAvailable(int position){
        return Available[position];
    }
    public int getNumberOfCards(){

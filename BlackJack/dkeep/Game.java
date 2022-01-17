@@ -78,9 +78,9 @@ public void freeSpot(int pid) {
 		numberOfPlayers = getNumberOfPlayers() - 1;
 		System.out.print("Slot nr"+pid+" freed\n");
 		OccupiedSlots[pid]=false;
-		if(betEntered[pid]) {
+		if(getBetEntered()[pid]) {
 			numberOfBets--;
-			betEntered[pid]=false;
+			getBetEntered()[pid]=false;
 			playerEndedTurn[pid]=false;
 			WinDrawLose[pid]=-1;
 			kick[pid]=false;
@@ -106,7 +106,7 @@ public void newGame() {
 			
 			payBet(i,WinDrawLose[i]);
 			Players[i].newGame();
-			betEntered[i]=false;
+			getBetEntered()[i]=false;
 			playerEndedTurn[i]=false;
 			WinDrawLose[i]=-1;
 
@@ -121,7 +121,6 @@ public void newGame() {
 }
 
 public void endGame() {
-	System.out.println("Entrei aqui");
 	playTimer.cancel();
 	playTimeisUp=false;
 	D.DealerHand.resetHidden();
@@ -130,7 +129,7 @@ public void endGame() {
 		numberOfWins=0;
 		int numberOfDraws=0;
 		for(int i=0;i<8;i++) {
-			if(betEntered[i]) {
+			if(getBetEntered()[i]) {
 				playerEndedTurn[i]=true;
 				if(whoWon(i)==1) {
 					numberOfWins++;
@@ -148,7 +147,7 @@ public void endGame() {
 			setGameState("Finished");
 			
 			for(int i=0;i<8;i++) {
-				if(betEntered[i]) {
+				if(getBetEntered()[i]) {
 					if(whoWon(i)==1) {
 						numberOfWins++;
 					}
@@ -249,7 +248,7 @@ public void payBet(int pid,int result) {
 }
 public int whoWon(int i) {
 	
-		if(betEntered[i]) {
+		if(getBetEntered()[i]) {
 			if(Players[i].isBust()) {
 				WinDrawLose[i]=0;
 				return 0;
@@ -291,7 +290,7 @@ public String getInfo(){
 	for(int i=1;i<8;i++) {
 		if(OccupiedSlots[i]) {
 			
-			info+= "Player"+Integer.toString(i) + ":Wallet:"+Integer.toString(Players[i].getWallet())+":Bet:"+Integer.toString(Players[i].getBet()) +":Hand Size:" + Players[i].PlayerHand[0].getHandsize() + ":Hand Value:" +Players[i].PlayerHand[0].getHandValue() +":Hand Cards:"+ Players[i].PlayerHand[0].toString()+" "+":Result:" +Integer.toString(WinDrawLose[i]) +":Participating:"+betEntered[i]+":TurnEnded:"+playerEndedTurn[i]+"%";
+			info+= "Player"+Integer.toString(i) + ":Wallet:"+Integer.toString(Players[i].getWallet())+":Bet:"+Integer.toString(Players[i].getBet()) +":Hand Size:" + Players[i].PlayerHand[0].getHandsize() + ":Hand Value:" +Players[i].PlayerHand[0].getHandValue() +":Hand Cards:"+ Players[i].PlayerHand[0].toString()+" "+":Result:" +Integer.toString(WinDrawLose[i]) +":Participating:"+getBetEntered()[i]+":TurnEnded:"+playerEndedTurn[i]+"%";
 
 		}
 		else{
@@ -332,8 +331,8 @@ public void setBet(int pid, int value) {
 }
 
 public void confirmBet(int pid) {
-	if(!betEntered[pid]) {
-		betEntered[pid]=true;
+	if(!getBetEntered()[pid]) {
+		getBetEntered()[pid]=true;
 		numberOfBets++;
 	}
 	
@@ -374,7 +373,7 @@ public void startPlaying() {
 	D.setAction("Dealer Start");
     D.doAction(P);
 	for(int i=1;i<8;i++) {
-		if(betEntered[i]) {
+		if(getBetEntered()[i]) {
 	        D.setAction("Player Bet");
 	        D.doAction(Players[i]);
 	        if(Players[i].PlayerHand[0].getHandValue()==21) {
@@ -435,7 +434,7 @@ public void kickPlayer(int i) {
 public int getNumberOfParticipatingPlayers() {
 	int n=0;
 	for(int i=1;i<8;i++) {
-		if(betEntered[i])
+		if(getBetEntered()[i])
 			n++;
 	}
 	return n;
@@ -495,13 +494,21 @@ public void newGameRequest() {
 
 
 public void cancelBet(int iD) {
-	if(!betEntered[iD]) {
-		betEntered[iD]=false;
+	if(!getBetEntered()[iD]) {
+		getBetEntered()[iD]=false;
 		Players[iD].deposit(Players[iD].getBet());
 		Players[iD].resetBet();
 	}
 	
 }
+
+
+public boolean[] getBetEntered() {
+	return betEntered;
+}
+
+
+
 
 }
 

@@ -39,6 +39,7 @@ public class Server {
 				mutex.lock();
 				ClientHandler clientHandler= new ClientHandler(socket,this);
 				Thread thread = new Thread(clientHandler);
+				Server.clientHandlers.add(clientHandler);
 				thread.start();}
 				finally {
 					mutex.unlock();

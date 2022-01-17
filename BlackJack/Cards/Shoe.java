@@ -2,7 +2,7 @@ package BlackJack.Cards;
 import java.util.Random;
 public class Shoe {
 
-    Deck[] Decks=new Deck[6];
+    Deck[] Decks=new Deck[10];
     int numberOfDecks;
 
     public Shoe(int numberOfDecks){
@@ -12,7 +12,7 @@ public class Shoe {
     }
     public void ReceiveCard(BlackJackCard Card){
         for(int i=0;i<numberOfDecks;i++){
-            if(this.Decks[i].insertCard(Card)==1){
+            if(this.Decks[i].insertCard(Card)==true){
                 break;
             }
         }

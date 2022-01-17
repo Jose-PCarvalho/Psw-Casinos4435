@@ -94,7 +94,7 @@
       </AnchorPane>
       <AnchorPane fx:id="accMenu" layoutX="115.0" layoutY="89.0" prefHeight="810.0" prefWidth="1151.0" style="-fx-background-color: #D2A4A4; -fx-background-radius: 30;">
          <children>
-            <ImageView fx:id="ProfileImage" fitHeight="266.0" fitWidth="414.0" layoutX="644.0" layoutY="79.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="ProfileImage" fitHeight="266.0" fitWidth="414.0" layoutX="659.0" layoutY="126.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@GeneralAssets/profile.png" />
                </image>
@@ -145,7 +145,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="pictureButton" layoutX="714.0" layoutY="345.0" mnemonicParsing="false" onMouseClicked="#chooseImage" prefHeight="55.0" prefWidth="275.0" style="-fx-background-color: #024f14; -fx-background-radius: 15;" text="Change Profile Picture" textFill="WHITE">
+            <Button fx:id="pictureButton" layoutX="728.0" layoutY="400.0" mnemonicParsing="false" onMouseClicked="#chooseImage" prefHeight="55.0" prefWidth="275.0" style="-fx-background-color: #024f14; -fx-background-radius: 15;" text="Change Profile Picture" textFill="WHITE">
                <font>
                   <Font size="20.0" />
                </font>
