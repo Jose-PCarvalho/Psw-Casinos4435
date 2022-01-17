@@ -1,4 +1,4 @@
-package Tests;
+package Tests.gameTests;
 
 import static org.junit.Assert.*;
 
@@ -6,13 +6,13 @@ import org.junit.Test;
 
 import BlackJack.dkeep.Game;
 
-public class lobbyInfoTest {
+public class availableSpotsTest {
 
 	@Test
 	public void test() {
 		Game g=new Game(1);
 		g.newPlayer(1, "Max", 100);
-		assertEquals("Dolores Aveiro%Max% % % % % % %&",g.lobbyInfo());
+		assertEquals("Available Spots: 2 3 4 5 6 7 ",g.AvailableSpots());
 	}
 
 }

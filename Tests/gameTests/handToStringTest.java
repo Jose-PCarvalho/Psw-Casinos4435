@@ -1,4 +1,4 @@
-package Tests;
+package Tests.gameTests;
 
 import static org.junit.Assert.*;
 
@@ -7,7 +7,7 @@ import org.junit.Test;
 import BlackJack.Cards.BlackJackCard;
 import BlackJack.Cards.Hand;
 
-public class handValueTestDealer {
+public class handToStringTest {
 
 	@Test
 	public void test() {
@@ -16,7 +16,7 @@ public class handValueTestDealer {
 		BlackJackCard card2=new BlackJackCard("hearts","K",11);
 		h.insertCard(card1);
 		h.insertCard(card2);
-		assertEquals(10,h.getHandValue());
+		assertEquals("cardback heartsK ",h.toString());
 	}
 
 }
