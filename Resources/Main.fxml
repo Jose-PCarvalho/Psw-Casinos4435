@@ -58,7 +58,7 @@
             <Font size="31.0" />
          </font>
       </Label>
-      <Label fx:id="WalletGUI" layoutX="43.0" layoutY="907.0" prefHeight="45.0" prefWidth="145.0" textAlignment="CENTER">
+      <Label fx:id="WalletGUI" alignment="CENTER" layoutX="43.0" layoutY="907.0" prefHeight="45.0" prefWidth="145.0" textAlignment="CENTER">
          <font>
             <Font size="29.0" />
          </font>
@@ -73,7 +73,7 @@
             <Font size="31.0" />
          </font>
       </Label>
-      <Label fx:id="BetGUI" layoutX="1456.0" layoutY="916.0" prefHeight="43.0" prefWidth="145.0">
+      <Label fx:id="BetGUI" alignment="CENTER" layoutX="1456.0" layoutY="916.0" prefHeight="43.0" prefWidth="145.0">
          <font>
             <Font size="29.0" />
          </font>
