@@ -54,13 +54,13 @@ public class Server {
 
 	public void sendMessageToClient(String messageToClient) {
 		try {
-			bufferedWriter.write(messageToClient);
-			bufferedWriter.newLine();
-			bufferedWriter.flush();
+			getBufferedWriter().write(messageToClient);
+			getBufferedWriter().newLine();
+			getBufferedWriter().flush();
 			System.out.println("I just sent this meassge " + messageToClient);
 		} catch (IOException e) {
 			System.out.println("Error sending message to client");
-			closeEverything(socket,bufferedReader,bufferedWriter);
+			closeEverything(socket,bufferedReader,getBufferedWriter());
 			e.printStackTrace();
 		}
 		
@@ -78,12 +78,12 @@ public class Server {
 						LastMessage=messageFromClient;
 						newMessage=true;
 						if(LastMessage.equals("Shutdown")) {
-							closeEverything(socket,bufferedReader,bufferedWriter);
+							closeEverything(socket,bufferedReader,getBufferedWriter());
 						}
 					} catch (IOException e) {
 						System.out.println("Error receiving message from Client");
 						e.printStackTrace();
-						closeEverything(socket,bufferedReader,bufferedWriter);
+						closeEverything(socket,bufferedReader,getBufferedWriter());
 						
 					}
 					
@@ -111,7 +111,7 @@ public class Server {
 			}
 		}
 	public void close() {
-		closeEverything(socket,bufferedReader,bufferedWriter);
+		closeEverything(socket,bufferedReader,getBufferedWriter());
 		try {
 			this.serverSocket.close();
 		} catch (IOException e) {
@@ -181,6 +181,12 @@ public class Server {
             mutex.unlock();
         }
 		
+	}
+
+
+
+	public BufferedWriter getBufferedWriter() {
+		return bufferedWriter;
 	}
 	
 
