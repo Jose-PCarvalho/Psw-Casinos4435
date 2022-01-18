@@ -156,8 +156,10 @@ boolean chatFlag=false;
  ImageView[] DealerHand= new ImageView[10];
  int PlayerPositionX[]= {0,225,400,585,782,980,1170,1345};
  int PlayerPositionY[]= {0,590,678,738,750,734,676,588};
- int PlayerRotation[]= {0,30,20,10,0,-10,-20,-30};
-
+ int PlayerRotation[]= {0,34,22,11,0,-11,-22,-34};
+ int PlayerCircleX[] = {0,305,460,628,805,988,1161,1322};
+ int PlayerCircleY[] = {0,523,609,659,676,659,609,523};
+ 
  private boolean SendMessage=false;
 
  private String message="";
@@ -1094,18 +1096,31 @@ public void removeCards(int id, int n) {
 		if(Integer.parseInt(Value)>0) {
 		for (int i=0;i<n;i++) {
 			// System.out.println("../Resources/Cards/"+linesD[i]+".png");
+			if(PlayerRotation[pid] != 0) {
+				 PlayersHands[pid][i]=new ImageView(new Image(getClass().getResourceAsStream("../Resources/Cards/"+linesD[i]+".png"))); 
+				 PlayersHands[pid][i].setLayoutX(PlayerPositionX[pid]+28*i-15);  //30*i
+				 PlayersHands[pid][i].setLayoutY(PlayerPositionY[pid]-45+ 12*i);
+				 PlayersHands[pid][i].setPreserveRatio(true);
+				 PlayersHands[pid][i].setSmooth(true);
+				 PlayersHands[pid][i].setFitWidth(75);
+				 PlayersHands[pid][i].setRotate(PlayerRotation[pid]);
+				 PlayersHands[pid][i].toFront();
+			     Pane.getChildren().add(PlayersHands[pid][i]);
+			}
+			else {
 			 PlayersHands[pid][i]=new ImageView(new Image(getClass().getResourceAsStream("../Resources/Cards/"+linesD[i]+".png"))); 
-			 PlayersHands[pid][i].setLayoutX(PlayerPositionX[pid]+30*i-15);
-			 PlayersHands[pid][i].setLayoutY(PlayerPositionY[pid]-45+5*i);
+			 PlayersHands[pid][i].setLayoutX(PlayerPositionX[pid]+40*i-15);  //30*i
+			 PlayersHands[pid][i].setLayoutY(PlayerPositionY[pid]-45+ i);
 			 PlayersHands[pid][i].setPreserveRatio(true);
 			 PlayersHands[pid][i].setSmooth(true);
 			 PlayersHands[pid][i].setFitWidth(75);
 			 PlayersHands[pid][i].setRotate(PlayerRotation[pid]);
 			 PlayersHands[pid][i].toFront();
 		     Pane.getChildren().add(PlayersHands[pid][i]);
+			}
 		}
 		
-		PlayerCircle[pid]=new Circle(PlayerPositionX[pid]+30,PlayerPositionY[pid]-70,22);
+		PlayerCircle[pid]=new Circle(PlayerCircleX[pid],PlayerCircleY[pid],22);
 		if(pid==this.pid) {
 		PlayerCircle[pid].setFill(javafx.scene.paint.Color.LIGHTGREEN);
 		}
@@ -1115,8 +1130,8 @@ public void removeCards(int id, int n) {
 		Pane.getChildren().add(PlayerCircle[pid]);
 		PlayerPoints[pid]= new Label(Value);
 		PlayerPoints[pid].setText(Value);
-		PlayerPoints[pid].setLayoutX(PlayerPositionX[pid]+25);
-		PlayerPoints[pid].setLayoutY(PlayerPositionY[pid]-80);
+		PlayerPoints[pid].setLayoutX(PlayerCircleX[pid]-10);
+		PlayerPoints[pid].setLayoutY(PlayerCircleY[pid]-10);
 		PlayerPoints[pid].setFont( new Font("Arial",17));
 		PlayerPoints[pid].toFront();
 		Pane.getChildren().add(PlayerPoints[pid]);}
