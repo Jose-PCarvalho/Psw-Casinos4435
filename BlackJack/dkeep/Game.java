@@ -35,6 +35,7 @@ public class Game{
     int GameRequest=0;
 	private int betCounter=0;
 	private int playCounter=0;
+	
 
     
 
@@ -101,6 +102,9 @@ public void newGame() {
 	start=true;
 	GameRequest=0;
 	D.newGame();
+	if(D.getShoe().AvailableCards()<D.getShoe().getnumberOfDecks()*52/2) {
+		D.getShoe().renewShoe();
+	}
 	for(int i=1;i<8;i++) {
 		if(OccupiedSlots[i]) {
 			
@@ -109,6 +113,7 @@ public void newGame() {
 			getBetEntered()[i]=false;
 			playerEndedTurn[i]=false;
 			WinDrawLose[i]=-1;
+			Players[i].setInsurance(false);
 
 		}
 	}
@@ -231,14 +236,21 @@ public void payBet(int pid,int result) {
 	
 	
 	if(result==1 ) {
-		if(Players[pid].PlayerHand[0].getHandsize()==2) {
+		if(Players[pid].PlayerHand[0].isBlackJack()) {
 			Players[pid].deposit((Players[pid].getBet()*3)/2);
+		}
+		else if(Players[pid].getInsurance()) {
+			Players[pid].deposit((Players[pid].getBet()));
 		}
 		else {
 		Players[pid].deposit(Players[pid].getBet()*2);}
 		 }
 	else if(result==2) {
-		Players[pid].deposit(Players[pid].getBet());	
+		if(Players[pid].getInsurance()) {
+			Players[pid].deposit((Players[pid].getBet()/2));
+		}
+		else 
+			Players[pid].deposit(Players[pid].getBet());	
 	}
 	
 	
@@ -249,7 +261,12 @@ public void payBet(int pid,int result) {
 public int whoWon(int i) {
 	
 		if(getBetEntered()[i]) {
-			if(Players[i].isBust()) {
+			
+			if(Players[i].getInsurance() && D.DealerHand.isBlackJack()) {
+				WinDrawLose[i]=1;
+				return 1;
+			}
+			else if(Players[i].isBust()) {
 				WinDrawLose[i]=0;
 				return 0;
 			}
@@ -285,7 +302,11 @@ public void setGameState(String gameState) {
 
 
 public String getInfo(){
-	String info="GameState:"+ getGameState()+":"+table+":"+betCounter+":"+playCounter+":"+newGameCounter+"%";
+	String ins="No";
+	if(D.DealerHand.getHandValue()>=10 && D.DealerHand.getHandsize()==2 && getGameState().equals("Playing")) {
+		ins="Insurance";
+	}
+	String info="GameState:"+ getGameState()+":"+table+":"+betCounter+":"+playCounter+":"+newGameCounter+":"+ins+"%";
 	info+= "Dealer" + ":Hand Size:" + D.DealerHand.getHandsize() + ":Hand Value:" + D.DealerHand.getHandValue() +":Hand Cards:" +D.DealerHand.toString()+" %";
 	for(int i=1;i<8;i++) {
 		if(OccupiedSlots[i]) {
@@ -450,10 +471,7 @@ public boolean sanityCheck() {
 		newGame(); 
 		UpdateNeed= true;
 	}
-	/*if(getGameState().equals("Ending")) {
-		endGame();
-		UpdateNeed= true;
-	}*/
+
 	if(numberOfPlayers!=0 && getGameState().equals("Waiting for Players")) {
 		setGameState("Betting");
 		UpdateNeed= true;
@@ -505,6 +523,13 @@ public void cancelBet(int iD) {
 
 public boolean[] getBetEntered() {
 	return betEntered;
+}
+
+public void setInsurance(int pid) {
+	Players[pid].setInsurance(true);
+	Players[pid].setBet(Players[pid].getBet());
+	
+	
 }
 
 

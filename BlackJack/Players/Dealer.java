@@ -80,6 +80,9 @@ public class Dealer extends Base_participant {
         }
         return false;
     }
+    public Shoe getShoe() {
+    	return dShoe;
+    }
 
 
 

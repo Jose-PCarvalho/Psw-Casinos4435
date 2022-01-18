@@ -36,6 +36,12 @@ public class Hand{
         numberOfCards++;
 
     }
+    public boolean isBlackJack() {
+    	if(numberOfCards==2 && getTrueHandValue()==21) {
+    		return true;
+    	}
+    	return false;
+    }
     
    
 
@@ -66,6 +72,35 @@ public class Hand{
 
         return this.handValue;
     }
+    
+    public int getTrueHandValue(){
+        this.handValue=0;
+        boolean aceFlag=false;
+        int i=0;
+     
+            for(i=0;i<numberOfCards;i++){
+                this.handValue+=handCards[i].getValue();
+                if(this.handCards[i].isAce()==true){
+                    aceFlag=true;
+                }
+            
+          
+
+            if(this.handValue>21 && aceFlag==true){
+                for(i=0;i<numberOfCards;i++){
+                    if(this.handCards[i].switchAceLow()==true){
+                        this.handValue-=10;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return this.handValue;
+    }
+    
+
+   
 
     public boolean isBust(){
         this.bust=false;

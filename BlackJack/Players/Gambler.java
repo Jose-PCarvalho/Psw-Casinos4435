@@ -8,7 +8,7 @@ public class Gambler extends Base_participant {
     private String Action;
     private boolean ActionDone;
     private int bet;
-    private boolean Active;
+    private boolean insurance=false;
 
     public Gambler(String name,int balance){
         super(name);
@@ -94,6 +94,14 @@ public class Gambler extends Base_participant {
         }
         return false;
     }
+
+	public boolean getInsurance() {
+		return insurance;
+	}
+
+	public void setInsurance(boolean insurance) {
+		this.insurance = insurance;
+	}
 
 
 

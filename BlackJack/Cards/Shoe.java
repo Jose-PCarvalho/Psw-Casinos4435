@@ -10,6 +10,10 @@ public class Shoe {
         createDecks(numberOfDecks);
 
     }
+    
+    public int getnumberOfDecks() {
+    	return numberOfDecks;
+    }
     public void ReceiveCard(BlackJackCard Card){
         for(int i=0;i<numberOfDecks;i++){
             if(this.Decks[i].insertCard(Card)==true){

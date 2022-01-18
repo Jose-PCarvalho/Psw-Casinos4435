@@ -34,6 +34,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -96,6 +97,7 @@ Button closeAcc;
 Button MyAccBut;
 @FXML 
 ImageView ProfileImage;
+@FXML Button insuranceButton;
 @FXML AnchorPane HelpMenu;
 @FXML Button closeHelp;
 @FXML TextFlow HelpText;
@@ -103,7 +105,8 @@ ImageView ProfileImage;
 @FXML AnchorPane Chat;
 @FXML TextFlow ChatText;
 @FXML AnchorPane kickMSG;
-
+@FXML ScrollPane chatScroll;
+int lastBet=0;
 private AudioClip mediaPlayer;
 private File directory;
 private File[] files;
@@ -124,7 +127,7 @@ boolean chatFlag=false;
  private Stage stage;
  private Scene scene;
  private Parent root;
- private File filePath;
+ private boolean insuranceFlag=false;
  boolean playGridOn=false;
  static int pid;
  boolean joined=false;
@@ -166,6 +169,7 @@ boolean chatFlag=false;
  private static Connection conn;
  static int table;
  @FXML Label timeL;
+ @FXML Button repeatButton;
 
 
 
@@ -507,23 +511,7 @@ public void setBetValue() {
 		HelpMenu.toFront();
 	}
 	
-	/*@FXML
-	private void depositMoney() {
-		if(operationFlag==false) {
-		depositTF.setVisible(true);
-		confirmButton.setVisible(true);
-		operation=1;
-		operationFlag=true;}
-	}
-	@FXML
-	private void withdraw() {
-		if(operationFlag==false) {
-		slideBut.setVisible(true);
-		confirmButton.setVisible(true);
-		slideBut.setMax(user.money);
-		operation=2;
-		operationFlag=true;}
-	}*/
+
 	
 	@FXML
 	private void kickOK() throws IOException  {
@@ -534,65 +522,7 @@ public void setBetValue() {
 	}
 	
 	
-	/*@FXML
-	private void confirm() {
-		if(operation==1) {
-			user.money=user.money+Integer.parseInt(depositTF.getText());
-			try {
-				UpdateMoney(user.username,user.money);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			balanceLabel.setText("Current Balance: " +user.money);
-			depositTF.clear();
-			depositTF.setVisible(false);
-			confirmButton.setVisible(false);
-			operationFlag=false;
-		}
-		
-		
-		if(operation==2) {
-			user.money-=slideBut.getValue();
-			try {
-				UpdateMoney(user.username,user.money);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			balanceLabel.setText("Current Balance: " + user.money);
-			
-			slideBut.setVisible(false);
-			confirmButton.setVisible(false);
-			operationFlag=false;
-		}
-	}
 	
-	@FXML
-    public void chooseImage() throws IOException{
-        Stage stage = (Stage) pictureButton.getScene().getWindow();
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open image");
-        
-        
-        this.filePath = fileChooser.showOpenDialog(stage);
-        
-        try {
-        	BufferedImage bufferedImage = ImageIO.read(filePath);
-        	Image image = SwingFXUtils.toFXImage(bufferedImage, null);
-        	ProfileImage.setImage(image);
-        	ProfileImage.setFitWidth(200.0);
-        	ProfileImage.setFitHeight(150.0);
-        	
-        	ProfileImage.setSmooth(true);
-        	ProfileImage.setCache(true);
-        	
-        	
-        }catch (IOException e) {
-        	System.err.println(e.getMessage());
-        }
-    }
-    */
 	
     @FXML
     private void BackgroundMusic() {
@@ -863,6 +793,7 @@ private void removePlayGrid() {
 	PlayGrid.getChildren().remove(0);
 	PlayGrid.getChildren().remove(0);
 	PlayGrid.getChildren().remove(0);
+	insuranceButton.setVisible(false);
 	playGridOn=false;
 }
  
@@ -900,6 +831,10 @@ public void gameOver(String Result) {
 	if(Integer.parseInt(Result)==-1) {
 		Result="0";
 	}
+	lastBet=Integer.parseInt(BetGUI.getText());
+	if(lastBet!=0) {
+		repeatButton.setVisible(true);
+	}
 	if(!gameFinalized) {
 	 String[] Screens= { "../Resources/GeneralAssets/LosingScreen.png","../Resources/GeneralAssets/WinningScreen.png","../Resources/GeneralAssets/DrawScreen.png" };
 	 FinalScreen= new ImageView(new Image(getClass().getResourceAsStream(Screens[Integer.parseInt(Result)])));
@@ -925,6 +860,7 @@ public void newGame() {
 	}
 	setMessage("New Game%"+table);
     messageRequest();
+    insuranceFlag=false;
 	
 	
 	
@@ -992,6 +928,10 @@ public void removeCards(int id, int n) {
 				else if(GameState.equals("Finished")) {
 					timeL.setText(GameState+" -Time Remaing :"+Values[5]);
 					}
+				if(Values[6].equals("Insurance") && Integer.parseInt(WalletGUI.getText())>Integer.parseInt(BetGUI.getText())) {
+					if(!insuranceFlag)
+						insuranceButton.setVisible(true);
+				}
 				
 			}
 			
@@ -1027,6 +967,7 @@ public void removeCards(int id, int n) {
 					}
 					else if( playGridOn==true && endedTurn && PlayerId==pid ) {
 						removePlayGrid();
+						
 					}
 					drawPlayer(PlayerId,PlayerBalance,PlayerBet,PlayerHandSize,PlayerHandValue,PlayerHandCards);		
 					if(GameState.equals("Finished")) { 
@@ -1090,52 +1031,57 @@ public void removeCards(int id, int n) {
 			
 		}
 		removeCards(pid,Integer.parseInt(Size));
+		if(!GameState.equals("Betting")) {
 		String linesD[] = Cards.split(" ");
 		int n=Integer.parseInt(Size);
 		
 		if(Integer.parseInt(Value)>0) {
-		for (int i=0;i<n;i++) {
-			// System.out.println("../Resources/Cards/"+linesD[i]+".png");
-			if(PlayerRotation[pid] != 0) {
+			for (int i=0;i<n;i++) {
+				// System.out.println("../Resources/Cards/"+linesD[i]+".png");
+				if(PlayerRotation[pid] != 0) {
+					 int offsetSignal=1;
+					 if(pid>4) {
+						 offsetSignal=-1;
+					 }
+					 PlayersHands[pid][i]=new ImageView(new Image(getClass().getResourceAsStream("../Resources/Cards/"+linesD[i]+".png"))); 
+					 PlayersHands[pid][i].setLayoutX(PlayerPositionX[pid]+28*i-15);  //30*i
+					 PlayersHands[pid][i].setLayoutY(PlayerPositionY[pid]-45+ 12*i*offsetSignal);
+					 PlayersHands[pid][i].setPreserveRatio(true);
+					 PlayersHands[pid][i].setSmooth(true);
+					 PlayersHands[pid][i].setFitWidth(75);
+					 PlayersHands[pid][i].setRotate(PlayerRotation[pid]);
+					 PlayersHands[pid][i].toFront();
+				     Pane.getChildren().add(PlayersHands[pid][i]);
+				}
+				else {
 				 PlayersHands[pid][i]=new ImageView(new Image(getClass().getResourceAsStream("../Resources/Cards/"+linesD[i]+".png"))); 
-				 PlayersHands[pid][i].setLayoutX(PlayerPositionX[pid]+28*i-15);  //30*i
-				 PlayersHands[pid][i].setLayoutY(PlayerPositionY[pid]-45+ 12*i);
+				 PlayersHands[pid][i].setLayoutX(PlayerPositionX[pid]+40*i-15);  //30*i
+				 PlayersHands[pid][i].setLayoutY(PlayerPositionY[pid]-45+ i);
 				 PlayersHands[pid][i].setPreserveRatio(true);
 				 PlayersHands[pid][i].setSmooth(true);
 				 PlayersHands[pid][i].setFitWidth(75);
 				 PlayersHands[pid][i].setRotate(PlayerRotation[pid]);
 				 PlayersHands[pid][i].toFront();
 			     Pane.getChildren().add(PlayersHands[pid][i]);
+				}
+			}
+			
+			PlayerCircle[pid]=new Circle(PlayerCircleX[pid],PlayerCircleY[pid],22);
+			if(pid==this.pid) {
+			PlayerCircle[pid].setFill(javafx.scene.paint.Color.LIGHTGREEN);
 			}
 			else {
-			 PlayersHands[pid][i]=new ImageView(new Image(getClass().getResourceAsStream("../Resources/Cards/"+linesD[i]+".png"))); 
-			 PlayersHands[pid][i].setLayoutX(PlayerPositionX[pid]+40*i-15);  //30*i
-			 PlayersHands[pid][i].setLayoutY(PlayerPositionY[pid]-45+ i);
-			 PlayersHands[pid][i].setPreserveRatio(true);
-			 PlayersHands[pid][i].setSmooth(true);
-			 PlayersHands[pid][i].setFitWidth(75);
-			 PlayersHands[pid][i].setRotate(PlayerRotation[pid]);
-			 PlayersHands[pid][i].toFront();
-		     Pane.getChildren().add(PlayersHands[pid][i]);
+				PlayerCircle[pid].setFill(javafx.scene.paint.Color.AQUA);
 			}
+			Pane.getChildren().add(PlayerCircle[pid]);
+			PlayerPoints[pid]= new Label(Value);
+			PlayerPoints[pid].setText(Value);
+			PlayerPoints[pid].setLayoutX(PlayerCircleX[pid]-10);
+			PlayerPoints[pid].setLayoutY(PlayerCircleY[pid]-10);
+			PlayerPoints[pid].setFont( new Font("Arial",17));
+			PlayerPoints[pid].toFront();
+			Pane.getChildren().add(PlayerPoints[pid]);}
 		}
-		
-		PlayerCircle[pid]=new Circle(PlayerCircleX[pid],PlayerCircleY[pid],22);
-		if(pid==this.pid) {
-		PlayerCircle[pid].setFill(javafx.scene.paint.Color.LIGHTGREEN);
-		}
-		else {
-			PlayerCircle[pid].setFill(javafx.scene.paint.Color.AQUA);
-		}
-		Pane.getChildren().add(PlayerCircle[pid]);
-		PlayerPoints[pid]= new Label(Value);
-		PlayerPoints[pid].setText(Value);
-		PlayerPoints[pid].setLayoutX(PlayerCircleX[pid]-10);
-		PlayerPoints[pid].setLayoutY(PlayerCircleY[pid]-10);
-		PlayerPoints[pid].setFont( new Font("Arial",17));
-		PlayerPoints[pid].toFront();
-		Pane.getChildren().add(PlayerPoints[pid]);}
-		
 	}
 	
 	 public void UpdateMoney (String username, int actual_money) throws SQLException {    	
@@ -1170,6 +1116,13 @@ public void removeCards(int id, int n) {
 		 chatFlag=!chatFlag;
 		 Chat.setVisible(chatFlag);
 		 Chat.toFront();
+		 if(chatFlag==false) {
+			 chatBut.setStyle("-fx-background-color : grey;"+"-fx-background-radius : 60;");
+		 }
+		 else {
+			 chatBut.setStyle("-fx-background-color :#ac2e2e;"+"-fx-background-radius : 60;"); 
+		 }
+		 
 
 	 }
 	 public void chatIn(KeyEvent ke) {
@@ -1187,16 +1140,40 @@ public void removeCards(int id, int n) {
 		 System.out.println("CLOSE");
 		 chatFlag=!chatFlag;
 		 Chat.setVisible(chatFlag);
+		 chatBut.setStyle("-fx-background-color : grey;"+"-fx-background-radius : 60;");
 	 }
 	 
 	 public void updateChat(String messageFromServer) {
 		
 		 String lines[] = messageFromServer.split("%");
+		 if(Integer.parseInt(lines[1])==table) {
+			 
+		 
 		 Text t=new Text(lines[2]+"\n");
 		 t.setFill(Colors[Integer.parseInt(lines[3])]);
 		 t.setFont(Font.font("System", 18));
 		 ChatText.getChildren().addAll(t);
+		 chatScroll.setVvalue(1.0);
+		 chatBut.setStyle("-fx-background-color :#ac2e2e;"+"-fx-background-radius : 60;");
+		 }
 		 
+	 }
+	 @FXML public void repeatLastBet() {
+		 if(GameState.equals("Betting")) {
+			 if(currentBet==0) {
+		        	ConfirmButton.setVisible(true);
+		        	CancelButton.setVisible(true);
+		        }
+			 currentBet=+lastBet;
+		 	setMessage( "Bet Entered%" + currentBet+"%"+Integer.toString(pid)+"%"+table);
+	        messageRequest();
+		 }
+	 }
+	 @FXML public void insuranceRequest() {
+		 insuranceButton.setVisible(false);
+		 setMessage("Playing Insurance%" + pid +"%"+ table);
+	     messageRequest();
+	     insuranceFlag=true;
 	 }
 }
 

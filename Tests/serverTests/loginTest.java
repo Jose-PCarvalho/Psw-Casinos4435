@@ -13,7 +13,6 @@ public class loginTest {
 	@Test
 	public void test() throws SQLException {
 		LoginController.ConnectDB();
-		
 		assertEquals(true,LoginController.UserNameExists("jpc"));
 		assertEquals(true,LoginController.FindPassword("jpc", "jpc"));
 	}

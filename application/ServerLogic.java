@@ -152,6 +152,16 @@ public class ServerLogic {
     					}
     					
     				}
+    	    		else if(server.messageList.get(i).contains("Insurance")) {
+    					System.out.println("Server: Insurance");
+    					String parse[]=server.messageList.get(i).split("%");
+    					ID=Integer.parseInt(parse[1]);
+    					int table=Integer.parseInt(parse[2]);
+    					if(g[table].getGameState().equals("Playing")) {
+    					g[table].setInsurance(ID);
+    					}
+    					
+    				}
     	    		else if(server.messageList.get(i).contains("Stand")) {
     					System.out.println("Server: Stand");
     					String parse[]=server.messageList.get(i).split("%");

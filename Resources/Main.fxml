@@ -99,7 +99,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <AnchorPane fx:id="Menu" layoutX="1237.0" layoutY="79.0" prefHeight="899.0" prefWidth="317.0" style="-fx-background-color: #A47474; -fx-background-radius: 30;">
+      <AnchorPane fx:id="Menu" layoutX="1237.0" layoutY="79.0" prefHeight="899.0" prefWidth="317.0" style="-fx-background-color: #A47474; -fx-background-radius: 30;" visible="false">
          <children>
             <JFXButton fx:id="MyAccBut" contentDisplay="RIGHT" graphicTextGap="30.0" layoutX="155.0" layoutY="740.0" onMouseClicked="#openAccMenu" prefHeight="58.0" prefWidth="206.0" text="My Account" textFill="WHITE">
                <font>
@@ -255,7 +255,7 @@
             </Button>
          </children>
       </AnchorPane>
-      <Button fx:id="ChatBut" layoutX="1202.0" layoutY="18.0" mnemonicParsing="false" onMouseClicked="#clickChat" prefHeight="50.0" prefWidth="105.0" style="-fx-background-radius: 60; -fx-background-color: grey;" text="Chat" textFill="WHITE">
+      <Button fx:id="chatBut" layoutX="1202.0" layoutY="18.0" mnemonicParsing="false" onMouseClicked="#clickChat" prefHeight="50.0" prefWidth="105.0" style="-fx-background-radius: 60; -fx-background-color: grey;" text="Chat" textFill="WHITE">
          <font>
             <Font name="Arial Bold" size="19.0" />
          </font>
@@ -265,7 +265,7 @@
       </Button>
       <AnchorPane fx:id="Chat" layoutX="1202.0" layoutY="97.0" prefHeight="683.0" prefWidth="414.0" style="-fx-background-color: #D2A4A4; -fx-background-radius: 30;" visible="false">
          <children>
-            <ScrollPane layoutX="19.0" layoutY="62.0" prefHeight="561.0" prefWidth="379.0" style="-fx-background: #D2A4A4; -fx-border-color: #D2A4A4;" stylesheets="@../scroll.css">
+            <ScrollPane fx:id="chatScroll" layoutX="19.0" layoutY="62.0" prefHeight="561.0" prefWidth="379.0" style="-fx-background: #D2A4A4; -fx-border-color: #D2A4A4;" stylesheets="@../scroll.css">
                <content>
                   <TextFlow fx:id="ChatText" prefHeight="543.0" prefWidth="375.0" />
                </content>
@@ -314,5 +314,14 @@
             </Button>
          </children>
       </AnchorPane>
+      <Button fx:id="insuranceButton" layoutX="38.0" layoutY="728.0" mnemonicParsing="false" onMouseClicked="#insuranceRequest" prefHeight="45.0" prefWidth="156.0" style="-fx-background-color: grey; -fx-background-radius: 20;" text="Insurance" textFill="WHITE" visible="false">
+         <font>
+            <Font size="18.0" />
+         </font></Button>
+      <Button fx:id="repeatButton" layoutX="38.0" layoutY="788.0" mnemonicParsing="false" onMouseClicked="#repeatLastBet" prefHeight="45.0" prefWidth="156.0" style="-fx-background-color: grey; -fx-background-radius: 20;" text="Repeat Last Bet" textFill="WHITE" visible="false">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>
