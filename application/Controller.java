@@ -129,7 +129,6 @@ boolean chatFlag=false;
  private Parent root;
  private boolean insuranceFlag=false;
  boolean playGridOn=false;
- static int pid;
  boolean joined=false;
  boolean MenuFlag=false;
  boolean accMenuFlag=false;
@@ -146,9 +145,6 @@ boolean chatFlag=false;
  Button CancelButton = new Button("Cancel Bet");
  Button AllIn = new Button("All-In");
  boolean buttonFlag=true;
- private static Socket socket;
- private static  BufferedReader bufferedReader;
- private static BufferedWriter bufferedWriter;
  static Account user;
  boolean gameFinalized=false;
  @FXML TextField ChatInput;
@@ -166,17 +162,22 @@ boolean chatFlag=false;
  private boolean SendMessage=false;
 
  private String message="";
- private static Connection conn;
- static int table;
  @FXML Label timeL;
  @FXML Button repeatButton;
 
 
 
-public static void setAccount(Account acc, Connection connect,int t){
+private static Socket socket;
+
+private static BufferedWriter bufferedWriter;
+
+private static BufferedReader bufferedReader;
+
+
+
+public static void setAccount(Account acc,int t){
  	user=acc;
- 	conn=connect;
- 	table=t;
+ 	user.table=t;
  } 
  
 @FXML 
@@ -192,7 +193,7 @@ public void BetEntered(MouseEvent e) {
 	        Integer colIndex = GridPane.getColumnIndex(clickedNode);
 	       
 	        currentBet=BetValues[colIndex];
-	        setMessage( "Bet Entered%" + currentBet+"%"+Integer.toString(pid)+"%"+table);
+	        setMessage( "Bet Entered%" + currentBet+"%"+Integer.toString(user.pid)+"%"+user.table);
 	        messageRequest();
 	        
 	        
@@ -206,7 +207,7 @@ public void BetEntered(MouseEvent e) {
 
 public void BetConfirmed() {
 	if(GameState.equals("Betting") && currentBet!=0) {
-		setMessage("Bet Confirmed%"+pid+"%"+table);
+		setMessage("Bet Confirmed%"+user.pid+"%"+user.table);
         messageRequest();
 		currentBet=0;
 		ConfirmButton.setVisible(false);
@@ -260,7 +261,7 @@ public void setBetValue() {
 		
 		
 	 populateGrid();
-	 message="Player Joined%"+table+"%"+user.name;
+	 message="Player Joined%"+user.table+"%"+user.name;
 	 messageRequest();
 	 NameLabel.setText("Profile Name : " + user.name);
  	 usernameLabel.setText("Username : " + user.username);
@@ -296,7 +297,7 @@ public void setBetValue() {
 	 CancelButton.setStyle("-fx-background-color : grey;"+"-fx-background-radius : 20;");
 	 CancelButton.applyCss();
 	 CancelButton.setOnMouseClicked(event ->{
-		    setMessage( "Bet Canceled"+"%"+Integer.toString(pid)+"%"+table);
+		    setMessage( "Bet Canceled"+"%"+Integer.toString(user.pid)+"%"+user.table);
 	        messageRequest();
 	        CancelButton.setVisible(false);
 	        ConfirmButton.setVisible(false);
@@ -323,7 +324,7 @@ public void setBetValue() {
 		        	CancelButton.setVisible(true);
 		        }
 			 currentBet=-1;
-		 	setMessage( "Bet Entered%" + currentBet+"%"+Integer.toString(pid)+"%"+table);
+		 	setMessage( "Bet Entered%" + currentBet+"%"+Integer.toString(user.pid)+"%"+user.table);
 	        messageRequest();}
 	});
 	 
@@ -372,99 +373,101 @@ public void setBetValue() {
 				+ "");
 		text7.setStyle("-fx-font-size: 18px;");
 		HelpText.getChildren().addAll(text1, text2,text3,text4,text5,text6,text7);
-	  try {
-		socket = new Socket("localhost", 1234);
-		bufferedWriter=new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-		bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		  
-	} catch (UnknownHostException e1) {
-		// TODO Auto-generated catch block
-		e1.printStackTrace();
-	} catch (IOException e1) {
-		
-		e1.printStackTrace();
-	}
-	  ;
-	  
-	  
-	  
+
+		  try {
+				socket = new Socket("localhost", 1234);
+				bufferedWriter=new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+				bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+				  
+			} catch (UnknownHostException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				
+				e1.printStackTrace();
+			}
+			  ;
+			  
+			  
+			  
 
 
-	  new Thread(() -> {
-	    try{
-	        while(socket.isConnected() && !socket.isClosed()){
-	            String messageFromServer= bufferedReader.readLine();
+			  new Thread(() -> {
+			    try{
+			        while(socket.isConnected() && !socket.isClosed()){
+			            String messageFromServer= bufferedReader.readLine();
 
-	            System.out.println(messageFromServer);
+			            System.out.println(messageFromServer);
 
-	            Platform.runLater( () -> {
-	            	 if(messageFromServer.contains("Chat") && this.joined==true) {
-	            		this.updateChat(messageFromServer);
-	            	}
-	            	 else if(messageFromServer.contains("Available Spots") && this.joined==false) {
-	            		this.setJoinButton(messageFromServer);
-	            	}
-	            	else if(messageFromServer.contains("GameState") && this.joined==true) {
-	            		this.absorbInfo(messageFromServer);
-	            	}
-	            	
-	            	
+			            Platform.runLater( () -> {
+			            	 if(messageFromServer.contains("Chat") && this.joined==true) {
+			            		this.updateChat(messageFromServer);
+			            	}
+			            	 else if(messageFromServer.contains("Available Spots") && this.joined==false) {
+			            		this.setJoinButton(messageFromServer);
+			            	}
+			            	else if(messageFromServer.contains("GameState") && this.joined==true) {
+			            		this.absorbInfo(messageFromServer);
+			            	}
+			            	
+			            	
 
-	            });
+			            });
 
 
-	        }
-	    }
-	    catch(IOException e){
-	    	e.printStackTrace();
-	    }
+			        }
+			    }
+			    catch(IOException e){
+			    	e.printStackTrace();
+			    }
 
-	  }).start();
-	  
-	  
-	
-	  new Thread(() -> {
-	    while(socket.isConnected() && !socket.isClosed()){
-	    	Platform.runLater( () -> {
-	    		boolean ReadyFlag=this.isReady();
-	    		String message=this.getMessage();
-	    		
-	    		
-	    		if(ReadyFlag) {
-	    			try {
-	    			System.out.println("I just sent this message"+  message);
-   	    		bufferedWriter.write(message);
-     				bufferedWriter.newLine();
-     				bufferedWriter.flush();
-     				this.messageSent();
-	    			}catch(IOException e) {
-	    				e.printStackTrace();
-	    			}
-	    		}
+			  }).start();
+			  
+			  
+			
+			  new Thread(() -> {
+			    while(socket.isConnected() && !socket.isClosed()){
+			    	Platform.runLater( () -> {
+			    		boolean ReadyFlag=this.isReady();
+			    		String message=this.getMessage();
+			    		
+			    		
+			    		if(ReadyFlag) {
+			    			try {
+			    			System.out.println("I just sent this message"+  message);
+			    			bufferedWriter.write(message);
+		     				bufferedWriter.newLine();
+		     				bufferedWriter.flush();
+		     				this.messageSent();
+			    			}catch(IOException e) {
+			    				e.printStackTrace();
+			    			}
+			    		}
 
-           });	
-			try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		}
+		           });	
+					try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				}
 
-	  }).start();
-	  
-	  
-	  
-	  Platform.runLater( () -> {
-  		
-  		Stage stage=(Stage) Pane.getScene().getWindow();
-  		stage.setOnCloseRequest(event -> {
-  		    shutdown();
-  		    
-  		});
-  		
-  		
-  	});
+			  }).start();
+			  
+			  
+			  
+			  Platform.runLater( () -> {
+		  		
+		  		Stage stage=(Stage) Pane.getScene().getWindow();
+		  		stage.setOnCloseRequest(event -> {
+		  		    shutdown();
+		  		    
+		  		});
+		  		
+		  		
+		  	});
+
 	  
 	  
  
@@ -526,10 +529,6 @@ public void setBetValue() {
 	
     @FXML
     private void BackgroundMusic() {
-       
-    	/*String path = getClass().getResource("../music/music.mp3").getPath();
-        Media media = new Media(new File(path).toURI().toString());
-        mediaPlayer = new AudioClip(media.getSource());*/
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         mediaPlayer.setVolume(0.1);
         if(Music.isSelected()){
@@ -560,38 +559,40 @@ public void setBetValue() {
     	
     }
     
- public static void shutdown() {
-	 System.out.println("Stage is closing");
-     try {
-     	try {
-     	if(bufferedWriter!=null) {
-     	bufferedWriter.write("Leave Table%"+pid+"%"+table);
-			bufferedWriter.newLine();
-			bufferedWriter.flush();}}
-     	catch(IOException e) {
-     		e.printStackTrace();
-     	}
-     	if(socket!=null)
-				socket.close();
-     	if(bufferedReader!=null)
-				bufferedReader.close();
-			if(bufferedWriter!=null)
-				bufferedWriter.close();	
-			
-     	
-    
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
- }
+    public static void shutdown() {
+   	 System.out.println("Stage is closing");
+        try {
+        	try {
+        	if(bufferedWriter!=null) {
+        	bufferedWriter.write("Leave Table%"+user.pid+"%"+user.table+"%"+"Logout"+"%"+user.username);
+   			bufferedWriter.newLine();
+   			bufferedWriter.flush();
+   			}}
+        	catch(IOException e) {
+        		e.printStackTrace();
+        	}
+        	if(socket!=null)
+   				socket.close();
+        	if(bufferedReader!=null)
+   				bufferedReader.close();
+   			if(bufferedWriter!=null)
+   				bufferedWriter.close();	
+   			
+        	
+       
+   		} catch (IOException e) {
+   			// TODO Auto-generated catch block
+   			e.printStackTrace();
+   		}
+    }
+
  
  public static void closeSocket() {
 	 System.out.println("Stage is closing");
      try {
      	try {
      	if(bufferedWriter!=null) {
-     	bufferedWriter.write("Leave Table%"+pid+"%"+table);
+     		bufferedWriter.write("Leave Table%"+user.pid+"%"+user.table);
 			bufferedWriter.newLine();
 			bufferedWriter.flush();}}
      	catch(IOException e) {
@@ -635,9 +636,9 @@ public void setBetValue() {
 	    		JoinButton1.setCursor(Cursor.HAND);
 	     		Pane.getChildren().add(JoinButton1);
 	     		JoinButton1.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
-	    			pid=Integer.parseInt(val);
+	    			user.pid=Integer.parseInt(val);
 	    			joined=true;
-	    			setMessage("New Player on position:" + Integer.toString(pid)+"%"+user.username+"%"+Integer.toString(user.money)+"%"+table);
+	    			setMessage("New Player on position:" + Integer.toString(user.pid)+"%"+user.username+"%"+Integer.toString(user.money)+"%"+user.table);
 	    			messageRequest();
 	    			removeButtons();
 	    			event.consume();
@@ -653,9 +654,9 @@ public void setBetValue() {
 	    		JoinButton2.setCursor(Cursor.HAND);
 	     		Pane.getChildren().add(JoinButton2);
 	     		JoinButton2.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
-	    			pid=Integer.parseInt(val);
+	    			user.pid=Integer.parseInt(val);
 	    			joined=true;
-	    			setMessage("New Player on position:" + Integer.toString(pid)+"%"+user.username+"%"+Integer.toString(user.money)+"%"+table);
+	    			setMessage("New Player on position:" + Integer.toString(user.pid)+"%"+user.username+"%"+Integer.toString(user.money)+"%"+user.table);
 	    			messageRequest();
 	    			removeButtons();
 	    			event.consume();
@@ -672,9 +673,9 @@ public void setBetValue() {
 	    		JoinButton3.setCursor(Cursor.HAND);
 	     		Pane.getChildren().add(JoinButton3);
 	     		JoinButton3.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
-	    			pid=Integer.parseInt(val);
+	    			user.pid=Integer.parseInt(val);
 	    			joined=true;
-	    			setMessage("New Player on position:" + Integer.toString(pid)+"%"+user.username+"%"+Integer.toString(user.money)+"%"+table);
+	    			setMessage("New Player on position:" + Integer.toString(user.pid)+"%"+user.username+"%"+Integer.toString(user.money)+"%"+user.table);
 	    			messageRequest();
 	    			removeButtons();
 	    			event.consume();
@@ -690,9 +691,9 @@ public void setBetValue() {
 	    		JoinButton4.setCursor(Cursor.HAND);
 	     		Pane.getChildren().add(JoinButton4);
 	     		JoinButton4.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
-	    			pid=Integer.parseInt(val);
+	    			user.pid=Integer.parseInt(val);
 	    			joined=true;
-	    			setMessage("New Player on position:" + Integer.toString(pid)+"%"+user.username+"%"+Integer.toString(user.money)+"%"+table);
+	    			setMessage("New Player on position:" + Integer.toString(user.pid)+"%"+user.username+"%"+Integer.toString(user.money)+"%"+user.table);
 	    			messageRequest();
 	    			removeButtons();
 	    			event.consume();
@@ -708,9 +709,9 @@ public void setBetValue() {
 	    		JoinButton5.setCursor(Cursor.HAND);
 	     		Pane.getChildren().add(JoinButton5);
 	     		JoinButton5.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
-	    			pid=Integer.parseInt(val);
+	    			user.pid=Integer.parseInt(val);
 	    			joined=true;
-	    			setMessage("New Player on position:" + Integer.toString(pid)+"%"+user.username+"%"+Integer.toString(user.money)+"%"+table);
+	    			setMessage("New Player on position:" + Integer.toString(user.pid)+"%"+user.username+"%"+Integer.toString(user.money)+"%"+user.table);
 	    			messageRequest();
 	    			removeButtons();
 	    			event.consume();
@@ -727,9 +728,9 @@ public void setBetValue() {
 	    		JoinButton6.setCursor(Cursor.HAND);
 	     		Pane.getChildren().add(JoinButton6);
 	     		JoinButton6.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
-	    			pid=Integer.parseInt(val);
+	    			user.pid=Integer.parseInt(val);
 	    			joined=true;
-	    			setMessage("New Player on position:" + Integer.toString(pid)+"%"+user.username+"%"+Integer.toString(user.money)+"%"+table);
+	    			setMessage("New Player on position:" + Integer.toString(user.pid)+"%"+user.username+"%"+Integer.toString(user.money)+"%"+user.table);
 	    			messageRequest();
 	    			removeButtons();
 	    			event.consume();
@@ -745,9 +746,9 @@ public void setBetValue() {
 	    		JoinButton7.setCursor(Cursor.HAND);
 	     		Pane.getChildren().add(JoinButton7);
 	     		JoinButton7.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{		
-	    			pid=Integer.parseInt(val);
+	    			user.pid=Integer.parseInt(val);
 	    			joined=true;
-	    			setMessage("New Player on position:" + Integer.toString(pid)+"%"+user.username+"%"+Integer.toString(user.money)+"%"+table);
+	    			setMessage("New Player on position:" + Integer.toString(user.pid)+"%"+user.username+"%"+Integer.toString(user.money)+"%"+user.table);
 	    			messageRequest();
 	    			removeButtons();
 	    			event.consume();
@@ -805,16 +806,16 @@ public void Play(MouseEvent e) {
 	    	Integer colIndex = GridPane.getColumnIndex(clickedNode);
 	    	if(colIndex==0) {
 	    		
-	    		 setMessage("Playing Double%" +pid +"%"+ table);
+	    		 setMessage("Playing Double%" +user.pid +"%"+ user.table);
 		         messageRequest();
 	    		
 	    	}
 	    	else if(colIndex==1) {
-	    		setMessage("Playing Hit%" + pid +"%"+ table);
+	    		setMessage("Playing Hit%" + user.pid +"%"+ user.table);
 		        messageRequest();
 	    	}
 	    	else if(colIndex==2) {
-	    		setMessage("Playing Stand%" + pid + "%"+table);
+	    		setMessage("Playing Stand%" + user.pid + "%"+user.table);
 		        messageRequest();
 	    	}
 	    	
@@ -858,7 +859,7 @@ public void newGame() {
 	for (int i=0;i<8;i++) {
 		removeCards(i,10);
 	}
-	setMessage("New Game%"+table);
+	setMessage("New Game%"+user.table);
     messageRequest();
     insuranceFlag=false;
 	
@@ -914,7 +915,7 @@ public void removeCards(int id, int n) {
 			}*/
 			if(i==0) {
 				int t=Integer.parseInt(Values[2]);
-				if(t!=table) 
+				if(t!=user.table) 
 					break;
 				GameState=Values[1];
 				if(!GameState.equals("Finished"))
@@ -945,10 +946,15 @@ public void removeCards(int id, int n) {
 			}
 			if(i>1) {
 				if(Values[1].equals("Not Playing")) {
-					if(i-1==pid) {
-						closeSocket();
+					if(i-1==user.pid) {
+						
 						kickMSG.setVisible(true);
-						//LeaveTable();
+						try {
+							LeaveTable();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 					
 				}
@@ -962,16 +968,16 @@ public void removeCards(int id, int n) {
 					String PlayerResult=Values[12];	
 					boolean Participating=Boolean.parseBoolean(Values[14]);
 					boolean endedTurn=Boolean.parseBoolean(Values[16]);
-					if(GameState.contains("Playing") && playGridOn==false && Participating==true && PlayerId==pid && !endedTurn) {
+					if(GameState.contains("Playing") && playGridOn==false && Participating==true && PlayerId==user.pid && !endedTurn) {
 						setPlayGrid();	
 					}
-					else if( playGridOn==true && endedTurn && PlayerId==pid ) {
+					else if( playGridOn==true && endedTurn && PlayerId==user.pid ) {
 						removePlayGrid();
 						
 					}
 					drawPlayer(PlayerId,PlayerBalance,PlayerBet,PlayerHandSize,PlayerHandValue,PlayerHandCards);		
 					if(GameState.equals("Finished")) { 
-						if(pid==PlayerId)
+						if(user.pid==PlayerId)
 							gameOver(PlayerResult);
 					}
 				}
@@ -1018,11 +1024,11 @@ public void removeCards(int id, int n) {
 	}
 	
 	public void drawPlayer(int pid,String Balance,String Bet,String Size,String Value,String Cards) {
-		if(this.pid==pid) {
+		if(user.pid==pid) {
 			user.money=Integer.parseInt(Balance);
 			setBetValue(user.money,Integer.parseInt(Bet));
 			try {
-				UpdateMoney(user.username,user.money);
+				user.UpdateMoney();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -1067,7 +1073,7 @@ public void removeCards(int id, int n) {
 			}
 			
 			PlayerCircle[pid]=new Circle(PlayerCircleX[pid],PlayerCircleY[pid],22);
-			if(pid==this.pid) {
+			if(pid==user.pid) {
 			PlayerCircle[pid].setFill(javafx.scene.paint.Color.LIGHTGREEN);
 			}
 			else {
@@ -1084,14 +1090,7 @@ public void removeCards(int id, int n) {
 		}
 	}
 	
-	 public void UpdateMoney (String username, int actual_money) throws SQLException {    	
-	    	String update_account_money = "UPDATE blackjack.users SET money='"+actual_money+"' WHERE username='"+username+"'";
-	    	Statement statement = conn.createStatement();
-			statement.executeUpdate(update_account_money);
-				
-			
-			
-	    }
+	 
 
 
 	 public void changeScene(String path) throws IOException {
@@ -1128,7 +1127,7 @@ public void removeCards(int id, int n) {
 	 public void chatIn(KeyEvent ke) {
 		 if (ke.getCode().equals(KeyCode.ENTER)) {
 	            if(!ChatInput.getText().equals(" ")) {
-	            	setMessage( "Chat%" + table+"%"+user.username+": "+ChatInput.getText()+"%"+pid);
+	            	setMessage( "Chat%" + user.table+"%"+user.username+": "+ChatInput.getText()+"%"+user.pid);
 	            	messageRequest();
 	            	ChatInput.clear();
 	    	      
@@ -1146,7 +1145,7 @@ public void removeCards(int id, int n) {
 	 public void updateChat(String messageFromServer) {
 		
 		 String lines[] = messageFromServer.split("%");
-		 if(Integer.parseInt(lines[1])==table) {
+		 if(Integer.parseInt(lines[1])==user.table) {
 			 
 		 
 		 Text t=new Text(lines[2]+"\n");
@@ -1165,13 +1164,13 @@ public void removeCards(int id, int n) {
 		        	CancelButton.setVisible(true);
 		        }
 			 currentBet=+lastBet;
-		 	setMessage( "Bet Entered%" + currentBet+"%"+Integer.toString(pid)+"%"+table);
+		 	setMessage( "Bet Entered%" + currentBet+"%"+Integer.toString(user.pid)+"%"+user.table);
 	        messageRequest();
 		 }
 	 }
 	 @FXML public void insuranceRequest() {
 		 insuranceButton.setVisible(false);
-		 setMessage("Playing Insurance%" + pid +"%"+ table);
+		 setMessage("Playing Insurance%" + user.pid +"%"+ user.table);
 	     messageRequest();
 	     insuranceFlag=true;
 	 }

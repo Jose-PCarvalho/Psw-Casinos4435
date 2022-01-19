@@ -2,6 +2,7 @@ package application;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import BlackJack.dkeep.Game;
@@ -58,6 +59,12 @@ public class ServerLogic {
     	    			server.broadcastMessage(updateLobby());
     	    		
     	    		}
+    	    		if(server.messageList.get(i).contains("Changing")) {
+    	    			
+    	    			server.broadcastMessage(updateLobby());
+    	    		
+    	    		}
+    	    		
     	    		else if(server.messageList.get(i).contains("DealerRequest%")) {
     	    			String lines[]=server.messageList.get(i).split("%");
     	    			String Name=lines[1];
@@ -206,7 +213,12 @@ public class ServerLogic {
     	    }
 
     	  }).start();
-		server.startServer();
+		try {
+			server.startServer();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	

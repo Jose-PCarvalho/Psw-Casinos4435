@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.sql.Connection;
@@ -57,6 +58,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.scene.Cursor;
 
 
@@ -98,7 +100,6 @@ public class AfterLoginController {
 	@FXML Button closeAcc;
 	@FXML Button MyAccBut;
 	@FXML TextField depositTF;
-	private static Connection conn;
 	@FXML ImageView ProfileImage;
 	@FXML AnchorPane HelpMenu;
 	@FXML Button closeHelp;
@@ -116,13 +117,14 @@ public class AfterLoginController {
 	@FXML Button nobut;
 	@FXML Button AccSucc;
 	@FXML Label DeleteQuery;
-	
+	@FXML AnchorPane serversAreDown;
 	//private Media media;
 	private AudioClip mediaPlayer;
 	private File directory;
 	private File[] files;
 	private int songNumber;
 	private ArrayList<File> songs;
+	@FXML AnchorPane loggedInAlready;
 	
 	AnchorPane[] TableMenu=new AnchorPane[6];
 	 private Stage stage;
@@ -132,13 +134,13 @@ public class AfterLoginController {
 	 private boolean SendMessage;
 	 private String message;
 	 static Account user;
-	 private static Socket socket;
-	 private static  BufferedReader bufferedReader;
-	 private static BufferedWriter bufferedWriter;
 	 Label[] DealerLabel=  new Label[6];
 	 Label[] NrPlayer= new Label[6];
 	 int[] labelPosX= {0,150,659,1164+4,430-4,925-4};
 	 int[] labelPosY= {0,257,257,257,590,590};
+	private Socket socket;
+	private BufferedWriter bufferedWriter;
+	private BufferedReader bufferedReader;
 
 	
 	public void initialize() {
@@ -152,7 +154,6 @@ public class AfterLoginController {
 				//System.out.println(file);
 			}
 		}
-		
 		//media = new Media(songs.get(songNumber).toURI().toString());
 		mediaPlayer = new AudioClip(songs.get(songNumber).toURI().toString());
 		NewComer.setVisible(user.newComer);
@@ -222,22 +223,31 @@ public class AfterLoginController {
 				+ "");
 		text7.setStyle("-fx-font-size: 18px;");
 		HelpText.getChildren().addAll(text1, text2,text3,text4,text5,text6,text7);
+		
         
-        
-        try {
+		try {
     		socket = new Socket("localhost", 1234);
     		bufferedWriter=new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
     		bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-    		  
+    		
     	} catch (UnknownHostException e1) {
-    		// TODO Auto-generated catch block
+    		serversAreDown.setVisible(true);
     		e1.printStackTrace();
     	} catch (IOException e1) {
-    		
+    		serversAreDown.setVisible(true);
     		e1.printStackTrace();
-    	};
+    	}
     	
     	
+    	try {
+			if(!user.setLogin()) {
+				loggedInAlready.setVisible(true);
+				
+			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
     	setMessage("LobbyInfoRequest");
     	messageRequest();
     	
@@ -252,6 +262,7 @@ public class AfterLoginController {
     	            Platform.runLater( () -> {
     	            	if(messageFromServer.contains("Lobby Info")) {
     	            		updateLobby(messageFromServer);
+    	            		
     	            	}
     	            	
 
@@ -262,6 +273,7 @@ public class AfterLoginController {
     	    }
     	    catch(IOException e){
     	    	e.printStackTrace();
+    	    	serversAreDown.setVisible(true);
     	    }
 
     	  }).start();
@@ -277,12 +289,13 @@ public class AfterLoginController {
     	    		if(ReadyFlag) {
     	    			try {
     	    			System.out.println("I just sent this message"+  message);
-       	    		bufferedWriter.write(message);
+    	    			bufferedWriter.write(message);
          				bufferedWriter.newLine();
          				bufferedWriter.flush();
          				this.messageSent();
     	    			}catch(IOException e) {
     	    				e.printStackTrace();
+    	    				serversAreDown.setVisible(true);
     	    			}
     	    		}
 
@@ -301,12 +314,13 @@ public class AfterLoginController {
     		
     		Stage stage=(Stage) Pane.getScene().getWindow();
     		stage.setOnCloseRequest(event -> {
-    		    closeSocket();
+    		    logOut();
     		    
     		});
     		
     		
     	});
+
     	
     	
 	}
@@ -388,12 +402,7 @@ public class AfterLoginController {
 			TableMenu[index].setVisible(false);
             TableButton[index].setVisible(true);	
 		});
-        /*myButton.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                TableMenu[index].setVisible(false);
-                TableButton[index].setVisible(true);
-            }
-        });*/
+
 	}
 		
 
@@ -440,17 +449,16 @@ public class AfterLoginController {
 			
 	        myButton1.setOnAction(new EventHandler<ActionEvent>() {
 	        	public void handle(ActionEvent event) {
-	        		Controller.setAccount(user, conn, t);
+	        		
 	        		closeSocket();
-	        		try {
+					Controller.setAccount(user, t);
+					try {
 						changeScene(event,"../resources/Main.fxml");
-						mediaPlayer.stop();
-						
-						
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					mediaPlayer.stop();
 	        	}
 	        	
 	        });
@@ -647,7 +655,7 @@ public class AfterLoginController {
 	private void closeNewComer() {
 		NewComer.setVisible(false);
 		try {
-			notNewPlayer();
+			user.notNewPlayer();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -701,7 +709,7 @@ public class AfterLoginController {
 			AccSucc.setVisible(true);
 			yesbut.setVisible(false);
 			nobut.setVisible(false);
-			DeleteAccount(user.username);
+			user.DeleteAccount();
 			DeleteQuery.setText("Account successfully deleted.");
 			
 		}
@@ -731,13 +739,13 @@ public class AfterLoginController {
 		
 		if(ParamChange == 1) {
 			String change = Param.getText();
-			UpdatePName(user.username,change);
+			user.UpdatePName(change);
 			closeParamPopUp();
 			NameLabel.setText("Profile Name : " + user.name);
 		}
 		else if(ParamChange == 2) {
 			String change = Param.getText();
-			UpdateUName(user.username,change);
+			user.UpdateUName(change);
 			closeParamPopUp();
 			usernameLabel.setText("Username : " + user.username);
 			
@@ -745,7 +753,7 @@ public class AfterLoginController {
 		else if(ParamChange == 3) {
 			String pass = Pass.getText();
 			if(PassConfirm.getText().equals(pass)) {
-				UpdatePass(user.username,pass);
+				user.UpdatePass(pass);
 				closeParamPopUp();
 				passwordLabel.setText("Password : " + user.password.replaceAll("(?s).", "*"));
 			}
@@ -760,7 +768,7 @@ public class AfterLoginController {
 		if(operation==1) {
 			user.money=user.money+Integer.parseInt(depositTF.getText());
 			try {
-				UpdateMoney(user.username,user.money);
+				user.UpdateMoney();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -776,7 +784,7 @@ public class AfterLoginController {
 		if(operation==2) {
 			user.money-=slideBut.getValue();
 			try {
-				UpdateMoney(user.username,user.money);
+				user.UpdateMoney();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -813,50 +821,11 @@ public class AfterLoginController {
         mediaPlayer.stop();
     }
     
-    public static void setAccount(String name, String username, String password, Date birth, int balance, boolean admin,boolean newComer, Connection connect){
-    	user= new Account(name, username, password, birth, balance,admin, newComer);
-    	conn=connect;
+    public static void setAccount(String name, String username, String password, Date birth, int balance, boolean admin,boolean newComer, Connection connect) throws UnknownHostException, IOException{
+    	user= new Account(name, username, password, birth, balance,admin, newComer,connect);
+    	
     }
     
-    public void UpdateMoney (String username, int actual_money) throws SQLException {    	
-    	String update_account_money = "UPDATE blackjack.users SET money='"+actual_money+"' WHERE username='"+username+"'";
-    	Statement statement = conn.createStatement();
-		statement.executeUpdate(update_account_money);
-		
-    }
-    
-    public void UpdatePName (String username, String PName) throws SQLException {
-    	String update_profile_name = "UPDATE blackjack.users SET name= '" + PName + "' WHERE username ='"+ username +"'";
-    	Statement statement = conn.createStatement();
-    	statement.executeUpdate(update_profile_name);
-    	user.name = PName;
-    }
-    
-    public void UpdateUName(String username, String UName) throws SQLException{
-    	String update_username = "UPDATE blackjack.users SET username= '" + UName + "' WHERE username ='" + username + "'";
-    	Statement statement = conn.createStatement();
-    	statement.executeUpdate(update_username);
-    	user.username = UName;
-    }
-    
-    public void UpdatePass(String username, String Pass) throws SQLException{
-    	String update_pass = "UPDATE blackjack.users SET password= '" + Pass + "' WHERE username ='" + username + "'";
-    	Statement statement = conn.createStatement();
-    	statement.executeUpdate(update_pass);
-    	user.password = Pass;
-    }
-    
-    public void DeleteAccount(String username) throws SQLException{
-    	String delete = "DELETE FROM blackjack.users WHERE username= '" + username + "'";
-    	Statement statement = conn.createStatement();
-    	statement.executeUpdate(delete);
-    }
-    public void notNewPlayer() throws SQLException {
-    	String update_pass = "UPDATE blackjack.users SET newplayer= '" + false + "' WHERE username ='" + user.username + "'";
-    	Statement statement = conn.createStatement();
-    	statement.executeUpdate(update_pass);
-    	user.newComer=false;
-    }
     
     @FXML
     public void chooseImage() throws IOException{
@@ -885,10 +854,7 @@ public class AfterLoginController {
     
     @FXML
     private void BackgroundMusic() {
-       
-            /*String path = getClass().getResource("../music/music.mp3").getPath();
-            Media media = new Media(new File(path).toURI().toString());
-            mediaPlayer = new AudioClip(media.getSource());*/
+
             mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
             mediaPlayer.setVolume(0.1);
             if(Music.isSelected()){
@@ -972,9 +938,39 @@ public class AfterLoginController {
 	     try {
 	     	try {
 	     	if(bufferedWriter!=null) {
-	     	bufferedWriter.write("Shutdown " +0);
+	     		bufferedWriter.write("Shutdown " +0);
 				bufferedWriter.newLine();
 				bufferedWriter.flush();}}
+	     	catch(IOException e) {
+	     		e.printStackTrace();
+	     	}
+	     	if(socket!=null)
+					socket.close();
+	     	if(bufferedReader!=null)
+					bufferedReader.close();
+				if(bufferedWriter!=null)
+					bufferedWriter.close();	
+				
+	     	
+	    
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	 }
+	
+	public void logOut() {
+		 System.out.println("Stage is closing AfterLogin");
+	     try {
+	     	try {
+	     	if(bufferedWriter!=null) {
+	     		bufferedWriter.write("Logout" + user.username);
+				bufferedWriter.newLine();
+				bufferedWriter.flush();
+	     		bufferedWriter.write("Shutdown"+"%"+"Logout"+"%"+user.username);
+				bufferedWriter.newLine();
+				bufferedWriter.flush();
+				}}
 	     	catch(IOException e) {
 	     		e.printStackTrace();
 	     	}
@@ -1006,6 +1002,25 @@ public class AfterLoginController {
 		}
 		else {
 			PlayerNames[table][player].setText("Dealer : "+ Name);
+		}
+	}
+	@FXML
+	public void closeLogged(MouseEvent event) {
+		 try {
+			changeScene(event,"../Resources/login.fxml");
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		}
+	}
+	@FXML
+	public void serversClosed(MouseEvent event) {
+		 try {
+			 closeSocket();
+			changeScene(event,"../Resources/login.fxml");
+		} catch (IOException e) {
+			
+			e.printStackTrace();
 		}
 	}
 	

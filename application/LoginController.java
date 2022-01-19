@@ -14,6 +14,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -90,7 +91,7 @@ public final class LoginController{
 		stage.setScene(scene);
 		
     }
-    public void setUser() throws SQLException {
+    public void setUser() throws SQLException, UnknownHostException, IOException {
     	
     	String sql_username_exist = "SELECT * FROM blackjack.users WHERE username='"+usernameTF.getText()+"'";
     	Statement statement = conn.createStatement();
@@ -146,9 +147,7 @@ public final class LoginController{
     }
     
     public static boolean UserNameExists (String usernameField) throws SQLException {
-    	String sql_username_exist = "SELECT username FROM blackjack.users";
-    	
-    	
+    	String sql_username_exist = "SELECT username FROM blackjack.users";   	
     	Statement statement = conn.createStatement();
 		ResultSet resultSet = statement.executeQuery(sql_username_exist);
 		

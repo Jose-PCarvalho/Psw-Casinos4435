@@ -7,7 +7,13 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Properties;
 import java.util.concurrent.locks.ReentrantLock;
 
 import javafx.application.Platform;
@@ -22,15 +28,20 @@ public class Server {
 	public static ArrayList<ClientHandler> clientHandlers =new ArrayList<>();
 	ArrayList<String> messageList= new ArrayList<String>();
 	private ReentrantLock mutex = new ReentrantLock();
-
+	public Connection conn;
 	public Server(ServerSocket serverSocket) {
 		this.serverSocket=serverSocket;	
 	}
 	
 	
 	
-	public void startServer() {
+	public void startServer() throws SQLException {
 		try {
+			ConnectDB();
+			String query = "UPDATE blackjack.users SET logged ='false' WHERE logged='true'";   	
+			Statement statement = conn.createStatement();
+    		statement.executeUpdate(query);
+			conn.close();
 			
 			while(!serverSocket.isClosed()) {
 				Socket socket= serverSocket.accept();
@@ -188,7 +199,20 @@ public class Server {
 	public BufferedWriter getBufferedWriter() {
 		return bufferedWriter;
 	}
-	
+	public  void ConnectDB() throws SQLException {
+    	String url = "jdbc:postgresql://db.fe.up.pt/meec1a0405";
+		Properties props = new Properties();
+		props.setProperty("user","meec1a0405");
+		props.setProperty("password","IICQHlXb");
+		conn=null;
+		try {
+			 conn = DriverManager.getConnection(url, props);
+			 
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		}
 
 	
 }
