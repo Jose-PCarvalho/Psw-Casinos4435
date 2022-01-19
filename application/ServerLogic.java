@@ -109,6 +109,7 @@ public class ServerLogic {
     					g[table].newPlayer(Integer.parseInt(numberOnly),userName,Integer.parseInt(balance));
     					server.broadcastMessage(g[table].getInfo());
     					server.broadcastMessage(updateLobby());
+    					server.broadcastMessage(g[table].AvailableSpots());
     					
     					
     				}

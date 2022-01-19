@@ -297,23 +297,6 @@
                   </PasswordField>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="serversAreDown" layoutX="397.0" layoutY="227.0" prefHeight="310.0" prefWidth="414.0" style="-fx-background-color: lightyellow; -fx-background-radius: 30;" visible="false">
-               <children>
-                  <Label layoutX="32.0" layoutY="19.0" prefHeight="216.0" prefWidth="351.0" text="Servers are currently down.&#10;&#10;We are sorry for the inconveince.&#10;&#10;-Casinos 4435&#10;">
-                     <font>
-                        <Font name="System Bold" size="21.0" />
-                     </font>
-                  </Label>
-                  <Button layoutX="148.0" layoutY="235.0" mnemonicParsing="false" onMouseClicked="#serversClosed" prefHeight="35.0" prefWidth="118.0" style="-fx-background-radius: 20; -fx-background-color: green;" text="OK" textFill="WHITE">
-                     <font>
-                        <Font name="System Bold" size="24.0" />
-                     </font>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </Button>
-               </children>
-            </AnchorPane>
          </children>
       </AnchorPane>
       <AnchorPane fx:id="HelpMenu" layoutX="115.0" layoutY="89.0" prefHeight="810.0" prefWidth="1151.0" style="-fx-background-color: #D2A4A4; -fx-background-radius: 30;" visible="false">
@@ -394,6 +377,23 @@
                </font>
             </Label>
             <Button layoutX="148.0" layoutY="235.0" mnemonicParsing="false" onMouseClicked="#serversClosed" prefHeight="35.0" prefWidth="118.0" style="-fx-background-radius: 20; -fx-background-color: green;" text="OK" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="24.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="fullTable" layoutX="642.0" layoutY="367.0" prefHeight="310.0" prefWidth="414.0" style="-fx-background-color: lightyellow; -fx-background-radius: 30;" visible="false">
+         <children>
+            <Label alignment="CENTER" layoutX="20.0" layoutY="14.0" prefHeight="216.0" prefWidth="375.0" text="This Table is currently Full.&#10;&#10;Please choose another.">
+               <font>
+                  <Font name="System Bold" size="21.0" />
+               </font>
+            </Label>
+            <Button layoutX="148.0" layoutY="235.0" mnemonicParsing="false" onMouseClicked="#tableFullConfirm" prefHeight="35.0" prefWidth="118.0" style="-fx-background-radius: 20; -fx-background-color: green;" text="OK" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="24.0" />
                </font>

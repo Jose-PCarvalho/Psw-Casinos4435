@@ -26,6 +26,7 @@ public class Account {
     public Connection conn;
     int pid;
     int table;
+    public boolean loggedIn=false;
 
     
     /**
@@ -88,12 +89,15 @@ public class Account {
     	String logged = "SELECT logged FROM blackjack.users WHERE username='"+username+"'";   	
     	Statement statement = conn.createStatement();
 		ResultSet resultSet = statement.executeQuery(logged);
-		
+		if(loggedIn==true) {
+			return true;
+		}
 		while (resultSet.next()) {
             if(resultSet.getString("logged").equals("f")) {
             	String update = "UPDATE blackjack.users SET logged='"+true+"' WHERE username='"+username+"'";
             	statement = conn.createStatement();
         		statement.executeUpdate(update);
+        		loggedIn=true;
         		return true;
             }
         }

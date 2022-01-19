@@ -118,6 +118,8 @@ public class AfterLoginController {
 	@FXML Button AccSucc;
 	@FXML Label DeleteQuery;
 	@FXML AnchorPane serversAreDown;
+	@FXML AnchorPane fullTable;
+	
 	//private Media media;
 	private AudioClip mediaPlayer;
 	private File directory;
@@ -449,16 +451,21 @@ public class AfterLoginController {
 			
 	        myButton1.setOnAction(new EventHandler<ActionEvent>() {
 	        	public void handle(ActionEvent event) {
-	        		
-	        		closeSocket();
-					Controller.setAccount(user, t);
-					try {
-						changeScene(event,"../resources/Main.fxml");
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					mediaPlayer.stop();
+	        		if(Integer.parseInt(NrPlayer[t].getText())<7) {
+		        		closeSocket();
+						Controller.setAccount(user, t);
+						mediaPlayer.stop();
+						try {
+							changeScene(event,"../resources/Main.fxml");
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+	        		}
+	        		else {
+	        			fullTable.setVisible(true);
+	        		}
+					
 	        	}
 	        	
 	        });
@@ -1022,6 +1029,10 @@ public class AfterLoginController {
 			
 			e.printStackTrace();
 		}
+	}
+	@FXML
+	public void tableFullConfirm() {
+		fullTable.setVisible(false);
 	}
 	
 	

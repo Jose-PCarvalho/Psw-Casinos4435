@@ -105,6 +105,7 @@ ImageView ProfileImage;
 @FXML AnchorPane Chat;
 @FXML TextFlow ChatText;
 @FXML AnchorPane kickMSG;
+@FXML AnchorPane kickMSG1;
 @FXML ScrollPane chatScroll;
 int lastBet=0;
 private AudioClip mediaPlayer;
@@ -518,10 +519,7 @@ public void setBetValue() {
 	
 	@FXML
 	private void kickOK() throws IOException  {
-		//kickMSG.setVisible(false);
-		mediaPlayer.stop();
-		changeScene("/Resources/AfterLogin.fxml");
-		//Leave table
+		LeaveTable();
 	}
 	
 	
@@ -947,14 +945,12 @@ public void removeCards(int id, int n) {
 			if(i>1) {
 				if(Values[1].equals("Not Playing")) {
 					if(i-1==user.pid) {
-						
-						kickMSG.setVisible(true);
-						try {
-							LeaveTable();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+						if(Integer.parseInt(WalletGUI.getText())==0)
+							kickMSG.setVisible(true);
+						else {
+							kickMSG1.setVisible(true);
 						}
+						
 					}
 					
 				}
@@ -991,7 +987,7 @@ public void removeCards(int id, int n) {
 	}
 	
 	public void drawDealer(String Size,String Value,String Cards) {
-		removeCards(0,Integer.parseInt(Size));
+		removeCards(0,10);
 		String lines[] = Cards.split(" ");
 		int n=Integer.parseInt(Size);
 		if(Integer.parseInt(Value)>0) {
@@ -1036,7 +1032,7 @@ public void removeCards(int id, int n) {
 		
 			
 		}
-		removeCards(pid,Integer.parseInt(Size));
+		removeCards(pid,10);
 		if(!GameState.equals("Betting")) {
 		String linesD[] = Cards.split(" ");
 		int n=Integer.parseInt(Size);
