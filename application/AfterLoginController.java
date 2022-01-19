@@ -122,7 +122,7 @@ public class AfterLoginController {
 	private AudioClip mediaPlayer;
 	private File directory;
 	private File[] files;
-	private int songNumber;
+	public static int songNumber;
 	private ArrayList<File> songs;
 	@FXML AnchorPane loggedInAlready;
 	

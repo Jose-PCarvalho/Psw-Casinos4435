@@ -110,7 +110,7 @@ int lastBet=0;
 private AudioClip mediaPlayer;
 private File directory;
 private File[] files;
-private int songNumber;
+//private int songNumber;
 private ArrayList<File> songs;
 
 boolean chatFlag=false;
@@ -257,7 +257,7 @@ public void setBetValue() {
 		}
 		
 		//media = new Media(songs.get(songNumber).toURI().toString());
-		mediaPlayer = new AudioClip(songs.get(songNumber).toURI().toString());
+		mediaPlayer = new AudioClip(songs.get(AfterLoginController.songNumber).toURI().toString());
 		
 		
 	 populateGrid();
@@ -542,18 +542,18 @@ public void setBetValue() {
     
     @FXML 
     private void NextMusic() {
-    	if(songNumber < songs.size() - 1) {
-    		songNumber++;
+    	if(AfterLoginController.songNumber < songs.size() - 1) {
+    		AfterLoginController.songNumber++;
     		mediaPlayer.stop();
     		
-    		mediaPlayer = new AudioClip(songs.get(songNumber).toURI().toString());
+    		mediaPlayer = new AudioClip(songs.get(AfterLoginController.songNumber).toURI().toString());
     		BackgroundMusic();
     	}
     	else {
-    		songNumber = 0;
+    		AfterLoginController.songNumber = 0;
     		mediaPlayer.stop();
     		
-    		mediaPlayer = new AudioClip(songs.get(songNumber).toURI().toString());
+    		mediaPlayer = new AudioClip(songs.get(AfterLoginController.songNumber).toURI().toString());
     		BackgroundMusic();
     	}
     	
