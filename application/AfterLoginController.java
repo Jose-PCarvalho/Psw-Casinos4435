@@ -228,29 +228,33 @@ public class AfterLoginController {
 		HelpText.getChildren().addAll(text1, text2,text3,text4,text5,text6,text7);
 		
         
+		
+    	boolean alreadyLogged=true;
 		try {
-    		socket = new Socket("localhost", 1234);
-    		bufferedWriter=new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-    		bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-    		
-    	} catch (UnknownHostException e1) {
-    		serversAreDown.setVisible(true);
-    		e1.printStackTrace();
-    	} catch (IOException e1) {
-    		serversAreDown.setVisible(true);
-    		e1.printStackTrace();
-    	}
-    	
-    	
-    	try {
-			if(!user.setLogin()) {
+			alreadyLogged=user.setLogin();
+		} catch (SQLException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+			if(!alreadyLogged) {
 				loggedInAlready.setVisible(true);
 				
 			}
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		
+			else {
+				try {
+		    		socket = new Socket("localhost", 1234);
+		    		bufferedWriter=new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+		    		bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		    		
+		    	} catch (UnknownHostException e1) {
+		    		serversAreDown.setVisible(true);
+		    		e1.printStackTrace();
+		    	} catch (IOException e1) {
+		    		serversAreDown.setVisible(true);
+		    		e1.printStackTrace();
+		    	}
+    	
     	setMessage("LobbyInfoRequest%"+user.username);
     	messageRequest();
     	
@@ -311,6 +315,7 @@ public class AfterLoginController {
     		}
 
     	  }).start();
+			}
     	
     	
     	Platform.runLater( () -> {
