@@ -82,6 +82,7 @@ public class AfterLoginController {
 	boolean operationFlag=false;
 	int operation;
 	int ParamChange;
+	@FXML Label ParamLabel1;
 	@FXML AnchorPane Pane;
 	@FXML Button MenuButton;
 	@FXML JFXButton HelpBut;
@@ -250,7 +251,7 @@ public class AfterLoginController {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-    	setMessage("LobbyInfoRequest");
+    	setMessage("LobbyInfoRequest%"+user.username);
     	messageRequest();
     	
     	
@@ -345,6 +346,7 @@ public class AfterLoginController {
 			myButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{  
 				TableMenu[index].setVisible(true);
                 myButton.setVisible(false);
+                DealerLabel[index].setVisible(false);
 				
 				
 			});
@@ -368,11 +370,12 @@ public class AfterLoginController {
 		TableMenu[i].setLayoutY(MenuY[i]);
 		TableMenu[i].setPrefWidth(424);
 		TableMenu[i].setPrefHeight(340);
-		TableMenu[i].setOpacity(0.9);
+		TableMenu[i].setOpacity(1);
 		TableMenu[i].setStyle("-fx-background-color : white;"+"-fx-background-radius : 15;");
 		TableMenu[i].applyCss();
 		Pane.getChildren().add(TableMenu[i]);
 		TableMenu[i].setVisible(false);
+		
 		}
 		
 		
@@ -402,7 +405,8 @@ public class AfterLoginController {
 		
 		myButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{ 
 			TableMenu[index].setVisible(false);
-            TableButton[index].setVisible(true);	
+            TableButton[index].setVisible(true);
+            DealerLabel[index].setVisible(true);
 		});
 
 	}
@@ -642,20 +646,32 @@ public class AfterLoginController {
 	
 	@FXML
 	private void depositMoney() {
-		if(operationFlag==false) {
+		if(operationFlag==false || operation==2) {
 		depositTF.setVisible(true);
 		confirmButton.setVisible(true);
 		operation=1;
-		operationFlag=true;}
+		operationFlag=true;
+		slideBut.setVisible(false);}
+		else{
+			depositTF.setVisible(false);
+			confirmButton.setVisible(false);
+			operationFlag=false;
+		}
 	}
 	@FXML
 	private void withdraw() {
-		if(operationFlag==false) {
+		if(operationFlag==false || operation==1) {
 		slideBut.setVisible(true);
 		confirmButton.setVisible(true);
 		slideBut.setMax(user.money);
 		operation=2;
-		operationFlag=true;}
+		operationFlag=true;
+		depositTF.setVisible(false);}
+		else{
+			slideBut.setVisible(false);
+			confirmButton.setVisible(false);
+			operationFlag=false;
+		}
 	}
 	
 	@FXML
@@ -699,6 +715,8 @@ public class AfterLoginController {
 		Param.setVisible(false);
 		Pass.setVisible(true);
 		PassConfirm.setVisible(true);
+		ParamLabel1.setText("Write New Password: ");
+		ParamLabel1.setVisible(true);
 		ParamChange = 3;
 	}
 	
@@ -733,6 +751,9 @@ public class AfterLoginController {
 	private void closeParamPopUp() {
 		changeParam.setVisible(false);
 		Param.setText("");
+		ParamLabel1.setVisible(false);
+		Pass.clear();
+		PassConfirm.clear();
 	}
 	
 	@FXML
@@ -752,20 +773,25 @@ public class AfterLoginController {
 		}
 		else if(ParamChange == 2) {
 			String change = Param.getText();
-			user.UpdateUName(change);
-			closeParamPopUp();
-			usernameLabel.setText("Username : " + user.username);
+			if(!user.UserNameExists(change)) {
+				user.UpdateUName(change);
+				closeParamPopUp();
+				usernameLabel.setText("Username : " + user.username);
+				}
+			else {
+				ParamLabel.setText("That Username is already taken.\n"+" Please enter a new one: ");
+			}
 			
 		}
 		else if(ParamChange == 3) {
 			String pass = Pass.getText();
-			if(PassConfirm.getText().equals(pass)) {
+			if(PassConfirm.getText().equals(pass) && !pass.equals("")) {
 				user.UpdatePass(pass);
 				closeParamPopUp();
 				passwordLabel.setText("Password : " + user.password.replaceAll("(?s).", "*"));
 			}
 			else{
-				ParamLabel.setText("Passwords must match.");
+				ParamLabel1.setText("Passwords must match.");
 			}
 		}
 	}

@@ -147,4 +147,22 @@ public void ConnectDB() {
 	}
 }
 
+public boolean UserNameExists (String username) throws SQLException {
+	String sql_username_exist = "SELECT username FROM blackjack.users";
+	
+	
+	Statement statement = conn.createStatement();
+	ResultSet resultSet = statement.executeQuery(sql_username_exist);
+	
+	while (resultSet.next()) { 
+        if(username.equals(resultSet.getString("username")) == true) {
+        	return true;
+        }
+    }
+	
+	
+	return false;
+	
+}
+
 }

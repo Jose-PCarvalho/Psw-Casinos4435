@@ -35,6 +35,7 @@ public class Game{
     int GameRequest=0;
 	private int betCounter=0;
 	private int playCounter=0;
+	private final String[] dealerNames= {"Dolores Aveiro","Dolores Aveiro","Julia Pinheiro","Tino de Rans","Fernando Mendes","Cristina Ferreira"};
 	
 
     
@@ -42,7 +43,7 @@ public class Game{
 
 
 public Game(int table){
-    D=new Dealer("Dolores Aveiro", 4);
+    D=new Dealer(dealerNames[table], 4);
     this.table=table;
     start=true;
     for(int i=0;i<8;i++) {
@@ -261,6 +262,9 @@ public void payBet(int pid,int result) {
 public int whoWon(int i) {
 	
 		if(getBetEntered()[i]) {
+			if(WinDrawLose[i]==0) {
+				return 0;
+			}
 			
 			if(Players[i].getInsurance() && D.DealerHand.isBlackJack()) {
 				WinDrawLose[i]=1;

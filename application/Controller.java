@@ -166,6 +166,8 @@ boolean chatFlag=false;
  @FXML Label timeL;
  @FXML Button repeatButton;
 
+private boolean exit=false;;
+
 
 
 private static Socket socket;
@@ -253,11 +255,11 @@ public void setBetValue() {
 		if(files != null) {
 			for(File file : files) {
 				songs.add(file);
-				//System.out.println(file);
+				
 			}
 		}
 		
-		//media = new Media(songs.get(songNumber).toURI().toString());
+		
 		mediaPlayer = new AudioClip(songs.get(AfterLoginController.songNumber).toURI().toString());
 		
 		
@@ -419,7 +421,29 @@ public void setBetValue() {
 			        }
 			    }
 			    catch(IOException e){
+			    	Platform.runLater( () -> { 
+			    		try {
+							if(exit==false) {
+								LeaveTable();
+							}
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+			    		
+			    		
+			    	/*Stage stg=(Stage) Pane.getScene().getWindow();
+			    	stg.fireEvent(
+			                new WindowEvent(
+			                        stg,
+			                        WindowEvent.WINDOW_CLOSE_REQUEST
+			                )
+			        );*/
+			    	});
+			    	
 			    	e.printStackTrace();
+			    	
+			    	
 			    }
 
 			  }).start();
@@ -442,6 +466,13 @@ public void setBetValue() {
 		     				this.messageSent();
 			    			}catch(IOException e) {
 			    				e.printStackTrace();
+			    				try {
+			    					closeSocket();
+									changeScene("/Resources/AfterLogin.fxml");
+								} catch (IOException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
 			    			}
 			    		}
 
@@ -449,7 +480,7 @@ public void setBetValue() {
 					try {
 					Thread.sleep(100);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
+					
 					e.printStackTrace();
 				}
 				}
@@ -557,8 +588,9 @@ public void setBetValue() {
     	
     }
     
-    public static void shutdown() {
+    public void shutdown() {
    	 System.out.println("Stage is closing");
+   	 exit=true;
         try {
         	try {
         	if(bufferedWriter!=null) {
@@ -835,6 +867,10 @@ public void gameOver(String Result) {
 		repeatButton.setVisible(true);
 	}
 	if(!gameFinalized) {
+	if(FinalScreen!=null) {
+		Pane.getChildren().remove(FinalScreen);
+		FinalScreen=null;
+	}
 	 String[] Screens= { "../Resources/GeneralAssets/LosingScreen.png","../Resources/GeneralAssets/WinningScreen.png","../Resources/GeneralAssets/DrawScreen.png" };
 	 FinalScreen= new ImageView(new Image(getClass().getResourceAsStream(Screens[Integer.parseInt(Result)])));
 	 FinalScreen.setLayoutX(600);
@@ -845,6 +881,7 @@ public void gameOver(String Result) {
 	 FinalScreen.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{
 	         newGame();
 	         Pane.getChildren().remove(FinalScreen);
+	         FinalScreen=null;
 	         event.consume();
 	     });
 	 }
@@ -1099,7 +1136,7 @@ public void removeCards(int id, int n) {
 
 
 	 public void LeaveTable() throws IOException{
-		 
+		 exit=true;
 		 closeSocket();
 		 changeScene("/Resources/AfterLogin.fxml");
 		 mediaPlayer.stop();

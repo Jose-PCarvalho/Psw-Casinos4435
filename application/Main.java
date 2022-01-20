@@ -33,13 +33,13 @@ public class Main extends Application {
         
         
                 
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+       /* stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {          	
                 Controller.shutdown();
                 stage.close();
                 Platform.exit();
             }
-        });    
+        });  */  
         
         
         

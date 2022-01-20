@@ -153,7 +153,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="confirmButton" layoutX="531.0" layoutY="656.0" mnemonicParsing="false" onMouseClicked="#confirm" prefHeight="35.0" prefWidth="155.0" style="-fx-background-color: #024f14; -fx-background-radius: 15;" text="Confirm" textFill="WHITE">
+            <Button fx:id="confirmButton" layoutX="527.0" layoutY="680.0" mnemonicParsing="false" onMouseClicked="#confirm" prefHeight="35.0" prefWidth="155.0" style="-fx-background-color: #024f14; -fx-background-radius: 15;" text="Confirm" textFill="WHITE">
                <font>
                   <Font size="20.0" />
                </font>
@@ -173,7 +173,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <JFXSlider fx:id="slideBut" blockIncrement="50.0" layoutX="508.0" layoutY="613.0" max="5000.0" prefHeight="14.0" prefWidth="202.0" value="2500.0" />
+            <JFXSlider fx:id="slideBut" blockIncrement="50.0" indicatorPosition="RIGHT" layoutX="396.0" layoutY="598.0" max="5000.0" prefHeight="44.0" prefWidth="397.0" value="2500.0" />
             <Button layoutX="911.0" layoutY="567.0" mnemonicParsing="false" onMouseClicked="#deleteAcc" prefHeight="61.0" prefWidth="183.0" style="-fx-background-color: darkred; -fx-background-radius: 15;" text="Delete Account" textFill="WHITE">
                <font>
                   <Font size="20.0" />
@@ -182,7 +182,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <AnchorPane fx:id="delete" layoutX="340.0" layoutY="488.0" prefHeight="255.0" prefWidth="440.0" style="-fx-background-color: #CDFFCC; -fx-background-radius: 30;">
+            <AnchorPane fx:id="delete" layoutX="340.0" layoutY="488.0" prefHeight="255.0" prefWidth="440.0" style="-fx-background-color: #CDFFCC; -fx-background-radius: 30;" visible="false">
                <children>
                   <Label fx:id="DeleteQuery" alignment="CENTER" layoutX="33.0" layoutY="25.0" prefHeight="35.0" prefWidth="375.0" text="Are you sure?" textAlignment="CENTER">
                      <font>
@@ -253,7 +253,12 @@
             </ImageView>
             <AnchorPane fx:id="changeParam" layoutX="337.0" layoutY="486.0" prefHeight="255.0" prefWidth="440.0" style="-fx-background-color: #CDFFCC; -fx-background-radius: 30;" visible="false">
                <children>
-                  <Label fx:id="ParamLabel" alignment="CENTER" layoutX="74.0" layoutY="15.0" prefHeight="35.0" prefWidth="296.0">
+                  <Label fx:id="ParamLabel1" alignment="CENTER" layoutX="29.0" layoutY="16.0" prefHeight="46.0" prefWidth="397.0" textAlignment="CENTER" visible="false" wrapText="true">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="ParamLabel" alignment="CENTER" layoutX="19.0" layoutY="15.0" prefHeight="109.0" prefWidth="408.0" textAlignment="CENTER" wrapText="true">
                      <font>
                         <Font size="24.0" />
                      </font>

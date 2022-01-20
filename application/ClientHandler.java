@@ -26,6 +26,8 @@ public class ClientHandler implements Runnable {
 	private ReentrantLock mutex = new ReentrantLock();
 	public Connection conn;
 	String user;
+	private String table="0";
+	private String position="0";
 	public ClientHandler(Socket socket,Server server) throws SQLException {
 		try {
 			this.socket=socket;
@@ -70,9 +72,12 @@ public class ClientHandler implements Runnable {
 						}
 					}
 					closeEverything(socket,bufferedReader,bufferedWriter);
+					
 					break;
 				}
 				else if(message.contains("Leave Table")&& !message.contains("Chat%")) {
+					position="0";
+					table="0";
 					if(message.contains("Logout")) {
 						String[] str=message.split("%");
 						System.out.println("User:"+str[4]+"LoggedOut");
@@ -86,22 +91,31 @@ public class ClientHandler implements Runnable {
 					closeEverything(socket,bufferedReader,bufferedWriter);
 					break;
 				}
-				else if(message.contains("Login")&& !message.contains("Chat%")) {
+				else if(message.contains("LobbyInfoRequest") && !message.contains("Chat%")) {
 					String[] str=message.split("%");
-					user=str[2];
-					System.out.println("User:"+str[2]+"LoggedIn");
-					try {
-						setLogin(str[2]);
-					} catch (SQLException e) {
-						
-						e.printStackTrace();
-					}
+					user=str[1];
+					position="0";
+					table="0";
+					
+										
+				}
+				else if(message.contains("New Player")&& !message.contains("Chat%")) {
+					String[] str=message.split(":");
+					String[] str1=str[1].split("%");
+					table=str1[3];
+					position=str1[0];
+					user=str1[1];
+					System.out.println("table "+table +"position "+position);
+					
 					
 				}
 				
 				
 				
 			}catch(IOException e) {
+				System.out.println("adsfasfasd");
+				message ="Leave Table%"+position+"%"+table;
+				LastMessage=true;
 				e.printStackTrace();
 				closeEverything(socket,bufferedReader,bufferedWriter);
 				try {
@@ -157,6 +171,7 @@ public class ClientHandler implements Runnable {
     	String update = "UPDATE blackjack.users SET logged='"+false+"' WHERE username='"+username+"'";
     	Statement statement = conn.createStatement();
 		statement.executeUpdate(update);
+		System.out.println("Aqui!"+username);
 		
     }
         
