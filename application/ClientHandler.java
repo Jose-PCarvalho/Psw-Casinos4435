@@ -44,6 +44,11 @@ public class ClientHandler implements Runnable {
 	}
 	
 	
+	public ClientHandler() throws SQLException {
+		ConnectDB();
+	}
+
+
 	@Override
 	public void run() {
 		

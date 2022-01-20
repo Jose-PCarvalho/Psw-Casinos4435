@@ -46,7 +46,12 @@ public class Account {
 
     }
     
-    public void UpdateMoney () throws SQLException {    	
+    public Account(String uname) throws UnknownHostException, SQLException, IOException {
+		ConnectDB();
+		setUser(uname);
+	}
+
+	public void UpdateMoney () throws SQLException {    	
     	String update_account_money = "UPDATE blackjack.users SET money='"+money+"' WHERE username='"+username+"'";
     	Statement statement = conn.createStatement();
 		statement.executeUpdate(update_account_money);
@@ -105,5 +110,41 @@ public class Account {
     	
 		
     }
+    
+    
+    
+    
+public void setUser(String username) throws SQLException, UnknownHostException, IOException {
+    	
+    	String sql_username_exist = "SELECT * FROM blackjack.users WHERE username='"+username+"'";
+    	Statement statement = conn.createStatement();
+		ResultSet resultSet = statement.executeQuery(sql_username_exist);
+		
+		while (resultSet.next()) {
+			this.username=resultSet.getString("username");
+			this.name = resultSet.getString("name");
+			this.password = resultSet.getString("password");
+			this.birth = resultSet.getDate("birthdate");
+			this.money = resultSet.getInt("money");
+			this.admin = resultSet.getBoolean("admin");	
+		
+        }
+}
+
+
+public void ConnectDB() {
+	String url = "jdbc:postgresql://db.fe.up.pt/meec1a0405";
+	Properties props = new Properties();
+	props.setProperty("user","meec1a0405");
+	props.setProperty("password","IICQHlXb");
+	conn=null;
+	try {
+		 conn = DriverManager.getConnection(url, props);
+		 
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+}
 
 }

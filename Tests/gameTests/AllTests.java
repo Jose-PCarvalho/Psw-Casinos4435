@@ -9,8 +9,8 @@ import org.junit.runners.Suite.SuiteClasses;
 		changeDealerNameTest.class, dealCardShoeTest.class, drawCardTest.class, gameInfoTest.class,
 		getNumberOfParticipatingPlayersTest.class, handIsBustTest.class, handToStringTest.class, handValueTest.class,
 		handValueTestDealer.class, insertCardHandTest.class, insertCardTest.class, isAceTest.class,
-		kickPlayerTest.class, lobbyInfoTest.class, payBetTest.class, sanityCheckTest.class, setBetTest.class,
-		switchAceTest.class, whoWonTest.class })
+		isBlackJackTest.class, kickPlayerTest.class, lobbyInfoTest.class, payBetInsuranceTest.class, payBetTest.class,
+		sanityCheckTest.class, setBetTest.class, switchAceTest.class, trueHandValueTest.class, whoWonTest.class })
 public class AllTests {
 
 }

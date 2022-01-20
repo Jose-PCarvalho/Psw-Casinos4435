@@ -1,26 +1,23 @@
 package Tests.serverTests;
 
-
-
 import static org.junit.Assert.*;
 
 import java.io.IOException;
-import java.net.ServerSocket;
+import java.net.UnknownHostException;
 import java.sql.SQLException;
 
 import org.junit.Test;
 
 import application.Account;
-import application.LoginController;
-import application.Server;
 
-public class dbConnTest {
+public class updateMoneyTest {
 
 	@Test
-	public void test() throws IOException, SQLException {
+	public void test() throws SQLException, UnknownHostException, IOException {
 		Account user= new Account("jpc");
-		assertEquals(user.conn!=null,true);
-		
+		user.money=1000;
+		user.UpdateMoney();
+		assertEquals(1000,user.money);
 	}
 
 }
