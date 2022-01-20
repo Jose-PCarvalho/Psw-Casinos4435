@@ -43,6 +43,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -107,6 +109,9 @@ ImageView ProfileImage;
 @FXML AnchorPane kickMSG;
 @FXML AnchorPane kickMSG1;
 @FXML ScrollPane chatScroll;
+@FXML StackPane finalScreenPane;
+@FXML Region finalScreenRectangle;
+@FXML Text finalScreenText;
 int lastBet=0;
 private AudioClip mediaPlayer;
 private File directory;
@@ -159,6 +164,8 @@ boolean chatFlag=false;
  int PlayerRotation[]= {0,34,22,11,0,-11,-22,-34};
  int PlayerCircleX[] = {0,305,460,628,805,988,1161,1322};
  int PlayerCircleY[] = {0,523,609,659,676,659,609,523};
+ final String finalTexts[]= {"Lose","Win","Draw","Next"};
+ final String finalColors[]= {"-fx-background-color : #fa5260;"+"-fx-background-radius : 30;","-fx-background-color : #57fa5d;"+"-fx-background-radius : 30;","-fx-background-color : #ebf768;"+"-fx-background-radius : 30;","-fx-background-color : #898a87;"+"-fx-background-radius : 30;"};
  
  private boolean SendMessage=false;
 
@@ -167,7 +174,7 @@ boolean chatFlag=false;
  @FXML Button repeatButton;
 
 private boolean exit=false;;
-
+private boolean finalScreenFlag=false;
 
 
 private static Socket socket;
@@ -860,37 +867,25 @@ public void gameOver(String Result) {
 	if(playGridOn) {
 	removePlayGrid();}
 	if(Integer.parseInt(Result)==-1) {
-		Result="0";
+		Result="3";
 	}
 	lastBet=Integer.parseInt(BetGUI.getText());
 	if(lastBet!=0) {
 		repeatButton.setVisible(true);
 	}
-	if(!gameFinalized) {
-	if(FinalScreen!=null) {
-		Pane.getChildren().remove(FinalScreen);
-		FinalScreen=null;
-	}
-	 String[] Screens= { "../Resources/GeneralAssets/LosingScreen.png","../Resources/GeneralAssets/WinningScreen.png","../Resources/GeneralAssets/DrawScreen.png" };
-	 FinalScreen= new ImageView(new Image(getClass().getResourceAsStream(Screens[Integer.parseInt(Result)])));
-	 FinalScreen.setLayoutX(600);
-	 FinalScreen.setLayoutY(200+120);
-	 FinalScreen.setPreserveRatio(true);
+	if(!gameFinalized) {	
 	 gameFinalized=true;
-	 Pane.getChildren().add(FinalScreen);
-	 FinalScreen.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{
-	         newGame();
-	         Pane.getChildren().remove(FinalScreen);
-	         FinalScreen=null;
-	         event.consume();
-	     });
+	 finalScreenText.setText(finalTexts[Integer.parseInt(Result)]);
+	 finalScreenPane.setVisible(true);
+	 finalScreenRectangle.setStyle(finalColors[Integer.parseInt(Result)]);
+	
 	 }
 
 }
 
 public void newGame() {
 	
-	
+	finalScreenPane.setVisible(false);
 	for (int i=0;i<8;i++) {
 		removeCards(i,10);
 	}

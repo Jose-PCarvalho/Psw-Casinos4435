@@ -14,8 +14,11 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
 <AnchorPane fx:id="Pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="984.0" prefWidth="1636.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
@@ -340,5 +343,15 @@
             </Button>
          </children>
       </AnchorPane>
+      <StackPane fx:id="finalScreenPane" layoutX="613.0" layoutY="385.0" onMouseClicked="#newGame" prefHeight="188.0" prefWidth="425.0">
+         <children>
+            <Region fx:id="finalScreenRectangle" prefHeight="255.0" prefWidth="491.0" style="-fx-background-color: #fa5260; -fx-background-radius: 30;" />
+            <Text fx:id="finalScreenText" strokeType="OUTSIDE" strokeWidth="0.0" text="Lose" textAlignment="CENTER" wrappingWidth="319.484375">
+               <font>
+                  <Font name="Lucida Calligraphy Italic" size="96.0" />
+               </font>
+            </Text>
+         </children>
+      </StackPane>
    </children>
 </AnchorPane>
