@@ -29,20 +29,11 @@ public class Init{
     private Parent root;
 
 
-    /*@Override
-    public void start(Stage stage) throws Exception {
-        Img.fitWidthProperty().bind(Anchor.widthProperty());
-        Img.fitHeightProperty().bind(Anchor.heightProperty());
-
-        Scene scene = new Scene(Anchor);
-        stage.setScene(scene);
-        stage.show();
-    }*/
 
 
     public void GoToLog(ActionEvent Event) throws IOException{
     	
-        changeScene(Event,"../Resources/login.fxml");
+        changeScene(Event,"/Resources/login.fxml");
     }
     
     public void changeScene(ActionEvent event, String path) throws IOException {

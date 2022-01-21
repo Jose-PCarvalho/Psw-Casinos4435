@@ -87,7 +87,7 @@ public class Signup {
         		CAError.setText("Account successfully created.");
         		CAError.setVisible(true);
         		
-        		changeScene(Event,"../Resources/login.fxml");
+        		changeScene(Event,"/Resources/login.fxml");
         	}
 
         }
@@ -101,7 +101,7 @@ public class Signup {
     
     public void GoBack(ActionEvent Event) throws IOException {
         
-        changeScene(Event,"../Resources/login.fxml");
+        changeScene(Event,"/Resources/login.fxml");
     }
 
     public int GetYears(LocalDate date){

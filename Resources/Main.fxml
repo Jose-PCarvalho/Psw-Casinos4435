@@ -343,7 +343,7 @@
             </Button>
          </children>
       </AnchorPane>
-      <StackPane fx:id="finalScreenPane" layoutX="613.0" layoutY="385.0" onMouseClicked="#newGame" prefHeight="188.0" prefWidth="425.0">
+      <StackPane fx:id="finalScreenPane" layoutX="613.0" layoutY="385.0" onMouseClicked="#newGame" prefHeight="188.0" prefWidth="425.0" visible="false">
          <children>
             <Region fx:id="finalScreenRectangle" prefHeight="255.0" prefWidth="491.0" style="-fx-background-color: #fa5260; -fx-background-radius: 30;" />
             <Text fx:id="finalScreenText" strokeType="OUTSIDE" strokeWidth="0.0" text="Lose" textAlignment="CENTER" wrappingWidth="319.484375">
