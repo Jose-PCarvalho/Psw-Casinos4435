@@ -70,7 +70,7 @@ public final class LoginController{
             if(UserNameExists(username) == true) {
             	if(FindPassword(username, PasswordTF.getText()) == true) {
             		setUser();
-            		changeScene(event,"../Resources/AfterLogin.fxml");	
+            		changeScene(event,"/Resources/AfterLogin.fxml");	
             	}
             	else {
             		ErrorMsg.setText("Wrong password.Try again.");
@@ -125,7 +125,7 @@ public final class LoginController{
 
     public void changeWindowSU(ActionEvent Event) throws IOException{
  
-        changeScene(Event,"../resources/signup.fxml");
+        changeScene(Event,"/Resources/signup.fxml");
     }
 
     

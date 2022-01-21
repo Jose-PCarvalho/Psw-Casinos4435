@@ -44,6 +44,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -108,6 +110,9 @@ ImageView ProfileImage;
 @FXML AnchorPane kickMSG;
 @FXML AnchorPane kickMSG1;
 @FXML ScrollPane chatScroll;
+@FXML StackPane finalScreenPane;
+@FXML Region finalScreenRectangle;
+@FXML Text finalScreenText;
 int lastBet=0;
 private AudioClip mediaPlayer;
 /*private File directory;
@@ -119,8 +124,8 @@ boolean chatFlag=false;
  final int[] BetValues= {1,2,5,10,20,25,50,100,250,500,1000,2000,5000};
  int currentBet=0;
  int walletValue=10000;
- Image confirmImage = new Image(getClass().getResourceAsStream("../Resources/GeneralAssets/Confirm.png"));
- Image Join = new Image(getClass().getResourceAsStream("../Resources/GeneralAssets/Join.png"));
+ Image confirmImage = new Image(getClass().getResourceAsStream("/Resources/GeneralAssets/Confirm.png"));
+ Image Join = new Image(getClass().getResourceAsStream("/Resources/GeneralAssets/Join.png"));
  Circle PlayerCircle[] = new Circle[8];
  Label PlayerPoints[] = new Label[8];
  ImageView FinalScreen;
@@ -160,6 +165,8 @@ boolean chatFlag=false;
  int PlayerRotation[]= {0,34,22,11,0,-11,-22,-34};
  int PlayerCircleX[] = {0,305,460,628,805,988,1161,1322};
  int PlayerCircleY[] = {0,523,609,659,676,659,609,523};
+ final String finalTexts[]= {"Lose","Win","Draw","Next"};
+ final String finalColors[]= {"-fx-background-color : #fa5260;"+"-fx-background-radius : 30;","-fx-background-color : #57fa5d;"+"-fx-background-radius : 30;","-fx-background-color : #ebf768;"+"-fx-background-radius : 30;","-fx-background-color : #898a87;"+"-fx-background-radius : 30;"};
  
  private boolean SendMessage=false;
 
@@ -168,7 +175,7 @@ boolean chatFlag=false;
  @FXML Button repeatButton;
 
 private boolean exit=false;;
-
+private boolean finalScreenFlag=false;
 
 
 private static Socket socket;
@@ -234,7 +241,7 @@ public void setBetValue() {
 
  
  public void populateGrid() {
-	 String[] ChipName= {"../Resources/Coins/1.png","../Resources/Coins/2.png","../Resources/Coins/5.png","../Resources/Coins/10.png","../Resources/Coins/20.png","../Resources/Coins/25.png","../Resources/Coins/50.png","../Resources/Coins/100.png","../Resources/Coins/250.png","../Resources/Coins/500.png","../Resources/Coins/1000.png","../Resources/Coins/2000.png","../Resources/Coins/5000.png"};
+	 String[] ChipName= {"/Resources/Coins/1.png","/Resources/Coins/2.png","/Resources/Coins/5.png","/Resources/Coins/10.png","/Resources/Coins/20.png","/Resources/Coins/25.png","/Resources/Coins/50.png","/Resources/Coins/100.png","/Resources/Coins/250.png","/Resources/Coins/500.png","/Resources/Coins/1000.png","/Resources/Coins/2000.png","/Resources/Coins/5000.png"};
 	 
 	 for(int i=0;i<13;i++) {
 		 Image ChipImage= new Image(getClass().getResourceAsStream(ChipName[i]));
@@ -834,7 +841,7 @@ public void setBetValue() {
  	}
  
 private void setPlayGrid() {
-	 String[] PlayName= { "../Resources/GeneralAssets/Double.png","../Resources/GeneralAssets/Hit.png","../Resources/GeneralAssets/Stand.png" };
+	 String[] PlayName= { "/Resources/GeneralAssets/Double.png","/Resources/GeneralAssets/Hit.png","/Resources/GeneralAssets/Stand.png" };
  
 	for(int i=0;i<3;i++) {
 		 PlayGrid.setHgap(20);
@@ -887,37 +894,25 @@ public void gameOver(String Result) {
 	if(playGridOn) {
 	removePlayGrid();}
 	if(Integer.parseInt(Result)==-1) {
-		Result="0";
+		Result="3";
 	}
 	lastBet=Integer.parseInt(BetGUI.getText());
 	if(lastBet!=0) {
 		repeatButton.setVisible(true);
 	}
-	if(!gameFinalized) {
-	if(FinalScreen!=null) {
-		Pane.getChildren().remove(FinalScreen);
-		FinalScreen=null;
-	}
-	 String[] Screens= { "../Resources/GeneralAssets/LosingScreen.png","../Resources/GeneralAssets/WinningScreen.png","../Resources/GeneralAssets/DrawScreen.png" };
-	 FinalScreen= new ImageView(new Image(getClass().getResourceAsStream(Screens[Integer.parseInt(Result)])));
-	 FinalScreen.setLayoutX(600);
-	 FinalScreen.setLayoutY(200+120);
-	 FinalScreen.setPreserveRatio(true);
+	if(!gameFinalized) {	
 	 gameFinalized=true;
-	 Pane.getChildren().add(FinalScreen);
-	 FinalScreen.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{
-	         newGame();
-	         Pane.getChildren().remove(FinalScreen);
-	         FinalScreen=null;
-	         event.consume();
-	     });
+	 finalScreenText.setText(finalTexts[Integer.parseInt(Result)]);
+	 finalScreenPane.setVisible(true);
+	 finalScreenRectangle.setStyle(finalColors[Integer.parseInt(Result)]);
+	
 	 }
 
 }
 
 public void newGame() {
 	
-	
+	finalScreenPane.setVisible(false);
 	for (int i=0;i<8;i++) {
 		removeCards(i,10);
 	}
@@ -1056,8 +1051,8 @@ public void removeCards(int id, int n) {
 		int n=Integer.parseInt(Size);
 		if(Integer.parseInt(Value)>0) {
 		for (int i=0;i<n;i++) {
-			// System.out.println("../Resources/Cards/"+lines[i]+".png");
-			 PlayersHands[0][i]=new ImageView(new Image(getClass().getResourceAsStream("../Resources/Cards/"+lines[i]+".png"))); 
+			
+			 PlayersHands[0][i]=new ImageView(new Image(getClass().getResourceAsStream("/Resources/Cards/"+lines[i]+".png"))); 
 			 PlayersHands[0][i].setLayoutX(700+65*i);
 			 PlayersHands[0][i].setLayoutY(40);
 			 PlayersHands[0][i].setPreserveRatio(true);
@@ -1103,13 +1098,13 @@ public void removeCards(int id, int n) {
 		
 		if(Integer.parseInt(Value)>0) {
 			for (int i=0;i<n;i++) {
-				// System.out.println("../Resources/Cards/"+linesD[i]+".png");
+				
 				if(PlayerRotation[pid] != 0) {
 					 int offsetSignal=1;
 					 if(pid>4) {
 						 offsetSignal=-1;
 					 }
-					 PlayersHands[pid][i]=new ImageView(new Image(getClass().getResourceAsStream("../Resources/Cards/"+linesD[i]+".png"))); 
+					 PlayersHands[pid][i]=new ImageView(new Image(getClass().getResourceAsStream("/Resources/Cards/"+linesD[i]+".png"))); 
 					 PlayersHands[pid][i].setLayoutX(PlayerPositionX[pid]+28*i-15);  //30*i
 					 PlayersHands[pid][i].setLayoutY(PlayerPositionY[pid]-45+ 12*i*offsetSignal);
 					 PlayersHands[pid][i].setPreserveRatio(true);
@@ -1120,7 +1115,7 @@ public void removeCards(int id, int n) {
 				     Pane.getChildren().add(PlayersHands[pid][i]);
 				}
 				else {
-				 PlayersHands[pid][i]=new ImageView(new Image(getClass().getResourceAsStream("../Resources/Cards/"+linesD[i]+".png"))); 
+				 PlayersHands[pid][i]=new ImageView(new Image(getClass().getResourceAsStream("/Resources/Cards/"+linesD[i]+".png"))); 
 				 PlayersHands[pid][i].setLayoutX(PlayerPositionX[pid]+40*i-15);  //30*i
 				 PlayersHands[pid][i].setLayoutY(PlayerPositionY[pid]-45+ i);
 				 PlayersHands[pid][i].setPreserveRatio(true);

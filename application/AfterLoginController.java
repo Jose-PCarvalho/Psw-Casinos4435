@@ -242,29 +242,33 @@ public class AfterLoginController {
 		HelpText.getChildren().addAll(text1, text2,text3,text4,text5,text6,text7);
 		
         
+		
+    	boolean alreadyLogged=true;
 		try {
-    		socket = new Socket("localhost", 1234);
-    		bufferedWriter=new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-    		bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-    		
-    	} catch (UnknownHostException e1) {
-    		serversAreDown.setVisible(true);
-    		e1.printStackTrace();
-    	} catch (IOException e1) {
-    		serversAreDown.setVisible(true);
-    		e1.printStackTrace();
-    	}
-    	
-    	
-    	try {
-			if(!user.setLogin()) {
+			alreadyLogged=user.setLogin();
+		} catch (SQLException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+			if(!alreadyLogged) {
 				loggedInAlready.setVisible(true);
 				
 			}
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		
+			else {
+				try {
+		    		socket = new Socket("localhost", 1234);
+		    		bufferedWriter=new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+		    		bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		    		
+		    	} catch (UnknownHostException e1) {
+		    		serversAreDown.setVisible(true);
+		    		e1.printStackTrace();
+		    	} catch (IOException e1) {
+		    		serversAreDown.setVisible(true);
+		    		e1.printStackTrace();
+		    	}
+    	
     	setMessage("LobbyInfoRequest%"+user.username);
     	messageRequest();
     	
@@ -325,6 +329,7 @@ public class AfterLoginController {
     		}
 
     	  }).start();
+			}
     	
     	
     	Platform.runLater( () -> {
@@ -474,7 +479,7 @@ public class AfterLoginController {
 						Controller.setAccount(user, t);
 						mediaPlayer.stop();
 						try {
-							changeScene(event,"../resources/Main.fxml");
+							changeScene(event,"/Resources/Main.fxml");
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -492,7 +497,6 @@ public class AfterLoginController {
 				PlayerNames[i][j]=new Label();
 				PlayerNames[i][j].setText("Player"+j+": "+"Julia Pinheiro");
 				PlayerNames[i][j].setFont(Font.font("Verdana", 20));
-				//PlayerNames[i][j].setStyle("-fx-font-weight: bold;");
 				PlayerNames[i][j].setVisible(true);
 				TableMenuGrid[i].add(PlayerNames[i][j], 0, j);
 				if(j>0) {
@@ -525,13 +529,11 @@ public class AfterLoginController {
 			            		setMessage("KickRequest%"+table+"%"+player);
 			                	messageRequest();
 			           
-			            		//PlayerNames[table][player].setText("Player"+player+":");
-			            		//PlayerStatus[table][player].setFill(javafx.scene.paint.Color.GRAY);
 			          
 			            	}
 			            	else {
 			            		if(changeDealer[table]!=null && !changeDealer[table].getText().equals("")) {
-			            			//PlayerNames[table][player].setText("Dealer: "+ changeDealer[table].getText());
+
 	            		        	TableMenuGrid[table].getChildren().remove(changeDealer[table]);
 	            		        	TableMenuGrid[table].add(PlayerNames[table][player], 0, 0);
 	            		        	setMessage("DealerRequest%"+ changeDealer[table].getText()+"%"+table+"%");
@@ -587,9 +589,7 @@ public class AfterLoginController {
 			TableMenuGrid[i]= new GridPane();
 			TableMenuGrid[i].setLayoutX(15);
 			TableMenuGrid[i].setLayoutY(45);
-			//TableMenuGrid[i].setGridLinesVisible(true);
 			TableMenuGrid[i].setHgap(10);
-			//TableMenuGrid[i].setVgap(3);
 			final int numCols = 3 ;
 	        final int numRows = 8 ;
 	        for(int j=0;j<numCols;j++) {
@@ -864,7 +864,7 @@ public class AfterLoginController {
     
     public void userLogOut(MouseEvent event) throws IOException{
         closeDelete();
-        changeScene(event,"../Resources/login.fxml");
+        changeScene(event,"/Resources/login.fxml");
         mediaPlayer.stop();
     }
     
@@ -1065,7 +1065,7 @@ public class AfterLoginController {
 	@FXML
 	public void closeLogged(MouseEvent event) {
 		 try {
-			changeScene(event,"../Resources/login.fxml");
+			changeScene(event,"/Resources/login.fxml");
 		} catch (IOException e) {
 			
 			e.printStackTrace();
@@ -1075,7 +1075,7 @@ public class AfterLoginController {
 	public void serversClosed(MouseEvent event) {
 		 try {
 			 closeSocket();
-			changeScene(event,"../Resources/login.fxml");
+			changeScene(event,"/Resources/login.fxml");
 		} catch (IOException e) {
 			
 			e.printStackTrace();
