@@ -324,7 +324,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <ScrollPane layoutX="40.0" layoutY="111.0" style="-fx-background: #D2A4A4; -fx-border-color: #D2A4A4;" stylesheets="@../scroll.css">
+            <ScrollPane layoutX="40.0" layoutY="111.0" style="-fx-background: #D2A4A4; -fx-border-color: #D2A4A4;" stylesheets="@scroll.css">
                <content>
                   <TextFlow fx:id="HelpText" prefHeight="679.0" prefWidth="1067.0" />
                </content>

@@ -220,6 +220,9 @@ public class ServerLogic {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> { 
+			  server.CloseServerSocket();
+			}));
 		
 	}
 	

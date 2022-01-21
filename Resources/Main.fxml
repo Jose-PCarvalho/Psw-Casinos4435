@@ -268,7 +268,7 @@
       </Button>
       <AnchorPane fx:id="Chat" layoutX="1202.0" layoutY="97.0" prefHeight="683.0" prefWidth="414.0" style="-fx-background-color: #D2A4A4; -fx-background-radius: 30;" visible="false">
          <children>
-            <ScrollPane fx:id="chatScroll" layoutX="19.0" layoutY="62.0" prefHeight="561.0" prefWidth="379.0" style="-fx-background: #D2A4A4; -fx-border-color: #D2A4A4;" stylesheets="@../scroll.css">
+            <ScrollPane fx:id="chatScroll" layoutX="19.0" layoutY="62.0" prefHeight="561.0" prefWidth="379.0" style="-fx-background: #D2A4A4; -fx-border-color: #D2A4A4;" stylesheets="@scroll.css">
                <content>
                   <TextFlow fx:id="ChatText" prefHeight="543.0" prefWidth="375.0" />
                </content>
