@@ -1047,6 +1047,11 @@ public class AfterLoginController {
 			}
 	 }
 	
+	public void signOut(MouseEvent e) throws IOException {
+		logOut();
+		changeScene(e,"/Resources/login.fxml");
+	}
+	
 	public void changePlayer(int table, int player, String Name) {
 		if(player>0) {
 			PlayerNames[table][player].setText("Player"+player+": " +Name);
