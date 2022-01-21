@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.Date;
@@ -109,10 +110,10 @@ ImageView ProfileImage;
 @FXML ScrollPane chatScroll;
 int lastBet=0;
 private AudioClip mediaPlayer;
-private File directory;
+/*private File directory;
 private File[] files;
 //private int songNumber;
-private ArrayList<File> songs;
+private ArrayList<File> songs;*/
 
 boolean chatFlag=false;
  final int[] BetValues= {1,2,5,10,20,25,50,100,250,500,1000,2000,5000};
@@ -247,9 +248,9 @@ public void setBetValue() {
 	 
  }
  
- public void initialize() {
+ public void initialize() throws URISyntaxException {
 	 kickMSG.setVisible(false);
-	 songs = new ArrayList<File>();
+	 /*songs = new ArrayList<File>();
 		directory = new File("music");
 		files = directory.listFiles();
 		if(files != null) {
@@ -257,10 +258,22 @@ public void setBetValue() {
 				songs.add(file);
 				
 			}
+		}*/
+		
+	 if(AfterLoginController.songNumber == 0) {
+			Media media = new Media(getClass().getResource("/music/01. key plus words.mp3").toURI().toString());
+			mediaPlayer = new AudioClip(media.getSource());
+		}else if(AfterLoginController.songNumber == 1) {
+			Media media = new Media(getClass().getResource("/music/01 Tank!.mp3").toURI().toString());
+			mediaPlayer = new AudioClip(media.getSource());
+		}else if(AfterLoginController.songNumber == 2) {
+			Media media = new Media(getClass().getResource("/music/music.mp3").toURI().toString());
+			mediaPlayer = new AudioClip(media.getSource());
+		}else {
+			Media media = new Media(getClass().getResource("/music/yt1s.com - Bleach TYBW Number One PV Remix.mp3.mp3").toURI().toString());
+			mediaPlayer = new AudioClip(media.getSource());
 		}
-		
-		
-		mediaPlayer = new AudioClip(songs.get(AfterLoginController.songNumber).toURI().toString());
+		//mediaPlayer = new AudioClip(songs.get(AfterLoginController.songNumber).toURI().toString());
 		
 		
 	 populateGrid();
@@ -570,22 +583,36 @@ public void setBetValue() {
     }
     
     @FXML 
-    private void NextMusic() {
-    	if(AfterLoginController.songNumber < songs.size() - 1) {
+    private void NextMusic() throws URISyntaxException {
+    	if(AfterLoginController.songNumber < 4 - 1) {
     		AfterLoginController.songNumber++;
     		mediaPlayer.stop();
     		
-    		mediaPlayer = new AudioClip(songs.get(AfterLoginController.songNumber).toURI().toString());
-    		BackgroundMusic();
+    		//mediaPlayer = new AudioClip(songs.get(AfterLoginController.songNumber).toURI().toString());
+    		
     	}
     	else {
     		AfterLoginController.songNumber = 0;
     		mediaPlayer.stop();
     		
-    		mediaPlayer = new AudioClip(songs.get(AfterLoginController.songNumber).toURI().toString());
-    		BackgroundMusic();
+    		//mediaPlayer = new AudioClip(songs.get(AfterLoginController.songNumber).toURI().toString());
     	}
     	
+    	 if(AfterLoginController.songNumber == 0) {
+ 			Media media = new Media(getClass().getResource("/music/01. key plus words.mp3").toURI().toString());
+ 			mediaPlayer = new AudioClip(media.getSource());
+ 		}else if(AfterLoginController.songNumber == 1) {
+ 			Media media = new Media(getClass().getResource("/music/01 Tank!.mp3").toURI().toString());
+ 			mediaPlayer = new AudioClip(media.getSource());
+ 		}else if(AfterLoginController.songNumber == 2) {
+ 			Media media = new Media(getClass().getResource("/music/music.mp3").toURI().toString());
+ 			mediaPlayer = new AudioClip(media.getSource());
+ 		}else {
+ 			Media media = new Media(getClass().getResource("/music/yt1s.com - Bleach TYBW Number One PV Remix.mp3.mp3").toURI().toString());
+ 			mediaPlayer = new AudioClip(media.getSource());
+ 		}
+    	
+    	 BackgroundMusic();
     }
     
     public void shutdown() {
