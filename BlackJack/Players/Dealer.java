@@ -46,7 +46,6 @@ public class Dealer extends Base_participant {
         else if(this.Action.equals("Player Hit") ){
             Player.PlayerHand[0].insertCard(this.dShoe.dealCard()); 
             
-            //if splitted, draw another card
 
         }
         else if(this.Action.equals("Player Stand")){

@@ -24,7 +24,7 @@ public class Shoe {
 
     public BlackJackCard dealCard(int position, int deckNumber){
 
-        return Decks[deckNumber].drawCard(position); // needs to verify if not null;
+        return Decks[deckNumber].drawCard(position); 
     }
 
     public BlackJackCard dealCard(){

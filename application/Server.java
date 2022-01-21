@@ -126,7 +126,6 @@ public class Server {
 		try {
 			this.serverSocket.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -135,7 +134,7 @@ public class Server {
 		try {
 			this.serverSocket.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		
@@ -209,7 +208,6 @@ public class Server {
 			 conn = DriverManager.getConnection(url, props);
 			 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		}

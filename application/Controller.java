@@ -59,12 +59,6 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 public class Controller {
-
- //ImageView is a Node used for painting images loaded with Images
-
- // Image = picture 
- // ImageView = picture frame
- 
  @FXML 
  GridPane ChipGrid;
  
@@ -115,10 +109,6 @@ ImageView ProfileImage;
 @FXML Text finalScreenText;
 int lastBet=0;
 private AudioClip mediaPlayer;
-/*private File directory;
-private File[] files;
-//private int songNumber;
-private ArrayList<File> songs;*/
 
 boolean chatFlag=false;
  final int[] BetValues= {1,2,5,10,20,25,50,100,250,500,1000,2000,5000};
@@ -257,16 +247,6 @@ public void setBetValue() {
  
  public void initialize() throws URISyntaxException {
 	 kickMSG.setVisible(false);
-	 /*songs = new ArrayList<File>();
-		directory = new File("music");
-		files = directory.listFiles();
-		if(files != null) {
-			for(File file : files) {
-				songs.add(file);
-				
-			}
-		}*/
-		
 	 if(AfterLoginController.songNumber == 0) {
 			Media media = new Media(getClass().getResource("/music/01. key plus words.mp3").toURI().toString());
 			mediaPlayer = new AudioClip(media.getSource());
@@ -280,7 +260,6 @@ public void setBetValue() {
 			Media media = new Media(getClass().getResource("/music/yt1s.com - Bleach TYBW Number One PV Remix.mp3.mp3").toURI().toString());
 			mediaPlayer = new AudioClip(media.getSource());
 		}
-		//mediaPlayer = new AudioClip(songs.get(AfterLoginController.songNumber).toURI().toString());
 		
 		
 	 populateGrid();
@@ -420,7 +399,7 @@ public void setBetValue() {
 			        while(socket.isConnected() && !socket.isClosed()){
 			            String messageFromServer= bufferedReader.readLine();
 
-			            System.out.println(messageFromServer);
+			            //System.out.println(messageFromServer);
 
 			            Platform.runLater( () -> {
 			            	 if(messageFromServer.contains("Chat") && this.joined==true) {
@@ -448,20 +427,13 @@ public void setBetValue() {
 							}
 						} catch (IOException e1) {
 							// TODO Auto-generated catch block
-							e1.printStackTrace();
+						e1.printStackTrace();
 						}
 			    		
 			    		
-			    	/*Stage stg=(Stage) Pane.getScene().getWindow();
-			    	stg.fireEvent(
-			                new WindowEvent(
-			                        stg,
-			                        WindowEvent.WINDOW_CLOSE_REQUEST
-			                )
-			        );*/
 			    	});
 			    	
-			    	e.printStackTrace();
+			    	//e.printStackTrace();
 			    	
 			    	
 			    }
@@ -479,7 +451,7 @@ public void setBetValue() {
 			    		
 			    		if(ReadyFlag) {
 			    			try {
-			    			System.out.println("I just sent this message"+  message);
+			    			//System.out.println("I just sent this message"+  message);
 			    			bufferedWriter.write(message);
 		     				bufferedWriter.newLine();
 		     				bufferedWriter.flush();
@@ -490,7 +462,6 @@ public void setBetValue() {
 			    					closeSocket();
 									changeScene("/Resources/AfterLogin.fxml");
 								} catch (IOException e1) {
-									// TODO Auto-generated catch block
 									e1.printStackTrace();
 								}
 			    			}
@@ -593,16 +564,12 @@ public void setBetValue() {
     private void NextMusic() throws URISyntaxException {
     	if(AfterLoginController.songNumber < 4 - 1) {
     		AfterLoginController.songNumber++;
-    		mediaPlayer.stop();
-    		
-    		//mediaPlayer = new AudioClip(songs.get(AfterLoginController.songNumber).toURI().toString());
-    		
+    		mediaPlayer.stop();    		
     	}
     	else {
     		AfterLoginController.songNumber = 0;
     		mediaPlayer.stop();
     		
-    		//mediaPlayer = new AudioClip(songs.get(AfterLoginController.songNumber).toURI().toString());
     	}
     	
     	 if(AfterLoginController.songNumber == 0) {
@@ -623,7 +590,7 @@ public void setBetValue() {
     }
     
     public void shutdown() {
-   	 System.out.println("Stage is closing");
+   	// System.out.println("Stage is closing");
    	 exit=true;
         try {
         	try {
@@ -645,14 +612,13 @@ public void setBetValue() {
         	
        
    		} catch (IOException e) {
-   			// TODO Auto-generated catch block
    			e.printStackTrace();
    		}
     }
 
  
  public static void closeSocket() {
-	 System.out.println("Stage is closing");
+	 //System.out.println("Stage is closing");
      try {
      	try {
      	if(bufferedWriter!=null) {
@@ -672,7 +638,6 @@ public void setBetValue() {
      	
     
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	 
@@ -687,7 +652,7 @@ public void setBetValue() {
 	       
 		
 	 for (String val: message.split(" ")) {
-         System.out.println(val +"\n");
+        // System.out.println(val +"\n");
 	    if(i>1)  { 
 	    	if(Integer.parseInt(val)==1) {
 	    		JoinButton1=new ImageView(Join);
@@ -967,9 +932,6 @@ public void removeCards(int id, int n) {
 		String lines[] = msg.split("%");
 		for(int i=0;i<lines.length;i++) {
 			String Values[]=lines[i].split(":");
-			/*for(String a:Values) {
-				System.out.println(a);
-			}*/
 			if(i==0) {
 				int t=Integer.parseInt(Values[2]);
 				if(t!=user.table) 
@@ -1191,7 +1153,7 @@ public void removeCards(int id, int n) {
 	        }
 	 }
 	 @FXML public void closeChat() {
-		 System.out.println("CLOSE");
+		
 		 chatFlag=!chatFlag;
 		 Chat.setVisible(chatFlag);
 		 chatBut.setStyle("-fx-background-color : grey;"+"-fx-background-radius : 60;");

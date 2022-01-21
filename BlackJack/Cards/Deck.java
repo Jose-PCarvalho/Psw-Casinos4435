@@ -33,7 +33,7 @@ public class Deck {
         return Cards[position];
        }
        else{
-           return null;   //should not use NULL, change later
+           return null;   
        } 
    }
 

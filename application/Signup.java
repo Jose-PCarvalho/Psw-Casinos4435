@@ -72,7 +72,6 @@ public class Signup {
         }
         
         else if(GetYears(AgeBD.getValue()) < 18 && AgeBD.getValue() != null){
-        	//CAError.setText("You are too young to play this game.");
         	AgeError.setVisible(true);
         	
         }
@@ -119,7 +118,6 @@ public class Signup {
 			 conn = DriverManager.getConnection(url, props);
 			 return conn;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         return null;

@@ -234,7 +234,7 @@
                   <Image url="@GeneralAssets/baseline_help_outline_black_24dp.png" />
                </image>
             </ImageView>
-            <ScrollPane layoutX="42.0" layoutY="104.0" style="-fx-background: #D2A4A4; -fx-border-color: #D2A4A4;" stylesheets="@../scroll.css">
+            <ScrollPane layoutX="42.0" layoutY="104.0" style="-fx-background: #D2A4A4; -fx-border-color: #D2A4A4;" stylesheets="@scroll.css">
                <content>
                   <TextFlow fx:id="HelpText" prefHeight="679.0" prefWidth="1067.0" />
                </content>

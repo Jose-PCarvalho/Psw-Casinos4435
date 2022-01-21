@@ -30,7 +30,6 @@ public class ServerLogic {
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -217,7 +216,6 @@ public class ServerLogic {
 		try {
 			server.startServer();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> { 

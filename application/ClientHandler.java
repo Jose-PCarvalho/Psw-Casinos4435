@@ -20,10 +20,8 @@ public class ClientHandler implements Runnable {
 	Socket socket;
 	BufferedReader bufferedReader;
 	BufferedWriter bufferedWriter;
-	private String name;
 	String message;
 	boolean LastMessage;
-	private ReentrantLock mutex = new ReentrantLock();
 	public Connection conn;
 	String user;
 	private String table="0";
@@ -34,12 +32,6 @@ public class ClientHandler implements Runnable {
 			this.bufferedWriter=new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			this.bufferedReader=new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			ConnectDB();
-			/*try {
-	            mutex.lock();
-	            Server.clientHandlers.add(this);
-	        } finally {
-	            mutex.unlock();
-	        }*/
 		}catch(IOException e) {
 			e.printStackTrace();
 		}
@@ -157,7 +149,6 @@ public class ClientHandler implements Runnable {
 			 conn = DriverManager.getConnection(url, props);
 			 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		}
@@ -171,7 +162,6 @@ public class ClientHandler implements Runnable {
     	String update = "UPDATE blackjack.users SET logged='"+false+"' WHERE username='"+username+"'";
     	Statement statement = conn.createStatement();
 		statement.executeUpdate(update);
-		System.out.println("Aqui!"+username);
 		
     }
         

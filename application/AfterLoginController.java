@@ -121,13 +121,8 @@ public class AfterLoginController {
 	@FXML Label DeleteQuery;
 	@FXML AnchorPane serversAreDown;
 	@FXML AnchorPane fullTable;
-	
-	//private Media media;
 	private AudioClip mediaPlayer;
-	/*private File directory;
-	private File[] files;*/
 	public static int songNumber;
-	//private ArrayList<File> songs;
 	@FXML AnchorPane loggedInAlready;
 	
 	AnchorPane[] TableMenu=new AnchorPane[6];
@@ -148,17 +143,7 @@ public class AfterLoginController {
 
 	
 	public void initialize() throws URISyntaxException {
-		
-		/*songs = new ArrayList<File>();
-		directory = new File("music");
-		files = directory.listFiles();
-		if(files != null) {
-			for(File file : files) {
-				songs.add(file);
-				System.out.println(file);
-			}
-		}*/
-		
+				
 		if(songNumber == 0) {
 			Media media = new Media(getClass().getResource("/music/01. key plus words.mp3").toURI().toString());
 			mediaPlayer = new AudioClip(media.getSource());
@@ -278,7 +263,7 @@ public class AfterLoginController {
     	        while(socket.isConnected() && !socket.isClosed()){
     	            String messageFromServer= bufferedReader.readLine();
 
-    	            System.out.println("I received this message "+messageFromServer);
+    	            //System.out.println("I received this message "+messageFromServer);
 
     	            Platform.runLater( () -> {
     	            	if(messageFromServer.contains("Lobby Info")) {
@@ -293,7 +278,7 @@ public class AfterLoginController {
     	        }
     	    }
     	    catch(IOException e){
-    	    	e.printStackTrace();
+    	    //	e.printStackTrace();
     	    	serversAreDown.setVisible(true);
     	    }
 
@@ -309,7 +294,7 @@ public class AfterLoginController {
     	    		
     	    		if(ReadyFlag) {
     	    			try {
-    	    			System.out.println("I just sent this message"+  message);
+    	    			//System.out.println("I just sent this message"+  message);
     	    			bufferedWriter.write(message);
          				bufferedWriter.newLine();
          				bufferedWriter.flush();
@@ -324,7 +309,7 @@ public class AfterLoginController {
     			try {
     			Thread.sleep(100);
     		} catch (InterruptedException e) {
-    			e.printStackTrace();
+    			//e.printStackTrace();
     		}
     		}
 
@@ -369,12 +354,6 @@ public class AfterLoginController {
 				
 				
 			});
-	       /* myButton.setOnAction(new EventHandler<ActionEvent>() {
-	            public void handle(ActionEvent event) {
-	                TableMenu[index].setVisible(true);
-	                myButton.setVisible(false);
-	            }
-	        });*/
 			
 		}
 
@@ -481,7 +460,6 @@ public class AfterLoginController {
 						try {
 							changeScene(event,"/Resources/Main.fxml");
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 	        		}
@@ -816,8 +794,7 @@ public class AfterLoginController {
 			user.money=user.money+Integer.parseInt(depositTF.getText());
 			try {
 				user.UpdateMoney();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
+			} catch (SQLException e) { 
 				e.printStackTrace();
 			}
 			balanceLabel.setText("Current Balance: " +user.money);
@@ -833,7 +810,6 @@ public class AfterLoginController {
 			try {
 				user.UpdateMoney();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			balanceLabel.setText("Current Balance: " + user.money);
@@ -992,7 +968,7 @@ public class AfterLoginController {
 	
 	
 	public void closeSocket() {
-		 System.out.println("Stage is closing AfterLogin");
+		// System.out.println("Stage is closing AfterLogin");
 	     try {
 	     	try {
 	     	if(bufferedWriter!=null) {
@@ -1012,13 +988,12 @@ public class AfterLoginController {
 	     	
 	    
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 	 }
 	
 	public void logOut() {
-		 System.out.println("Stage is closing AfterLogin");
+		// System.out.println("Stage is closing AfterLogin");
 	     try {
 	     	try {
 	     	if(bufferedWriter!=null) {
@@ -1042,7 +1017,7 @@ public class AfterLoginController {
 	     	
 	    
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+		
 				e.printStackTrace();
 			}
 	 }
