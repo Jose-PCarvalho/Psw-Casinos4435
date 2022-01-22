@@ -8,9 +8,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="Anchor" prefHeight="700.0" prefWidth="1400.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Init">
+<AnchorPane fx:id="Anchor" prefHeight="460.0" prefWidth="859.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Init">
    <children>
-      <ImageView fx:id="Img" fitHeight="700.0" fitWidth="1400.0" pickOnBounds="true" preserveRatio="false">
+      <ImageView fx:id="Img" fitHeight="495.0" fitWidth="878.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@GeneralAssets/RR-Table-Games-07-scaled.jpg" />
          </image>

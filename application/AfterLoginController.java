@@ -237,6 +237,10 @@ public class AfterLoginController {
 		}
 			if(!alreadyLogged) {
 				loggedInAlready.setVisible(true);
+				for(int i=0;i<6;i++) {
+					disableTableButtons();
+					MenuButton.setVisible(false);
+				}
 				
 			}
 		
@@ -251,6 +255,8 @@ public class AfterLoginController {
 		    		e1.printStackTrace();
 		    	} catch (IOException e1) {
 		    		serversAreDown.setVisible(true);
+		    		disableTableButtons();
+					MenuButton.setVisible(false);
 		    		e1.printStackTrace();
 		    	}
     	
@@ -302,6 +308,8 @@ public class AfterLoginController {
     	    			}catch(IOException e) {
     	    				e.printStackTrace();
     	    				serversAreDown.setVisible(true);
+    	    				disableTableButtons();
+    						MenuButton.setVisible(false);
     	    			}
     	    		}
 

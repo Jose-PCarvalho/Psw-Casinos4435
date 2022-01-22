@@ -78,7 +78,7 @@ public class Signup {
         
         else {
         	if(UserNameExists(usernameField.getText()) == true) {
-        		CAError.setText("Username already exists.\nChoose other.");
+        		CAError.setText("Username already exists.\nChoose another.");
         		CAError.setVisible(true);
         	}
         	else {

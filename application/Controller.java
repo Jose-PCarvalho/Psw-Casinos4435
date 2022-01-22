@@ -261,7 +261,7 @@ public void setBetValue() {
 			mediaPlayer = new AudioClip(media.getSource());
 		}
 		
-		
+	 initPlayers();
 	 populateGrid();
 	 message="Player Joined%"+user.table+"%"+user.name;
 	 messageRequest();
@@ -895,12 +895,15 @@ public void removeCards(int id, int n) {
 	//System.out.println(n);
 	for (int i=0;i<n;i++) {
 		
-	     Pane.getChildren().remove(PlayersHands[id][i]);
+	     //Pane.getChildren().remove(PlayersHands[id][i]);
+		PlayersHands[id][i].setVisible(false);
 	}
 	
 	
-	Pane.getChildren().remove(PlayerPoints[id]);
-	Pane.getChildren().remove(PlayerCircle[id]);
+	//Pane.getChildren().remove(PlayerPoints[id]);
+	//Pane.getChildren().remove(PlayerCircle[id]);
+	PlayerPoints[id].setVisible(false);
+	PlayerCircle[id].setVisible(false);
 }
 
 
@@ -928,7 +931,7 @@ public void removeCards(int id, int n) {
 		
 		removeButtons();
 			
-		
+		hideAllCards();
 		String lines[] = msg.split("%");
 		for(int i=0;i<lines.length;i++) {
 			String Values[]=lines[i].split(":");
@@ -1013,31 +1016,57 @@ public void removeCards(int id, int n) {
 		int n=Integer.parseInt(Size);
 		if(Integer.parseInt(Value)>0) {
 		for (int i=0;i<n;i++) {
-			
-			 PlayersHands[0][i]=new ImageView(new Image(getClass().getResourceAsStream("/Resources/Cards/"+lines[i]+".png"))); 
+			 PlayersHands[0][i].setImage(new Image(getClass().getResourceAsStream("/Resources/Cards/"+lines[i]+".png"))); 
 			 PlayersHands[0][i].setLayoutX(700+65*i);
 			 PlayersHands[0][i].setLayoutY(40);
 			 PlayersHands[0][i].setPreserveRatio(true);
 			 PlayersHands[0][i].setSmooth(true);
 			 PlayersHands[0][i].setFitWidth(75);
-			 PlayersHands[0][i].toFront();
 			 PlayersHands[0][i].setRotate(0);
-		     Pane.getChildren().add(PlayersHands[0][i]);
+		     PlayersHands[0][i].setVisible(true);
+		    
 
 		}
 		
-		PlayerCircle[0]=new Circle(800,199,22);
 		PlayerCircle[0].setFill(javafx.scene.paint.Color.AQUA);
-		Pane.getChildren().add(PlayerCircle[0]);
-		PlayerPoints[0]= new Label(Value);
+		PlayerCircle[0].setVisible(true);
 		PlayerPoints[0].setText(Value);
 		PlayerPoints[0].setLayoutX(800-6);
 		PlayerPoints[0].setLayoutY(199-10);
 		PlayerPoints[0].setFont( new Font("Arial",17));
-		PlayerPoints[0].toFront();
-		Pane.getChildren().add(PlayerPoints[0]);}
-		
-		
+	    PlayerPoints[0].setVisible(true);
+	    
+		}
+	   
+	}
+	
+	public void initPlayers() {
+		for (int i=0;i<8;i++) {
+			for(int n=0;n<10;n++) {
+				PlayersHands[i][n]=new ImageView(new Image(getClass().getResourceAsStream("/Resources/Cards/"+"clubs"+".png")));
+				
+				 PlayersHands[i][n].setVisible(true);
+				 PlayersHands[i][n].setLayoutX(PlayerPositionX[i]+28*n-15);  //30*i
+				 PlayersHands[i][n].setLayoutY(PlayerPositionY[i]-45+ 12*n*1);
+				 PlayersHands[i][n].setPreserveRatio(true);
+				 PlayersHands[i][n].setSmooth(true);
+				 PlayersHands[i][n].setFitWidth(75);
+				 PlayersHands[i][n].setRotate(PlayerRotation[i]);
+				 Pane.getChildren().add(PlayersHands[i][n]);
+				 PlayersHands[i][n].setVisible(false); 
+			}
+				 if(i==0)
+					 PlayerCircle[0]=new Circle(800,199,22);
+				 else
+					 PlayerCircle[i]=new Circle(PlayerCircleX[i],PlayerCircleY[i],22);
+				 PlayerCircle[i].setFill(javafx.scene.paint.Color.AQUA);
+				 Pane.getChildren().add(PlayerCircle[i]);
+				 PlayerCircle[i].setVisible(false);
+				 PlayerPoints[i]= new Label("1");
+				 Pane.getChildren().add(PlayerPoints[i]);
+				 PlayerPoints[i].setVisible(false);
+			
+		}
 	}
 	
 	public void drawPlayer(int pid,String Balance,String Bet,String Size,String Value,String Cards) {
@@ -1066,44 +1095,40 @@ public void removeCards(int id, int n) {
 					 if(pid>4) {
 						 offsetSignal=-1;
 					 }
-					 PlayersHands[pid][i]=new ImageView(new Image(getClass().getResourceAsStream("/Resources/Cards/"+linesD[i]+".png"))); 
+					 PlayersHands[pid][i].setImage(new Image(getClass().getResourceAsStream("/Resources/Cards/"+linesD[i]+".png"))); 
 					 PlayersHands[pid][i].setLayoutX(PlayerPositionX[pid]+28*i-15);  //30*i
 					 PlayersHands[pid][i].setLayoutY(PlayerPositionY[pid]-45+ 12*i*offsetSignal);
 					 PlayersHands[pid][i].setPreserveRatio(true);
 					 PlayersHands[pid][i].setSmooth(true);
 					 PlayersHands[pid][i].setFitWidth(75);
 					 PlayersHands[pid][i].setRotate(PlayerRotation[pid]);
-					 PlayersHands[pid][i].toFront();
-				     Pane.getChildren().add(PlayersHands[pid][i]);
+					 PlayersHands[pid][i].setVisible(true);
 				}
 				else {
-				 PlayersHands[pid][i]=new ImageView(new Image(getClass().getResourceAsStream("/Resources/Cards/"+linesD[i]+".png"))); 
+				 PlayersHands[pid][i].setImage(new Image(getClass().getResourceAsStream("/Resources/Cards/"+linesD[i]+".png"))); 
 				 PlayersHands[pid][i].setLayoutX(PlayerPositionX[pid]+40*i-15);  //30*i
 				 PlayersHands[pid][i].setLayoutY(PlayerPositionY[pid]-45+ i);
 				 PlayersHands[pid][i].setPreserveRatio(true);
 				 PlayersHands[pid][i].setSmooth(true);
 				 PlayersHands[pid][i].setFitWidth(75);
 				 PlayersHands[pid][i].setRotate(PlayerRotation[pid]);
-				 PlayersHands[pid][i].toFront();
-			     Pane.getChildren().add(PlayersHands[pid][i]);
+			     PlayersHands[pid][i].setVisible(true);
 				}
 			}
 			
-			PlayerCircle[pid]=new Circle(PlayerCircleX[pid],PlayerCircleY[pid],22);
 			if(pid==user.pid) {
 			PlayerCircle[pid].setFill(javafx.scene.paint.Color.LIGHTGREEN);
 			}
 			else {
 				PlayerCircle[pid].setFill(javafx.scene.paint.Color.AQUA);
 			}
-			Pane.getChildren().add(PlayerCircle[pid]);
-			PlayerPoints[pid]= new Label(Value);
+			PlayerCircle[pid].setVisible(true);
 			PlayerPoints[pid].setText(Value);
 			PlayerPoints[pid].setLayoutX(PlayerCircleX[pid]-10);
 			PlayerPoints[pid].setLayoutY(PlayerCircleY[pid]-10);
 			PlayerPoints[pid].setFont( new Font("Arial",17));
-			PlayerPoints[pid].toFront();
-			Pane.getChildren().add(PlayerPoints[pid]);}
+			PlayerPoints[pid].setVisible(true);
+			}
 		}
 	}
 	
@@ -1190,6 +1215,11 @@ public void removeCards(int id, int n) {
 		 setMessage("Playing Insurance%" + user.pid +"%"+ user.table);
 	     messageRequest();
 	     insuranceFlag=true;
+	 }
+	 public void hideAllCards() {
+	 for (int i=0;i<8;i++) {
+			removeCards(i,10);
+		}
 	 }
 }
 
