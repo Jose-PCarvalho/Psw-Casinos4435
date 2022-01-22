@@ -22,6 +22,9 @@ public class Gambler extends Base_participant {
          }
     }
 
+    /**
+     * Prepares player for a new game.
+     */
     public void newGame(){
         PlayerHand[0]=new Hand();
         PlayerHand[1]=new Hand();
@@ -51,14 +54,26 @@ public class Gambler extends Base_participant {
         return wallet;
     }
 
+    /**
+     * @param quantity
+     * deposits quantity in wallet.
+     */
     public void deposit(int quantity){
         this.wallet+=quantity;
     }
 
+    /**
+     * @param quantity
+     * removes quantity from wallet
+     */
     public void withdraw(int quantity){
         this.wallet-=quantity;
     }
 
+    /**
+     * @param quantity
+     * sets bet of x quantitity.
+     */
     public void setBet(int quantity){
     	if(quantity>this.wallet) {
     		this.bet+=this.wallet;
@@ -68,6 +83,9 @@ public class Gambler extends Base_participant {
         this.bet+=quantity;
         this.wallet-=quantity;}
     }
+    /**
+     *  cancels bet.
+     */
     public void resetBet(){
         this.bet=0;
     }

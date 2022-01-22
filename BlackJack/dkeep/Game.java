@@ -52,6 +52,13 @@ public Game(int table){
 }
 
 
+/**
+ * @param pid
+ * @param name
+ * @param Balance
+ * Inserts new player in the game.
+ * Also starts the game if there weren't players before.
+ */
 public void newPlayer(int pid, String name, int Balance) {
 	Players[pid]=new Gambler(name,Balance);
 	numberOfPlayers = getNumberOfPlayers() + 1;
@@ -63,6 +70,10 @@ public void newPlayer(int pid, String name, int Balance) {
 	}
 }
 
+/**
+ * @return
+ * A string with the available spots, for informing the clients.
+ */
 public String AvailableSpots() {
 	String Message="Available Spots: ";
 	for(int i=1;i<8;i++) {
@@ -75,6 +86,10 @@ public String AvailableSpots() {
 	return Message;	
 }
 
+/**
+ * @param pid
+ * frees a spot in the game.
+ */
 public void freeSpot(int pid) {
 	if(OccupiedSlots[pid]==true) {
 		numberOfPlayers = getNumberOfPlayers() - 1;
@@ -92,6 +107,10 @@ public void freeSpot(int pid) {
 
 
 
+/**
+ * 
+ * Called when the logic wants to restart the game. Does all prep needed.
+ */
 public void newGame() {
 	newGameTimer.cancel();
 	newGameTimeisUp=false;
@@ -126,6 +145,9 @@ public void newGame() {
     numberOfWins=0;
 }
 
+/**
+ * Called when the game logic wants to end the game. Does all the calculation needed.
+ */
 public void endGame() {
 	playTimer.cancel();
 	playTimeisUp=false;
@@ -195,6 +217,11 @@ public void endGame() {
 	
 }
 
+/**
+ * @param Message
+ * @param pid
+ * Reads and execute a specfic player (pid) action (Message)
+ */
 public void PlayerPlay(String Message,int pid) {
 	if(playerEndedTurn[pid]==false) {
 	
@@ -233,6 +260,11 @@ public boolean getGameIsPlaying() {
 	return GameIsPlaying;
 }
 
+/**
+ * @param pid
+ * @param result
+ * Pays a specific player (pid) depeding on its result
+ */
 public void payBet(int pid,int result) {
 	
 	
@@ -259,6 +291,11 @@ public void payBet(int pid,int result) {
 	
 	
 }
+/**
+ * @param i
+ * @return
+ * Calculates the result of the game for a specific player. puts in WinDrawLose
+ */
 public int whoWon(int i) {
 	
 		if(getBetEntered()[i]) {
@@ -305,6 +342,10 @@ public void setGameState(String gameState) {
 }
 
 
+/**
+ * @return
+ * A string with all the game info. It's used to broadcast for the clients.
+ */
 public String getInfo(){
 	String ins="No";
 	if(D.DealerHand.getHandValue()>=10 && D.DealerHand.getHandsize()==2 && getGameState().equals("Playing")) {
@@ -325,6 +366,10 @@ public String getInfo(){
 	
 	return info;
 }
+/**
+ * @return 
+ * Gives information only regarding to the players names and occupied slots.
+ */
 public String lobbyInfo(){
 	
 	String info="";
@@ -345,6 +390,11 @@ public String lobbyInfo(){
 	return info;
 }
 
+/**
+ * @param pid
+ * @param value
+ * Sets a specific player bet.
+ */
 public void setBet(int pid, int value) {
 	if(value==-1) {
 		Players[pid].setBet(Players[pid].getWallet());
@@ -355,6 +405,10 @@ public void setBet(int pid, int value) {
 	
 }
 
+/**
+ * @param pid
+ * Confirms if a player has entered a valid bet. Also starts a game if all conditions are met
+ */
 public void confirmBet(int pid) {
 	if(!getBetEntered()[pid]) {
 		getBetEntered()[pid]=true;
@@ -439,6 +493,9 @@ public int getNumberOfPlayers() {
 	return numberOfPlayers;
 }
 
+/**
+ * Calls the endGame method if all players that are participating finished their turn.
+ */
 public void checkPlayerTurns() {
 	int n=0;
 	for(int i=0;i<8;i++) {
@@ -456,6 +513,10 @@ public void checkPlayerTurns() {
 public void kickPlayer(int i) {
 	freeSpot(i);
 }
+/**
+ * @return
+ * gets the number of player that entered a valid bet.
+ */
 public int getNumberOfParticipatingPlayers() {
 	int n=0;
 	for(int i=1;i<8;i++) {
@@ -465,10 +526,18 @@ public int getNumberOfParticipatingPlayers() {
 	return n;
 }
 
+/**
+ * @param Name
+ * Changes Dealer name.
+ */
 public void changeDealerName(String Name) {
 	D.setName(Name);
 }
 
+/**
+ * @return
+ * Called in a loop with 1s period. Checks if the game is stuck and needs and update, return if true.
+ */
 public boolean sanityCheck() {
 	boolean UpdateNeed=false;
 	if(numberOfPlayers==0 && !getGameState().equals("Waiting for Players")) {
@@ -505,6 +574,9 @@ public boolean sanityCheck() {
 	return UpdateNeed;
 }
 
+/**
+ * Register players request to start a new game
+ */
 public void newGameRequest() {
 	GameRequest++;
 	
@@ -515,6 +587,10 @@ public void newGameRequest() {
 }
 
 
+/**
+ * @param iD
+ * cancels a specific player bet
+ */
 public void cancelBet(int iD) {
 	if(!getBetEntered()[iD]) {
 		getBetEntered()[iD]=false;
@@ -529,6 +605,10 @@ public boolean[] getBetEntered() {
 	return betEntered;
 }
 
+/**
+ * @param pid
+ * Sets insurance for a specific bet.
+ */
 public void setInsurance(int pid) {
 	Players[pid].setInsurance(true);
 	Players[pid].setBet(Players[pid].getBet());

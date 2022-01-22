@@ -18,6 +18,9 @@ public class Dealer extends Base_participant {
         
     }
 
+    /**
+     * Renews hand for a new game.
+     */
     public void newGame(){
         this.DealerHand=new Hand("Dealer");
        
@@ -25,10 +28,19 @@ public class Dealer extends Base_participant {
     }
 
 
+    /**
+     * @param Act
+     * sets action to be completed later.
+     */
     public void setAction(String Act){
         this.Action=Act;
     }
 
+    /**
+     * @param Player 
+     * Does a specific game action.
+     * for himself or the player.
+     */
     public void doAction(Gambler Player){
 
         if(this.Action.equals("Dealer Start")){
@@ -73,6 +85,10 @@ public class Dealer extends Base_participant {
     }
 
     
+    /**
+     * @return
+     * checks if hand is bust.
+     */
     public boolean isBust(){
         if(this.DealerHand.getHandValue()>21){
             return true;

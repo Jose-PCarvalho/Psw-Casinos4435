@@ -65,6 +65,13 @@ public class Signup {
 		stage.setScene(scene);
     }
 
+    /**
+     * @param Event
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws SQLException
+     * Listener for create account button. checks if there are any errors, if not account is created,
+     */
     public void CreateAccount(ActionEvent Event) throws IOException, InterruptedException, SQLException {
         if (usernameField.getText().isEmpty() || AgeBD.getValue() == null || PasswordField.getText().isEmpty() || NameField.getText().isEmpty()) {
             CAError.setText("Please input data.");
@@ -92,17 +99,30 @@ public class Signup {
         }
     }
 
+    /**
+     * closes the program.
+     */
     @FXML 
     private void quit() {
     	Stage stage = (Stage) AgeOk.getScene().getWindow();
     	stage.close();
     }
     
+    /**
+     * @param Event
+     * @throws IOException
+     * goes to the login page.
+     */
     public void GoBack(ActionEvent Event) throws IOException {
         
         changeScene(Event,"/Resources/login.fxml");
     }
 
+    /**
+     * @param date
+     * @return
+     * return the age of a certain player with birthdate date.
+     */
     public int GetYears(LocalDate date){
         Period period = Period.between(date, LocalDate.now());
         return period.getYears();
@@ -123,6 +143,12 @@ public class Signup {
         return null;
     }
     
+    /**
+     * @param usernameField
+     * @return
+     * @throws SQLException
+     * checks if a UserNameExists.
+     */
     public boolean UserNameExists (String usernameField) throws SQLException {
     	String sql_username_exist = "SELECT username FROM blackjack.users";
     	Connection conn = getConnection();
@@ -141,6 +167,16 @@ public class Signup {
     	
     }
     
+    /**
+     * @param name
+     * @param username
+     * @param pass
+     * @param birth
+     * @param money
+     * @param admin
+     * @throws SQLException
+     * Inserts a new user in the database.
+     */
     public void InsertNewUser (String name, String username, String pass, LocalDate birth, int money, boolean admin) throws SQLException {    	
     	Connection conn = getConnection();
     	String sql_insert_user = "INSERT INTO blackjack.users (name, username, password, birthdate, money, admin) VALUES ('"+name+"', '"+username+"', '"+pass+"', DATE('"+birth+"'), '"+money+"', '"+admin+"')";

@@ -142,6 +142,10 @@ public class AfterLoginController {
 	private BufferedReader bufferedReader;
 
 	
+	/**
+	 * @throws URISyntaxException 
+	 * Iniatilizes javafx elements, music, sockets and verifies if account is logged in already.
+	 */
 	public void initialize() throws URISyntaxException {
 				
 		if(songNumber == 0) {
@@ -341,6 +345,9 @@ public class AfterLoginController {
 	}
 	
 	
+	/**
+	 * initalizes table buttons.
+	 */
 	private void setTableButtons() {
 		for (int i=1;i<6;i++) {
 			TableButton[i]=new Button();
@@ -369,6 +376,9 @@ public class AfterLoginController {
 		
 	}
 	
+	/**
+	 *  initializes table menus
+	 */
 	private void setTableMenu() {
 		for(int i=1;i<6;i++) {
 		TableMenu[i]= new AnchorPane();
@@ -391,6 +401,9 @@ public class AfterLoginController {
 		
 	}
 	
+	/**
+	 * Iniatialzies buttons to close menu.
+	 */
 	private void setXButtons() {
 		for (int i=1;i<6;i++) {
 		XButton[i]=new Button("X");
@@ -420,6 +433,9 @@ public class AfterLoginController {
 
 	}
 	
+	/**
+	 * Initailizes Dealer labels
+	 */
 	private void setLabels() {
 		for(int i=1;i<6;i++) {
 			DealerLabel[i]=new Label("Teste");
@@ -444,6 +460,9 @@ public class AfterLoginController {
 		}
 		
 	}
+	/**
+	 * Intializes players labels
+	 */
 	private void setPlayers() {
 		for(int i=1;i<6;i++) {
 			EnterButton[i]=new Button("Enter");
@@ -570,6 +589,9 @@ public class AfterLoginController {
 	}
 	
 	
+	/**
+	 * Intialize the grid where the components stand.
+	 */
 	private void setMenuGrids() {
 		for(int i=1;i<6;i++) {
 			TableMenuGrid[i]= new GridPane();
@@ -592,6 +614,9 @@ public class AfterLoginController {
 			
 		}
 	}
+	/**
+	 * Method to listen to presses on menu button
+	 */
 	@FXML
 	private void MenuPressed() {
 		if(MenuFlag==true) {
@@ -605,6 +630,9 @@ public class AfterLoginController {
 		}
 		
 	}
+	/**
+	 * Method to listen to AccMenu Button
+	 */
 	@FXML
 	private void openAccMenu() {
 		accMenuFlag=true;
@@ -623,6 +651,9 @@ public class AfterLoginController {
 			TableButton[i].setVisible(true);
 		}
 	}
+	/**
+	 * Method that listen to the X button in closeAccMenu
+	 */
 	@FXML
 	private void closeAccMenu() {
 		accMenuFlag=false;
@@ -632,6 +663,9 @@ public class AfterLoginController {
 		
 	}
 	
+	/**
+	 * Method that listen to open help button
+	 */
 	@FXML
 	private void openHelp() {
 		HelpMenu.setVisible(true);
@@ -644,6 +678,9 @@ public class AfterLoginController {
 		enableTableButtons();
 	}
 	
+	/**
+	 * Method to request deposit money operation
+	 */
 	@FXML
 	private void depositMoney() {
 		if(operationFlag==false || operation==2) {
@@ -658,6 +695,9 @@ public class AfterLoginController {
 			operationFlag=false;
 		}
 	}
+	/**
+	 * Method to request withdraw money operation
+	 */
 	@FXML
 	private void withdraw() {
 		if(operationFlag==false || operation==1) {
@@ -674,6 +714,9 @@ public class AfterLoginController {
 		}
 	}
 	
+	/**
+	 * Method to remove new Player flag.
+	 */
 	@FXML
 	private void closeNewComer() {
 		NewComer.setVisible(false);
@@ -684,6 +727,9 @@ public class AfterLoginController {
 		}
 	}
 	
+	/**
+	 * Methos to change profile name
+	 */
 	@FXML
 	private void changeParametersPName() {
 		changeParam.setVisible(true);
@@ -696,6 +742,9 @@ public class AfterLoginController {
 		
 	}
 	
+	/**
+	 * Method to change user name
+	 */
 	@FXML
 	private void changeParametersUName() {
 		changeParam.setVisible(true);
@@ -707,6 +756,9 @@ public class AfterLoginController {
 		ParamChange = 2;
 	}
 	
+	/**
+	 * Method to change password.
+	 */
 	@FXML
 	private void changeParametersPass() {
 		changeParam.setVisible(true);
@@ -720,6 +772,9 @@ public class AfterLoginController {
 		ParamChange = 3;
 	}
 	
+	/**
+	 * Method to delete Acc.
+	 */
 	@FXML
 	private void deleteAcc() {
 		delete.setVisible(true);
@@ -761,6 +816,10 @@ public class AfterLoginController {
 		delete.setVisible(false);
 	}
 	
+	/**
+	 * @throws SQLException
+	 * Method to conclude change of parameters operation
+	 */
 	@FXML
 	private void changeParameters() throws SQLException {
 		
@@ -796,6 +855,9 @@ public class AfterLoginController {
 		}
 	}
 	
+	/**
+	 * Listen to confirm button. confirms withdraw/deposit operation
+	 */
 	@FXML
 	private void confirm() {
 		if(operation==1) {
@@ -846,18 +908,40 @@ public class AfterLoginController {
     }
     
     
+    /**
+     * @param event
+     * @throws IOException
+     * LogsOut after deleting account
+     */
     public void userLogOut(MouseEvent event) throws IOException{
         closeDelete();
         changeScene(event,"/Resources/login.fxml");
         mediaPlayer.stop();
     }
     
+    /**
+     * @param name
+     * @param username
+     * @param password
+     * @param birth
+     * @param balance
+     * @param admin
+     * @param newComer
+     * @param connect
+     * @throws UnknownHostException
+     * @throws IOException
+     * Receives an account, use for communication between controllers.
+     */
     public static void setAccount(String name, String username, String password, Date birth, int balance, boolean admin,boolean newComer, Connection connect) throws UnknownHostException, IOException{
     	user= new Account(name, username, password, birth, balance,admin, newComer,connect);
     	
     }
     
     
+    /**
+     * @throws IOException
+     * Change Image Method.
+     */
     @FXML
     public void chooseImage() throws IOException{
         Stage stage = (Stage) pictureButton.getScene().getWindow();
@@ -871,8 +955,8 @@ public class AfterLoginController {
         	BufferedImage bufferedImage = ImageIO.read(filePath);
         	Image image = SwingFXUtils.toFXImage(bufferedImage, null);
         	ProfileImage.setImage(image);
-        	ProfileImage.setFitWidth(200.0);
-        	ProfileImage.setFitHeight(150.0);
+        	ProfileImage.setFitWidth(414);
+        	ProfileImage.setFitHeight(266);
         	
         	ProfileImage.setSmooth(true);
         	ProfileImage.setCache(true);
@@ -883,6 +967,9 @@ public class AfterLoginController {
         }
     }
     
+    /**
+     * Sets or resets the backgroud music.
+     */
     @FXML
     private void BackgroundMusic() {
             mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
@@ -896,6 +983,10 @@ public class AfterLoginController {
         
     }
     
+    /**
+     * @throws URISyntaxException
+     * Changes music.
+     */
     @FXML 
     private void NextMusic() throws URISyntaxException {
     	if(songNumber < 4 - 1) {
@@ -928,6 +1019,10 @@ public class AfterLoginController {
     }
     
     
+    /**
+     * @param messageFromServer
+     * Updates lobby with info from the server.
+     */
     private void updateLobby(String messageFromServer) {
     	
     	String lines[] = messageFromServer.split("&");
@@ -949,23 +1044,47 @@ public class AfterLoginController {
     	
     }
     
+    /**
+     * @param i
+     * @param Name
+     * Changes specific dealer Label
+     */
     private void changeDealerLabel(int i, String Name) {
     	DealerLabel[i].setText(Name);
     }
+    /**
+     * @param i
+     * @param n
+     * Changes number os players in a table label.
+     */
     private void changeNrLabel(int i,int n) {
     	NrPlayer[i].setText(Integer.toString(n));
     }
+    /**
+     * @return
+     * checks if there's a message to send
+     */
     public boolean isReady(){
 		return SendMessage;
 		
 	}
     
+    /**
+     * @param str
+     * set's am message to send.
+     */
     public void setMessage(String str) {	
 		 message=str;
 	}
+	/**
+	 * Request's a message to send.
+	 */
 	public void messageRequest() {
 		SendMessage=true;
 	}
+	/**
+	 * Concludes the process.
+	 */
 	public void messageSent() {
 		SendMessage=false;
 	}
@@ -975,6 +1094,9 @@ public class AfterLoginController {
 	}
 	
 	
+	/**
+	 * Closes the socket without logging out.
+	 */
 	public void closeSocket() {
 		// System.out.println("Stage is closing AfterLogin");
 	     try {
@@ -1000,6 +1122,9 @@ public class AfterLoginController {
 			}
 	 }
 	
+	/**
+	 * Closes socket, and logs out.
+	 */
 	public void logOut() {
 		// System.out.println("Stage is closing AfterLogin");
 	     try {
@@ -1030,11 +1155,22 @@ public class AfterLoginController {
 			}
 	 }
 	
+	/**
+	 * @param e
+	 * @throws IOException
+	 * sign out button method.
+	 */
 	public void signOut(MouseEvent e) throws IOException {
 		logOut();
 		changeScene(e,"/Resources/login.fxml");
 	}
 	
+	/**
+	 * @param table
+	 * @param player
+	 * @param Name
+	 * changes Player name and status.
+	 */
 	public void changePlayer(int table, int player, String Name) {
 		if(player>0) {
 			PlayerNames[table][player].setText("Player"+player+": " +Name);
@@ -1059,6 +1195,10 @@ public class AfterLoginController {
 			e.printStackTrace();
 		}
 	}
+	/**
+	 * @param event
+	 * Handles servers closed exception.
+	 */
 	@FXML
 	public void serversClosed(MouseEvent event) {
 		 try {
@@ -1069,6 +1209,9 @@ public class AfterLoginController {
 			e.printStackTrace();
 		}
 	}
+	/**
+	 * confirm button for table full.
+	 */
 	@FXML
 	public void tableFullConfirm() {
 		fullTable.setVisible(false);

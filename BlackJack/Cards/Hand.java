@@ -31,11 +31,19 @@ public class Hand{
     public void resetHidden(){
         this.Hidden=false;
     }
+    /**
+     * @param Card
+     * Inserts specific card in the hand.
+     */
     public void insertCard(BlackJackCard Card){
         handCards[numberOfCards]=new BlackJackCard(Card.getSuit(), Card.getFace(), Card.getPosition());
         numberOfCards++;
 
     }
+    /**
+     * @return
+     * true if the hand is Blackjack, false if not
+     */
     public boolean isBlackJack() {
     	if(numberOfCards==2 && getTrueHandValue()==21) {
     		return true;
@@ -45,6 +53,10 @@ public class Hand{
     
    
 
+    /**
+     * @return
+     * return the hand value. Always takes in consideration if there's one card hidden
+     */
     public int getHandValue(){
         this.handValue=0;
         boolean aceFlag=false;
@@ -73,6 +85,10 @@ public class Hand{
         return this.handValue;
     }
     
+    /**
+     * @return
+     * the hand value. never takes in consideration if card is hidden.
+     */
     public int getTrueHandValue(){
         this.handValue=0;
         boolean aceFlag=false;
@@ -102,6 +118,10 @@ public class Hand{
 
    
 
+    /**
+     * @return
+     * true if the handValue>21
+     */
     public boolean isBust(){
         this.bust=false;
         if(getHandValue()>21){
@@ -114,6 +134,9 @@ public class Hand{
         return numberOfCards;
     }
 
+    /**
+     * Transforms card into a string ready to be intreperted by the GUI controller.
+     */
     public String toString(){
         String str="";
         for(int i=0;i<numberOfCards;i++){

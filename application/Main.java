@@ -28,6 +28,8 @@ public class Main extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/Resources/init.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("Casinos 4435");
+        stage.setX(50);
+        stage.setY(50);
         stage.setScene(scene);
         stage.show();
         

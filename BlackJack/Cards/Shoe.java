@@ -14,6 +14,10 @@ public class Shoe {
     public int getnumberOfDecks() {
     	return numberOfDecks;
     }
+    /**
+     * @param Card
+     * Receives a specific card and sees if it can be inserted in any deck
+     */
     public void ReceiveCard(BlackJackCard Card){
         for(int i=0;i<numberOfDecks;i++){
             if(this.Decks[i].insertCard(Card)==true){
@@ -22,11 +26,21 @@ public class Shoe {
         }
     }
 
+    /**
+     * @param position
+     * @param deckNumber
+     * @return
+     * Deals a specific card, by position and number of the deck.
+     */
     public BlackJackCard dealCard(int position, int deckNumber){
 
         return Decks[deckNumber].drawCard(position); 
     }
 
+    /**
+     * @return
+     * Deals a random Card.
+     */
     public BlackJackCard dealCard(){
         Random rand = new Random();
         boolean found=false;
@@ -51,6 +65,10 @@ public class Shoe {
     
 
 
+    /**
+     * @return
+     * gets the number of cards available in the deck.
+     */
     public int AvailableCards(){
         int total=0;
         for (int i=0;i<numberOfDecks;i++){

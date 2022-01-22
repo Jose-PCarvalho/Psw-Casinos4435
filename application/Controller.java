@@ -176,11 +176,20 @@ private static BufferedReader bufferedReader;
 
 
 
+/**
+ * @param acc
+ * @param t
+ * sets account for use. Used for communication between controllers.
+ */
 public static void setAccount(Account acc,int t){
  	user=acc;
  	user.table=t;
  } 
  
+/**
+ * @param e
+ * Listens to mouse events on the bet values grid.
+ */
 @FXML 
 public void BetEntered(MouseEvent e) {
 	if(GameState.equals("Betting")) {
@@ -206,6 +215,9 @@ public void BetEntered(MouseEvent e) {
 	}
  }
 
+/**
+ * Listens to betconfirmed button, and sends appropriate message.
+ */
 public void BetConfirmed() {
 	if(GameState.equals("Betting") && currentBet!=0) {
 		setMessage("Bet Confirmed%"+user.pid+"%"+user.table);
@@ -218,6 +230,11 @@ public void BetConfirmed() {
 	
 	}
  
+/**
+ * @param walletValue
+ * @param currentBet
+ * setsBetValue with parameters.
+ */
 public void setBetValue(int walletValue,int currentBet) {
 	WalletGUI.setText(Integer.toString(walletValue));
 	BetGUI.setText(Integer.toString(currentBet));
@@ -230,7 +247,10 @@ public void setBetValue() {
  
 
  
- public void populateGrid() {
+ /**
+ * Initalizes bet values grid.
+ */
+public void populateGrid() {
 	 String[] ChipName= {"/Resources/Coins/1.png","/Resources/Coins/2.png","/Resources/Coins/5.png","/Resources/Coins/10.png","/Resources/Coins/20.png","/Resources/Coins/25.png","/Resources/Coins/50.png","/Resources/Coins/100.png","/Resources/Coins/250.png","/Resources/Coins/500.png","/Resources/Coins/1000.png","/Resources/Coins/2000.png","/Resources/Coins/5000.png"};
 	 
 	 for(int i=0;i<13;i++) {
@@ -245,7 +265,11 @@ public void setBetValue() {
 	 
  }
  
- public void initialize() throws URISyntaxException {
+ /**
+ * @throws URISyntaxException
+ * Initializes song, sockets and every javafx gui element that isn't initialized with the fxml.
+ */
+public void initialize() throws URISyntaxException {
 	 kickMSG.setVisible(false);
 	 if(AfterLoginController.songNumber == 0) {
 			Media media = new Media(getClass().getResource("/music/01. key plus words.mp3").toURI().toString());
@@ -496,7 +520,10 @@ public void setBetValue() {
  
  }
 
- @FXML
+ /**
+ * Listens to Menu button being pressed.
+ */
+@FXML
 	private void MenuPressed() {
 		if(MenuFlag==true) {
 			Menu.setVisible(false);
@@ -510,6 +537,9 @@ public void setBetValue() {
 		}
 		
 	}
+	/**
+	 * Listens to account menu being pressed.
+	 */
 	@FXML
 	private void openAccMenu() {
 		accMenuFlag=true;
@@ -517,6 +547,9 @@ public void setBetValue() {
 	    accMenu.toFront();
 		
 	}
+	/**
+	 * Closes the account menu.
+	 */
 	@FXML
 	private void closeAccMenu() {
 		accMenuFlag=false;
@@ -547,6 +580,9 @@ public void setBetValue() {
 	
 	
 	
+    /**
+     * Sets or resets the background music.
+     */
     @FXML
     private void BackgroundMusic() {
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
@@ -560,6 +596,10 @@ public void setBetValue() {
         
     }
     
+    /**
+     * @throws URISyntaxException
+     * Changes the music.
+     */
     @FXML 
     private void NextMusic() throws URISyntaxException {
     	if(AfterLoginController.songNumber < 4 - 1) {
@@ -589,6 +629,9 @@ public void setBetValue() {
     	 BackgroundMusic();
     }
     
+    /**
+     * Closes sockets with logout message.
+     */
     public void shutdown() {
    	// System.out.println("Stage is closing");
    	 exit=true;
@@ -617,7 +660,10 @@ public void setBetValue() {
     }
 
  
- public static void closeSocket() {
+ /**
+ * Closes socket without logout message.
+ */
+public static void closeSocket() {
 	 //System.out.println("Stage is closing");
      try {
      	try {
@@ -644,7 +690,11 @@ public void setBetValue() {
  }
 
  
- public void setJoinButton(String message) {
+ /**
+ * @param message
+ * Initializes join buttons.
+ */
+public void setJoinButton(String message) {
 	 
 	 int i=0;
 	 removeButtons();
@@ -794,6 +844,9 @@ public void setBetValue() {
  }
  
  	
+ 	/**
+ 	 * Removes join Buttons.
+ 	 */
  	public void removeButtons() {
  		Pane.getChildren().remove(JoinButton1);
  		Pane.getChildren().remove(JoinButton2);
@@ -805,6 +858,9 @@ public void setBetValue() {
  		
  	}
  
+/**
+ * Sets grid with player options.
+ */
 private void setPlayGrid() {
 	 String[] PlayName= { "/Resources/GeneralAssets/Double.png","/Resources/GeneralAssets/Hit.png","/Resources/GeneralAssets/Stand.png" };
  
@@ -819,6 +875,9 @@ private void setPlayGrid() {
 	 }
 	
  }
+/**
+ * removes grid with player options 
+ */
 private void removePlayGrid() {
 	PlayGrid.getChildren().remove(0);
 	PlayGrid.getChildren().remove(0);
@@ -828,6 +887,10 @@ private void removePlayGrid() {
 }
  
 
+/**
+ * @param e
+ * Listens to clicks on the play grid.
+ */
 public void Play(MouseEvent e) {
 	if(GameState.equals("Playing")) {
 	 Node clickedNode = e.getPickResult().getIntersectedNode();
@@ -855,6 +918,10 @@ public void Play(MouseEvent e) {
 
 }
 
+/**
+ * @param Result
+ * Shows end game screen.
+ */
 public void gameOver(String Result) {
 	if(playGridOn) {
 	removePlayGrid();}
@@ -875,6 +942,9 @@ public void gameOver(String Result) {
 
 }
 
+/**
+ * Prepares for a new game.
+ */
 public void newGame() {
 	
 	finalScreenPane.setVisible(false);
@@ -889,6 +959,11 @@ public void newGame() {
 	
 }
 
+/**
+ * @param id
+ * @param n
+ * hides a specific player cards.
+ */
 public void removeCards(int id, int n) {
 
 	
@@ -926,12 +1001,16 @@ public void removeCards(int id, int n) {
 	public void messageSent() {
 		SendMessage=false;
 	}
+	/**
+	 * @param msg
+	 * Processes info sent by the server.
+	 */
 	public void absorbInfo(String msg) {
 		
 		
 		removeButtons();
 			
-		hideAllCards();
+		
 		String lines[] = msg.split("%");
 		for(int i=0;i<lines.length;i++) {
 			String Values[]=lines[i].split(":");
@@ -955,7 +1034,7 @@ public void removeCards(int id, int n) {
 					if(!insuranceFlag)
 						insuranceButton.setVisible(true);
 				}
-				
+				hideAllCards();
 			}
 			
 			if(i==1) {
@@ -1010,8 +1089,13 @@ public void removeCards(int id, int n) {
 		
 	}
 	
+	/**
+	 * @param Size
+	 * @param Value
+	 * @param Cards
+	 * draws dealer with info from the server.
+	 */
 	public void drawDealer(String Size,String Value,String Cards) {
-		removeCards(0,10);
 		String lines[] = Cards.split(" ");
 		int n=Integer.parseInt(Size);
 		if(Integer.parseInt(Value)>0) {
@@ -1040,6 +1124,9 @@ public void removeCards(int id, int n) {
 	   
 	}
 	
+	/**
+	 * Initializes players gui elements.
+	 */
 	public void initPlayers() {
 		for (int i=0;i<8;i++) {
 			for(int n=0;n<10;n++) {
@@ -1069,6 +1156,15 @@ public void removeCards(int id, int n) {
 		}
 	}
 	
+	/**
+	 * @param pid
+	 * @param Balance
+	 * @param Bet
+	 * @param Size
+	 * @param Value
+	 * @param Cards
+	 * draws player with info from the server.
+	 */
 	public void drawPlayer(int pid,String Balance,String Bet,String Size,String Value,String Cards) {
 		if(user.pid==pid) {
 			user.money=Integer.parseInt(Balance);
@@ -1082,7 +1178,7 @@ public void removeCards(int id, int n) {
 		
 			
 		}
-		removeCards(pid,10);
+		
 		if(!GameState.equals("Betting")) {
 		String linesD[] = Cards.split(" ");
 		int n=Integer.parseInt(Size);
@@ -1144,7 +1240,11 @@ public void removeCards(int id, int n) {
 	 }
 
 
-	 public void LeaveTable() throws IOException{
+	 /**
+	 * @throws IOException
+	 * Leave table button.
+	 */
+	public void LeaveTable() throws IOException{
 		 exit=true;
 		 closeSocket();
 		 changeScene("/Resources/AfterLogin.fxml");
@@ -1210,13 +1310,19 @@ public void removeCards(int id, int n) {
 	        messageRequest();
 		 }
 	 }
-	 @FXML public void insuranceRequest() {
+	 /**
+	 * Listener to insurance button.
+	 */
+	@FXML public void insuranceRequest() {
 		 insuranceButton.setVisible(false);
 		 setMessage("Playing Insurance%" + user.pid +"%"+ user.table);
 	     messageRequest();
 	     insuranceFlag=true;
 	 }
-	 public void hideAllCards() {
+	 /**
+	 * hides all player cards.
+	 */
+	public void hideAllCards() {
 	 for (int i=0;i<8;i++) {
 			removeCards(i,10);
 		}

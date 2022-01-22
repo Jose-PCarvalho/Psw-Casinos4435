@@ -35,6 +35,11 @@ public class Server {
 	
 	
 	
+	/**
+	 * @throws SQLException
+	 * starts the server operation.
+	 * creates a thread for every client that connects.
+	 */
 	public void startServer() throws SQLException {
 		try {
 			ConnectDB();
@@ -63,6 +68,10 @@ public class Server {
 		}
 	}
 
+	/**
+	 * @param messageToClient
+	 * sends a String to a client.
+	 */
 	public void sendMessageToClient(String messageToClient) {
 		try {
 			getBufferedWriter().write(messageToClient);
@@ -78,6 +87,9 @@ public class Server {
 		
 		
 	}
+	/**
+	 * receives message from a client
+	 */
 	public void receiveMessageFromClient() {
 		new Thread(new Runnable() {
 			@Override
@@ -108,6 +120,12 @@ public class Server {
 		
 	}
 	
+	/**
+	 * @param socket
+	 * @param bufferedReader
+	 * @param bufferedWriter
+	 * closes socket, and buffered reader and writer.
+	 */
 	public void closeEverything(Socket socket,BufferedReader bufferedReader, BufferedWriter bufferedWriter) {
 			
 			try {
@@ -143,6 +161,10 @@ public class Server {
 	
 	
 	
+	/**
+	 * @param messageToSend
+	 * broadcasts a message to every client.
+	 */
 	public void broadcastMessage(String messageToSend) {
 		try {
             mutex.lock();
@@ -172,10 +194,18 @@ public class Server {
 		
 	}
 	
+	/**
+	 * @param clientHandler
+	 * removes a client that no longer is communicating
+	 */
 	public void removeClientHandler(ClientHandler clientHandler) {
 		clientHandlers.remove(clientHandler);
 	}
 	
+	/**
+	 * 
+	 * receives messages from clientHandlers.
+	 */
 	public void receiveMessageClientHandlers() {
 		try {
             mutex.lock();
@@ -198,6 +228,10 @@ public class Server {
 	public BufferedWriter getBufferedWriter() {
 		return bufferedWriter;
 	}
+	/**
+	 * @throws SQLException
+	 * connects to the db.
+	 */
 	public  void ConnectDB() throws SQLException {
     	String url = "jdbc:postgresql://db.fe.up.pt/meec1a0405";
 		Properties props = new Properties();

@@ -51,18 +51,32 @@ public class Account {
 		setUser(uname);
 	}
 
+	/**
+	 * @throws SQLException
+	 * Updates the money value on database.
+	 */
 	public void UpdateMoney () throws SQLException {    	
     	String update_account_money = "UPDATE blackjack.users SET money='"+money+"' WHERE username='"+username+"'";
     	Statement statement = conn.createStatement();
 		statement.executeUpdate(update_account_money);
 		
     }
+    /**
+     * @param PName
+     * @throws SQLException
+     * Updates the profile name in the database.
+     */
     public void UpdatePName (String PName) throws SQLException {
     	String update_profile_name = "UPDATE blackjack.users SET name= '" + PName + "' WHERE username ='"+ username +"'";
     	Statement statement =conn.createStatement();
     	statement.executeUpdate(update_profile_name);
     	name = PName;
     }
+    /**
+     * @param UName
+     * @throws SQLException
+     * Updates the username in the database
+     */
     public void UpdateUName(String UName) throws SQLException{
     	String update_username = "UPDATE blackjack.users SET username= '" + UName + "' WHERE username ='" + username + "'";
     	Statement statement = conn.createStatement();
@@ -70,6 +84,11 @@ public class Account {
     	username = UName;
     }
     
+    /**
+     * @param Pass
+     * @throws SQLException
+     * Updates the password in the database.
+     */
     public void UpdatePass(String Pass) throws SQLException{
     	String update_pass = "UPDATE blackjack.users SET password= '" + Pass + "' WHERE username ='" + username + "'";
     	Statement statement = conn.createStatement();
@@ -77,18 +96,31 @@ public class Account {
     	password = Pass;
     }
     
+    /**
+     * @throws SQLException
+     * Deletes account from the database.
+     */
     public void DeleteAccount() throws SQLException{
     	String delete = "DELETE FROM blackjack.users WHERE username= '" + username + "'";
     	Statement statement = conn.createStatement();
     	statement.executeUpdate(delete);
     }
     
+    /**
+     * @throws SQLException
+     * sets the new player flag too false.
+     */
     public void notNewPlayer() throws SQLException {
     	String update_pass = "UPDATE blackjack.users SET newplayer= '" + false + "' WHERE username ='" +username + "'";
     	Statement statement =conn.createStatement();
     	statement.executeUpdate(update_pass);
     	newComer=false;
     }
+    /**
+     * @return
+     * @throws SQLException
+     * logs in account return true if account wasn't logged in already before the current session.
+     */
     public boolean setLogin () throws SQLException {
     	
     	String logged = "SELECT logged FROM blackjack.users WHERE username='"+username+"'";   	
@@ -114,6 +146,13 @@ public class Account {
     
     
     
+/**
+ * @param username
+ * @throws SQLException
+ * @throws UnknownHostException
+ * @throws IOException
+ * Constructor method for the database.
+ */
 public void setUser(String username) throws SQLException, UnknownHostException, IOException {
     	
     	String sql_username_exist = "SELECT * FROM blackjack.users WHERE username='"+username+"'";
@@ -132,6 +171,10 @@ public void setUser(String username) throws SQLException, UnknownHostException, 
 }
 
 
+/**
+ * Creates a connection with the DB.
+ * 
+ */
 public void ConnectDB() {
 	String url = "jdbc:postgresql://db.fe.up.pt/meec1a0405";
 	Properties props = new Properties();
@@ -146,6 +189,12 @@ public void ConnectDB() {
 	}
 }
 
+/**
+ * @param username
+ * @return
+ * @throws SQLException
+ * checks if the username exists in the database
+ */
 public boolean UserNameExists (String username) throws SQLException {
 	String sql_username_exist = "SELECT username FROM blackjack.users";
 	

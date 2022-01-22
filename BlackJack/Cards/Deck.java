@@ -26,7 +26,13 @@ public class Deck {
         }
         this.numberOfCards=52;
     }
-   public BlackJackCard drawCard(int position){
+   /**
+ * @param position
+ * position of the card in the deck that you want to draw
+ * @return
+ * the card choosen (if available) or null.
+ */
+public BlackJackCard drawCard(int position){
        if(isAvailable(position)==true){  
         this.numberOfCards--;  
         Available[position]=false;
@@ -37,7 +43,13 @@ public class Deck {
        } 
    }
 
-   public boolean insertCard(BlackJackCard Card){
+   /**
+ * @param Card
+ *  Card you want to insert back on the deck
+ * @return
+ * true if succeful, false if not
+ */
+public boolean insertCard(BlackJackCard Card){
        if(isAvailable(Card.getPosition())==false){
            Cards[Card.getPosition()]=Card;
            this.numberOfCards++;
@@ -47,7 +59,13 @@ public class Deck {
        return false;
    }
 
-   public boolean isAvailable(int position){
+   /**
+ * @param position
+ * position in the deck of the card
+ * @return
+ * if card is available or not
+ */
+public boolean isAvailable(int position){
        return Available[position];
    }
    public int getNumberOfCards(){

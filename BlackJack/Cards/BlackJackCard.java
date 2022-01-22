@@ -1,5 +1,10 @@
 package BlackJack.Cards;
 
+/**
+ * Class for the cards used in game.
+ *
+ */
+
 public class BlackJackCard extends General_card {
 
     private int value;
@@ -10,7 +15,12 @@ public class BlackJackCard extends General_card {
         setValue();
 
     }
+    
+   
 
+    /**
+     *  Sets the value for any card. Used exclusively by the contrusctor
+     */
     private void setValue(){
         
         if(this.getFace().equals("Ace")==true){
@@ -63,6 +73,11 @@ public class BlackJackCard extends General_card {
         return (this.getFace().equals("Ace")) ? true : false;
     }
 
+    /**
+     * switches Ace value on demand.
+     * @return true if the switch operation was succeful.
+     * 
+     */
     public boolean switchAceLow(){
         if(this.isAce() && this.getValue()==11){
             this.value=1;
