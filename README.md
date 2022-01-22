@@ -5,12 +5,18 @@ Casinos 4435 is a JAVA online gambling app developed as a project in the course 
 # Users
 It can be used by anyone over 18 that wants to gamble. We thrived to give a social and imersing casino experience to everyone that wants to try it at home.
 
+
 # Tecnhnologies
 JavaFX
+
 PostgresSQL
+
 Client/Server communications via TCP sockets.
 
 # Authors
 José Pedro Carvalho
+
 Lourenço Pinho
+
 Marco Costa
+
