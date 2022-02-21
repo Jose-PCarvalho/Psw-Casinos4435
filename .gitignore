@@ -2,3 +2,7 @@
 /.gradle/
 /gameTests.class
 /bin/
+/.setting
+/.vscode
+/.classpath
+/.project
